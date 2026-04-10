@@ -1,8 +1,8 @@
 <?php
 
-class Tasks extends CI_Controller {
+class Tickets extends CI_Controller {
     public function index() {
-        $data['title'] = 'Tasks';
+        $data['title'] = 'My Ticket';
 
 
         $this->load->view('templates/header', $data);

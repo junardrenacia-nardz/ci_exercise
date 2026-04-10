@@ -1,9 +1,6 @@
 @import url("https://fonts.googleapis.com/css2?family=Saira+Stencil:ital,wght@0,100..900;1,100..900&display=swap");
 
 /* SIDEBAR STYLING  */
-body {
-}
-
 li {
 	list-style: none;
 }
@@ -13,19 +10,45 @@ a {
 }
 
 main {
-	min-height: 100vh;
 	width: 100%;
 	overflow: hidden;
+}
+
+#main {
+	transition: filter 0.3s ease;
+}
+
+/* #main.blurred {
+	width: 100%;
+}
+
+#main.blurred::after {
+	content: "";
+	position: fixed;
+	inset: 0;
+	backdrop-filter: blur(10px);
+	background: rgba(0, 0, 0, 0.2);
+} */
+
+#overlayBg {
+	position: fixed;
+	inset: 0;
+	background: rgba(0, 0, 0, 0.2);
+	backdrop-filter: blur(10px);
+	opacity: 0;
+	pointer-events: none;
+	transition: 0.3s ease;
+	z-index: 999;
+}
+
+#overlayBg.active {
+	opacity: 1;
+	pointer-events: auto;
 }
 
 .sidebar-item a i,
 .sidebar-footer a i {
 	width: 30px;
-}
-
-#sidebar-logo {
-	padding: 0;
-	height: 66px;
 }
 
 #sidebar {
@@ -35,8 +58,8 @@ main {
 	height: 100vh;
 	z-index: 1000;
 	font-family: "Saira Stencil", sans-serif;
-	max-width: 264px;
-	min-width: 264px;
+	max-width: 300px;
+	min-width: 300px;
 	transition: all 0.35s ease-in-out;
 	background-color: black;
 	display: flex;
@@ -44,15 +67,11 @@ main {
 }
 
 #sidebar.collapsed {
-	margin-left: -264px;
+	margin-left: -300px;
 }
 
 #main {
 	transition: all 0.35s ease-in-out;
-}
-
-#main.collapsed {
-	margin-left: 264px;
 }
 
 .toggler-btn {
@@ -80,11 +99,15 @@ main {
 }
 
 .sidebar-nav {
-	flex: 1 1 auto;
+	height: 100vh;
+	overflow-y: auto;
+	overflow-wrap: break-word;
 }
 
 .sidebar-logo {
-	padding: 1.15rem 1.5rem;
+	padding: 0 1.5rem;
+	padding: 0;
+	height: 76px;
 	text-align: center;
 }
 
@@ -109,7 +132,8 @@ a.sidebar-link {
 	font-size: 16px;
 }
 
-#history-item li a.sidebar-link {
+#history-item li a.sidebar-link,
+#ticket-items li a.sidebar-link {
 	padding-left: 50px;
 }
 
@@ -145,23 +169,33 @@ a.sidebar-link:hover {
 	height: 66px;
 }
 
+/*Sidebar Scrollbar*/
+::-webkit-scrollbar {
+	width: 8px; /* scrollbar width */
+}
+
+::-webkit-scrollbar-track {
+	background: none; /* track (background) */
+}
+
+::-webkit-scrollbar-thumb {
+	background: #888; /* scrollbar handle */
+	border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+	background: #555;
+}
+
 @media (max-width: 760px) {
 	#sidebar {
-		margin-left: -100vw;
+		margin-left: 0vw;
 		max-width: 100vw;
 		min-width: 100vw;
 	}
 
 	#sidebar.collapsed {
-		margin-left: 0;
-	}
-
-	#main {
-		margin-left: 100vw;
-	}
-
-	#main.collapsed {
-		margin-left: 0;
+		margin-left: -100vw;
 	}
 
 	.sidebar-toggler {
