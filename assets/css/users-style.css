@@ -34,8 +34,12 @@ main,
 	width: 14vw;
 }
 
-.form-control {
+.form-control,
+label,
+span,
+li {
 	font-size: 0.9rem;
+	font-family: "Poppins", "Sans-serif";
 }
 
 label {
@@ -90,7 +94,7 @@ label {
 }
 
 .form {
-	height: 60vh;
+	height: 70vh;
 }
 
 .steps .form-control:focus {
@@ -103,7 +107,7 @@ label {
 
 /*Sidebar Scrollbar*/
 ::-webkit-scrollbar {
-	width: 2px; /* scrollbar width */
+	width: 4px; /* scrollbar width */
 }
 
 ::-webkit-scrollbar-track {

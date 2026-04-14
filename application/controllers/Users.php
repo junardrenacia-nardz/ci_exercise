@@ -5,6 +5,10 @@
  * @property User_model $user_model
  * @property CI_Input $input
  * @property CI_Session $session
+ * @property CI_Output $output
+ * @property CI_DB $db
+ * @property Department_model $department_model
+ * @property Position_model $position_model
  */
 
 class Users extends CI_Controller {
@@ -25,60 +29,71 @@ class Users extends CI_Controller {
     }
 
     public function register() {
-        $data['title'] = "Registration";
+        $data = $this->input->post();
 
-        $step = $this->input->post('step') ?? 1;
-        $direction = $this->input->post('direction');
+        $data['departments'] = $this->department_model->get_departments();
 
-        $sessionData = $this->session->userdata('register') ?? [];
+        // ✅ LOAD ALL POSITIONS (important for JS filtering)
+        $data['positions'] = $this->position_model->get_positions();
 
-        // MERGE NEW DATA FROM FORM
-        $postData = $this->input->post();
-        unset($postData['step'], $postData['direction']);
 
-        if (!empty($postData)) {
-            $sessionData = array_merge($sessionData, $postData);
-            $this->session->set_userdata('register', $sessionData);
-        }
+        $data['title'] = 'Registration';
 
-        // HANDLE BACK
-        if ($direction === 'back') {
-            $step--;
-        }
+        $this->form_validation->set_rules('firstName', 'First Name', 'required');
+        $this->form_validation->set_rules('lastName', 'Last Name', 'required');
+        $this->form_validation->set_rules('contact', 'Contact', 'required|callback_validate_contact');
+        $this->form_validation->set_rules('department', 'Department', 'required');
+        $this->form_validation->set_rules('role', "Role", 'required');
+        $this->form_validation->set_rules('tier', "Tier", 'required');
+        $this->form_validation->set_rules('email', 'Email', 'required|valid_email');
+        $this->form_validation->set_rules('password', 'Password', 'required|callback_validate_password');
+        $this->form_validation->set_rules('password2', 'Confirm Password', 'matches[password]');
 
-        // STEP ROUTING
-        if ($step == 1) {
-            $data['form'] = $sessionData;
+        if ($this->form_validation->run() == FALSE) {
             $this->load->view('users/create', $data);
-        } elseif ($step == 2) {
-            $data['form'] = $sessionData;
-            $this->load->view('users/register_step2', $data);
-        } elseif ($step == 3) {
+        } else {
+            $hashed_pass = password_hash($this->input->post('password'), PASSWORD_DEFAULT);
+            $this->user_model->register($hashed_pass);
 
-            // FINAL VALIDATION
-            $this->form_validation->set_rules('firstName', 'First Name', 'required');
-            $this->form_validation->set_rules('email', 'Email', 'required');
-
-            if ($this->form_validation->run() == TRUE) {
-
-                // SAVE TO DATABASE HERE
-                // $this->user_model->insert($sessionData);
-
-                // CLEAR EVERYTHING
-                $this->session->unset_userdata('register');
-                echo "<script>localStorage.removeItem('registerDraft');</script>";
-
-                redirect('success');
-            } else {
-                $this->load->view('users/register_step1', $data);
-            }
+            redirect('users');
         }
-        // $this->form_validation->set_rules('firstName', 'First Name', 'required');
-        // $this->form_validation->set_rules('lastName', 'Last Name', 'required');
-
-
-        $this->load->view('users/create', $data);
     }
+
+    function validate_password($password) {
+        if (strlen($password) < 8) {
+            $this->form_validation->set_message([
+                'validate_password' =>
+                "Password must have at least 8 character"
+            ]);
+            return false;
+        } else if (!preg_match('/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&-])[A-Za-z\d@$!%*?&-]{8,}$/', $password)) {
+            $this->form_validation->set_message([
+                'validate_password' =>
+                "Password must be the combination of Letters, Numbers, and Special Characters"
+            ]);
+            return false;
+        }
+
+        return true;
+    }
+
+    function validate_contact($contact) {
+        if (!preg_match('/^09/', $contact)) {
+            $this->form_validation->set_message([
+                'validate_contact' =>
+                'Must start with "09"'
+            ]);
+            return false;
+        } else if (!preg_match('/^09\d{9}$/', $contact)) {
+            $this->form_validation->set_message([
+                'validate_contact' =>
+                "Must have the length of 11 digits"
+            ]);
+            return false;
+        }
+        return true;
+    }
+
 
     function find_email($email) {
         $this->form_validation->set_message(['find_email' => 'That email does not exist']);

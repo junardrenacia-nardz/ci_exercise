@@ -48,7 +48,8 @@
             </form>
 
             <div class="mt-3 no-account">
-                <p>No Account? <a class="create-acc" href="<?php echo base_url('users/register') ?>">Create One</a></p>
+                <p>No Account? <a class="create-acc" href="<?php echo base_url('users/register') ?>">Create One</a>
+                </p>
             </div>
         </div>
     </main>
