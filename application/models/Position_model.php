@@ -6,11 +6,11 @@ class Position_model extends CI_Model {
 
     public function get_positions($id = FALSE) {
         if ($id === FALSE) {
-            $query = $this->db->get('position');
+            $query = $this->db->get('positions');
             return $query->result_array();
         }
 
-        $query = $this->db->get_where('position', array('department_id' => $id));
+        $query = $this->db->get_where('positions', array('department_id' => $id));
         return $query->result_array();
     }
 }

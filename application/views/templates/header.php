@@ -85,11 +85,28 @@
             </div>
         </aside>
 
-        <div id="main">
+        <div id="main" class="container-fluid g-0">
             <div id="overlayBg"></div>
-            <nav id="nav-toggle" class="navbar px-3 d-flex align-items-center navbar-expand border-bottom">
-                <button class="toggler-btn" type="button"><i class="fa-solid fa-bars"></i></button>
-                <h3 class="ms-2"><?= $title ?></h3>
+            <nav id="nav-toggle"
+                class="navbar px-3 d-flex align-items-center justify-content-between navbar-expand border-bottom">
+                <div class="d-flex align-items-center">
+                    <button class="toggler-btn" type="button"><i class="fa-solid fa-bars"></i></button>
+                    <h3 class="ms-2"><?= $title ?></h3>
+                </div>
+
+                <div class="d-flex align-items-center">
+                    <a href="<?= base_url() ?>tickets/createTicket" id="createTicket"
+                        class="btn btn-primary rounded-5 text-nowrap me-2" type="button">
+                        <i class="fa-solid fa-ticket me-2"></i>
+                        Create Ticket</a>
+                    <div class="input-group">
+                        <input id="input-search-all" type="text" class="form-control rounded-5" placeholder="Search">
+                        <button class="search-btn-all btn rounded-5 ms-2">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                        </button>
+                    </div>
+
+
             </nav>
-            <main class="p-3 mt-5">
+            <main class="main p-3 mt-5">
                 <div class="container-fluid mt-3">

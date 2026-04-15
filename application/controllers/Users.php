@@ -24,7 +24,20 @@ class Users extends CI_Controller {
             $user_id = $this->user_model->login($this->input->post('password'));
             $email = $this->input->post('email');
 
-            redirect('posts');
+            if ($user_id) {
+                $user_data = [
+                    'user_id' => $user_id,
+                    'email' => $email,
+                    'logged_in' => true
+                ];
+
+                $this->session->set_userdata($user_data);
+                $this->session->set_flashdata('user_loggedin', 'You are now logged in');
+                redirect('tickets');
+            } else {
+                $this->session->set_flashdata('login_failed', 'Password is incorrect. Login is invalid');
+                redirect('users');
+            }
         }
     }
 

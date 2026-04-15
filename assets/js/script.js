@@ -23,3 +23,24 @@ overlay_bg.addEventListener("click", () => {
 		!sidebar.classList.contains("collapsed"),
 	);
 });
+
+const searchBtnToggler = document.querySelector(".search-btn-all");
+const inputSearchAll = document.querySelector("#input-search-all");
+const searchIcon = searchBtnToggler.querySelector("i");
+
+searchBtnToggler.addEventListener("click", function () {
+	if (
+		inputSearchAll.style.display === "none" ||
+		inputSearchAll.style.display === ""
+	) {
+		searchBtnToggler.classList.add("btn-secondary");
+		searchIcon.classList.remove("fa-magnifying-glass");
+		searchIcon.classList.add("fa-chevron-right");
+		inputSearchAll.style.display = "block";
+	} else {
+		searchBtnToggler.classList.remove("btn-secondary");
+		searchIcon.classList.add("fa-magnifying-glass");
+		searchIcon.classList.remove("fa-chevron-right");
+		inputSearchAll.style.display = "none";
+	}
+});

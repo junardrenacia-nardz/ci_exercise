@@ -12,23 +12,9 @@ a {
 main {
 	width: 100%;
 	overflow: hidden;
+	max-height: 93vh;
+	overflow-y: auto;
 }
-
-#main {
-	transition: filter 0.3s ease;
-}
-
-/* #main.blurred {
-	width: 100%;
-}
-
-#main.blurred::after {
-	content: "";
-	position: fixed;
-	inset: 0;
-	backdrop-filter: blur(10px);
-	background: rgba(0, 0, 0, 0.2);
-} */
 
 #overlayBg {
 	position: fixed;
@@ -170,21 +156,56 @@ a.sidebar-link:hover {
 }
 
 /*Sidebar Scrollbar*/
-::-webkit-scrollbar {
+main.main ::-webkit-scrollbar {
 	width: 8px; /* scrollbar width */
 }
 
-::-webkit-scrollbar-track {
+main.main ::-webkit-scrollbar-track {
 	background: none; /* track (background) */
 }
 
-::-webkit-scrollbar-thumb {
+main.main ::-webkit-scrollbar-thumb {
 	background: #888; /* scrollbar handle */
 	border-radius: 10px;
 }
 
-::-webkit-scrollbar-thumb:hover {
+main.main ::-webkit-scrollbar-thumb:hover {
 	background: #555;
+}
+
+button.search-btn-all:hover {
+	background-color: rgb(119, 149, 182);
+}
+
+#createTicket {
+	font-size: 0.8rem;
+	padding: 8px 15px;
+}
+
+#input-search-all {
+	display: none;
+}
+
+#createNewTicket .form-control,
+#createNewTicket .form-label {
+	font-family: "Poppins", sans-serif;
+	font-size: 0.8rem;
+}
+
+#createNewTicket .form-control {
+	margin-bottom: 15px;
+}
+
+.input-wrapper {
+	position: relative;
+}
+
+.input-wrapper .icon-dropdown {
+	position: absolute;
+	right: 10px;
+	top: 50%;
+	transform: translateY(-50%);
+	color: gray;
 }
 
 @media (max-width: 760px) {

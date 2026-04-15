@@ -13,6 +13,12 @@
 </head>
 
 <body>
+
+    <div class="position-fixed top-0 start-50 translate-middle-x w-50 mt-3">
+        <?php if ($this->session->flashdata('login_failed')) {
+            echo "<p id = 'loginFailedAlert' class = 'alert alert-danger'>" . $this->session->flashdata('login_failed') . "</p>";
+        } ?>
+    </div>
     <main class=" main-login container-xl d-flex justify-content-center align-items-center">
         <div class="login card col-md-6 col-lg-4 py-5 d-flex align-items-center">
             <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="user-icon bi bi-person-circle"
@@ -73,6 +79,18 @@
             password.type = "password";
             toggle.textContent = "Show Password";
         }
+    }
+
+    const alertBox = document.getElementById('loginFailedAlert');
+
+    if (alertBox) {
+        setTimeout(() => {
+            alertBox.style.transition = "opacity 0.5s ease";
+            alertBox.style.opacity = "0";
+            setTimeout(() => {
+                alertBox.remove();
+            }, 500);
+        }, 3000); // 3 seconds
     }
 </script>
 

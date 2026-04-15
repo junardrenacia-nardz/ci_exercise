@@ -6,7 +6,7 @@ class Department_model extends CI_Model {
 
     public function get_departments($id = FALSE) {
         if ($id === FALSE) {
-            $query = $this->db->get('department');
+            $query = $this->db->get('departments');
             return $query->result_array();
         }
     }
