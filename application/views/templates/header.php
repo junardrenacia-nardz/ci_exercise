@@ -6,11 +6,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="<?= base_url(); ?>assets/css/bootstrap.css">
     <link rel="stylesheet" href="<?= base_url(); ?>assets/css/style.css">
+    <link rel="stylesheet" href="<?= base_url(); ?>assets/css/dataTable-style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
         referrerpolicy="no-referrer" />
+    <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+    <script src="https://code.jquery.com/ui/1.14.1/jquery-ui.js"></script>
+    <link rel="stylesheet" href="https://cdn.datatables.net/2.3.0/css/dataTables.dataTables.css">
+    <script src="https://cdn.datatables.net/2.3.0/js/dataTables.min.js"></script>
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.14.1/themes/base/jquery-ui.css">
+    <!-- <link rel="stylesheet" href="../css/dataTable-styles.css"> -->
     <title><?php echo $title
             ?></title>
+
+
 </head>
 
 <body>
@@ -91,21 +100,24 @@
                 class="navbar px-3 d-flex align-items-center justify-content-between navbar-expand border-bottom">
                 <div class="d-flex align-items-center">
                     <button class="toggler-btn" type="button"><i class="fa-solid fa-bars"></i></button>
-                    <h3 class="ms-2"><?= $title ?></h3>
+                    <h4 class="ms-2"><?= $title ?></h4>
                 </div>
 
                 <div class="d-flex align-items-center">
                     <a href="<?= base_url() ?>tickets/createTicket" id="createTicket"
-                        class="btn btn-primary rounded-5 text-nowrap me-2" type="button">
+                        class="btn btn-primary rounded-5 text-nowrap mx-1" type="button">
                         <i class="fa-solid fa-ticket me-2"></i>
                         Create Ticket</a>
                     <div class="input-group">
                         <input id="input-search-all" type="text" class="form-control rounded-5" placeholder="Search">
-                        <button class="search-btn-all btn rounded-5 ms-2">
+                        <button class="search-btn-all btn rounded-5 mx-1 p-2 px-3">
                             <i class="fa-solid fa-magnifying-glass"></i>
                         </button>
                     </div>
-
+                    <a href="#" id="notifications" class="btn rounded-5 text-nowrap mx-1 p-2 px-3" type="button">
+                        <i class="fa-regular fa-bell" style="font-size: 18px;"></i></a>
+                    <h6 class="text-nowrap mx-1 me-2 px-1">
+                        <?= $logged_user['first_name'] . ' ' . $logged_user['last_name'] ?></h6>
 
             </nav>
             <main class="main p-3 mt-5">

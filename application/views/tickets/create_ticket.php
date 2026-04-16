@@ -18,8 +18,8 @@
                     </div>
                     <div class="col-sm-12 form-group">
                         <label for="" class="form-label">Attachments</label>
-                        <input type="file" name="files[]" id="files" class="form-control" multiple
-                            accept=".jpg,.png,.pdf,.docx,.ppt,.zip,.pptx">
+                        <input type="file" name="fileUploads[]" id="files" class="form-control" multiple
+                            accept=".jpg,.jpeg,.png,.pdf,.docx,.ppt,.zip,.pptx">
                     </div>
                     <ul id="fileList" class="list-group mt-2"></ul>
                 </div>
@@ -132,16 +132,50 @@
             btn.style.marginLeft = '10px';
             btn.onclick = () => removeFile(index);
 
+            const fileIcons = {
+                pdf: 'assets/images/ticket_attachments/defaults/pdf.png',
+                doc: 'assets/images/ticket_attachments/defaults/word.png',
+                docx: 'assets/images/ticket_attachments/defaults/word.png',
+                xls: 'assets/images/ticket_attachments/defaults/excel.png',
+                xlsx: 'assets/images/ticket_attachments/defaults/excel.png',
+                ppt: 'assets/images/ticket_attachments/defaults/ppt.png',
+                pptx: 'assets/images/ticket_attachments/defaults/ppt.png',
+                txt: 'assets/images/ticket_attachments/defaults/txt.png',
+                zip: 'assets/images/ticket_attachments/defaults/zip.png',
+                rar: 'assets/images/ticket_attachments/defaults/zip.png',
+                default: 'assets/images/ticket_attachments/defaults/file.png'
+            };
 
+            const fileName = file.name.toLowerCase();
+            const ext = fileName.split('.').pop();
+
+
+            const img = document.createElement('img');
             // ✅ Image preview (FIXED: now inside loop)
+
+            let previewElement;
+
             if (file.type.startsWith('image/')) {
-                const img = document.createElement('img');
-                img.src = URL.createObjectURL(file);
-                img.style.display = 'block';
-                img.style.width = '100px';
-                img.style.marginTop = '5px';
-                li.appendChild(img);
+                // Show actual image
+                previewElement = document.createElement('img');
+                previewElement.src = URL.createObjectURL(file);
+
+            } else {
+                // Show icon based on extension
+                previewElement = document.createElement('img');
+
+                const iconPath = fileIcons[ext] || fileIcons['default'];
+                previewElement.src = "<?= base_url() ?>" + iconPath;
+
             }
+
+
+            // Styling
+            previewElement.style.display = 'block';
+            previewElement.style.width = '100px';
+            previewElement.style.marginTop = '5px';
+            li.appendChild(previewElement);
+
             wrapper.appendChild(fileInfo);
             wrapper.appendChild(btn);
 

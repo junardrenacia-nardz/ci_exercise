@@ -6,6 +6,11 @@ class User_model extends CI_Model {
         $this->load->database();
     }
 
+    public function get_employee_details($employee_id) {
+        $query = $this->db->get_where('employees', array('employee_id' => $employee_id));
+        return $query->row_array();
+    }
+
     public function login($password) {
         $email = $this->input->post('email');
 
@@ -16,7 +21,10 @@ class User_model extends CI_Model {
 
         if (password_verify($password, $password_stored)) {
             if ($result->num_rows() == 1) {
-                return $result->row(0)->user_id;
+                return [
+                    'user_id' => $result->row(0)->user_id,
+                    'employee_id' => $result->row(0)->employee_id
+                ];
             } else {
                 return false;
             }

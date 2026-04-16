@@ -1,0 +1,61 @@
+div.dt-container .dt-search input {
+	border: 1px solid #aaa;
+	padding: 15px 10px !important;
+	background-color: transparent;
+	border-radius: 15px !important;
+	color: inherit;
+	margin-left: 10px;
+	height: 30px;
+}
+
+div.dt-container .dt-search label {
+	display: none;
+}
+
+div.dt-container .dt-input {
+	border: 1px solid #aaa;
+	border-radius: 10px;
+	padding: 5px;
+	background-color: transparent;
+	color: inherit;
+	margin-right: 10px;
+}
+
+div.dt-container .dt-paging .dt-paging-button {
+	box-sizing: border-box;
+	display: inline-block;
+	min-width: 1.5em;
+	padding: 0.5em 1em;
+	margin-left: 2px;
+	text-align: center;
+	text-decoration: none !important;
+	cursor: pointer;
+	color: inherit !important;
+	border: 1px solid transparent;
+	border-radius: 2px;
+	background: transparent;
+	font-size: 0.8em;
+}
+
+div.dt-container .dt-paging .dt-paging-button:hover {
+	color: #000 !important;
+	border: 1px solid #aaa;
+	background: linear-gradient(to bottom, #f9f9f9 0%, #f9f9f9 100%); /* W3C */
+}
+
+div.dt-container .dt-info {
+	font-size: 0.8em;
+}
+
+div.dt-container .dt-paging .dt-paging-button.current,
+div.dt-container .dt-paging .dt-paging-button.current:hover {
+	color: inherit !important;
+	border: none;
+	background-color: #3399cc;
+	color: #fff !important;
+}
+
+div.dt-container .dt-length,
+div.dt-container .dt-search {
+	font-size: 0.8em;
+}

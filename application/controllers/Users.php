@@ -12,6 +12,7 @@
  */
 
 class Users extends CI_Controller {
+
     public function login() {
         $data['title'] = "Login";
 
@@ -26,7 +27,8 @@ class Users extends CI_Controller {
 
             if ($user_id) {
                 $user_data = [
-                    'user_id' => $user_id,
+                    'user_id' => $user_id['user_id'],
+                    'employee_id' => $user_id['employee_id'],
                     'email' => $email,
                     'logged_in' => true
                 ];
@@ -71,6 +73,8 @@ class Users extends CI_Controller {
             redirect('users');
         }
     }
+
+
 
     function validate_password($password) {
         if (strlen($password) < 8) {

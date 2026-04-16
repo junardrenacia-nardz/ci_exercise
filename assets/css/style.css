@@ -173,7 +173,8 @@ main.main ::-webkit-scrollbar-thumb:hover {
 	background: #555;
 }
 
-button.search-btn-all:hover {
+button.search-btn-all:hover,
+a#notifications:hover {
 	background-color: rgb(119, 149, 182);
 }
 
@@ -206,6 +207,16 @@ button.search-btn-all:hover {
 	top: 50%;
 	transform: translateY(-50%);
 	color: gray;
+}
+
+/* TABLES Design */
+.tbl-custom,
+.tbl-custom a {
+	font-size: 0.75rem;
+}
+
+.tbl-custom thead tr th {
+	text-align: center;
 }
 
 @media (max-width: 760px) {
