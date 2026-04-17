@@ -154,22 +154,25 @@ a.sidebar-link:hover {
 	padding: 0;
 	height: 66px;
 }
-
-/*Sidebar Scrollbar*/
-main.main ::-webkit-scrollbar {
-	width: 8px; /* scrollbar width */
+/* Main Scrollbar */
+main.main::-webkit-scrollbar,
+.sidebar-nav::-webkit-scrollbar {
+	width: 8px;
 }
 
-main.main ::-webkit-scrollbar-track {
-	background: none; /* track (background) */
+main.main::-webkit-scrollbar-track,
+.sidebar-nav::-webkit-scrollbar-track {
+	background: none;
 }
 
-main.main ::-webkit-scrollbar-thumb {
-	background: #888; /* scrollbar handle */
+main.main::-webkit-scrollbar-thumb,
+.sidebar-nav::-webkit-scrollbar-thumb {
+	background: #888;
 	border-radius: 10px;
 }
 
-main.main ::-webkit-scrollbar-thumb:hover {
+main.main::-webkit-scrollbar-thumb:hover,
+.sidebar-nav::-webkit-scrollbar-thumb:hover {
 	background: #555;
 }
 
@@ -217,6 +220,35 @@ a#notifications:hover {
 
 .tbl-custom thead tr th {
 	text-align: center;
+}
+
+.information-tickets .ticket-subject .subject {
+	font-size: 1.3rem;
+	font-weight: bold;
+}
+
+.information-tickets .badge-ticket,
+.information-tickets .ticket-subject .badge-ticket {
+	color: rgb(5, 119, 212);
+	font-size: 0.65rem;
+	background-color: rgba(123, 170, 228, 0.397);
+}
+
+.information-tickets .detail-title span {
+	font-size: 1rem;
+}
+
+.information-tickets .details .person-in-charge,
+.information-tickets .ticket-subject span,
+.information-tickets #ticket_id,
+.information-tickets .title,
+.information-tickets .dates,
+.information-tickets .ticket_description {
+	font-size: 0.8rem;
+}
+
+.information-tickets .dates span {
+	margin: 2px 0 10px 0;
 }
 
 @media (max-width: 760px) {

@@ -38,7 +38,7 @@ class Users extends CI_Controller {
                 redirect('tickets');
             } else {
                 $this->session->set_flashdata('login_failed', 'Password is incorrect. Login is invalid');
-                redirect('users');
+                $this->load->view('users/login', $data);
             }
         }
     }
@@ -72,6 +72,12 @@ class Users extends CI_Controller {
 
             redirect('users');
         }
+    }
+
+    public function logout() {
+        $this->session->sess_destroy();
+
+        redirect('users');
     }
 
 

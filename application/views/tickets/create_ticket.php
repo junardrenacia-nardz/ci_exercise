@@ -62,12 +62,10 @@
                             <div class="input-wrapper">
                                 <select name="priority" id="priority" class="form-control" disabled>
                                     <option value="">- Select Priority -</option>
-                                    <?php foreach ($priorities as $priority): ?>
-                                        <option value="<?= $priority['priority_id'] ?>"
-                                            data-hey="<?= $priority['department_id'] ?>">
-                                            <?= $priority['level_of_priority'] ?></option>
-
-                                    <?php endforeach; ?>
+                                    <option value="Critical">Critical</option>
+                                    <option value="High">High</option>
+                                    <option value="Medium">Medium</option>
+                                    <option value="Low">Low</option>
                                 </select>
                                 <i class="fa-solid fa-angle-down icon-dropdown"></i>
                             </div>
@@ -217,11 +215,9 @@
         const priority = document.getElementById('priority');
 
         const allOptions = Array.from(requestType.querySelectorAll("option"));
-        const priorityAllOptions = Array.from(priority.querySelectorAll("option"));
 
         function filterRequestTypes(selectedDept) {
             requestType.innerHTML = '<option value="">- Select Request Type -</option>';
-            priority.innerHTML = '<option value="">- Select Priority -</option>';
 
             if (selectedDept === "") {
                 requestType.disabled = true;
@@ -238,21 +234,11 @@
                 }
             });
 
-            priorityAllOptions.forEach(option => {
-                if (option.dataset.hey === selectedDept) {
-                    priority.appendChild(option);
-                }
-            });
         }
 
         // 🔁 Run when user changes department
         department.addEventListener("change", function() {
             filterRequestTypes(this.value);
         });
-
-        // ✅ RUN ON PAGE LOAD (THIS FIXES YOUR ISSUE)
-        // if (department.value !== "") {
-        //     filterRequestTypes(department.value);
-        // }
     });
 </script>

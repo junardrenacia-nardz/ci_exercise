@@ -1,4 +1,5 @@
-<div class="container">
+<div class="container table-wrapper">
+
     <table class="table table-striped tbl-custom" id="ticketTable">
         <thead>
             <tr>
@@ -15,44 +16,48 @@
         </thead>
         <tbody>
             <?php foreach ($ticket_details as $ticket): ?>
-            <tr class="">
-                <td class="align-middle"><?php $aging = date('Ymd', time()) - date('Ymd', strtotime($ticket['ticket_created']));
-                                                echo $aging ?>
-                </td>
-                <td class="align-middle"><?= $ticket['ticket_id'] ?></td>
-                <td class="align-middle"><?= $ticket['level_of_priority'] ?></td>
-                <td class="align-middle"><?= $ticket['ticket_name'] ?></td>
-                <td class="align-middle"><?= $ticket['ticket_status'] ?></td>
-                <td class="align-middle">
-                    <?php $count_assign = 0;
+                <tr class="">
+                    <td class="align-middle"><?php $created = new DateTime($ticket['ticket_created']);
+                                                $today = new DateTime();
+
+                                                $aging = $today->diff($created)->days;
+
+                                                echo $aging; ?>
+                    </td>
+                    <td class="align-middle"><?= $ticket['ticket_id'] ?></td>
+                    <td class="align-middle"><?= $ticket['priority'] ?></td>
+                    <td class="align-middle"><?= $ticket['ticket_name'] ?></td>
+                    <td class="align-middle"><?= $ticket['ticket_status'] ?></td>
+                    <td class="align-middle">
+                        <?php $count_assign = 0;
                         $inCharge = "";
                         foreach ($ticket_assigned as $assigned):
                             if ($ticket['ticket_id'] == $assigned['ticket_id']): ?>
-                    <?php $inCharge = $ticket['department_name'];
+                                <?php $inCharge = $ticket['department_name'];
                                 $count_assign++ ?>
-                    <?php endif; ?>
-                    <?php endforeach;
+                            <?php endif; ?>
+                        <?php endforeach;
                         if ($count_assign === 0): ?>
-                    <div class="text-center">
-                        <a href="" class="btn btn-outline-primary fw-bold rounded-5 p-2 py-1"><i
-                                class="fa-solid fa-plus"></i>
-                            Assign</a>
-                    </div>
-                    <?php else : ?>
-                    <div class="text-center fw-bold">
-                        <?= get_abbreviation($inCharge) . " ($count_assign)" ?>
-                    </div>
-                    <?php endif; ?>
-                </td class="align-middle">
-                <td class="align-middle"><?= $ticket['requester_first_name'] . " " . $ticket['requester_last_name']  ?>
-                </td>
-                <td class="align-middle"><?= date('m-d-Y', strtotime($ticket['ticket_updated'])) ?></td>
-                <td class="align-middle">
-                    <a href="<?= base_url('tickets/view_ticket') . '/' . $ticket['ticket_id'] ?>" class="btn"><i
-                            class="fa-solid fa-eye"></i></a>
+                            <div class="text-center">
+                                <a href="" class="btn btn-outline-primary fw-bold rounded-5 p-2 py-1"><i
+                                        class="fa-solid fa-plus"></i>
+                                    Assign</a>
+                            </div>
+                        <?php else : ?>
+                            <div class="text-center fw-bold">
+                                <?= get_abbreviation($inCharge) . " ($count_assign)" ?>
+                            </div>
+                        <?php endif; ?>
+                    </td class="align-middle">
+                    <td class="align-middle"><?= $ticket['requester_first_name'] . " " . $ticket['requester_last_name']  ?>
+                    </td>
+                    <td class="align-middle"><?= date('m-d-Y', strtotime($ticket['ticket_updated'])) ?></td>
+                    <td class="align-middle">
+                        <a href="<?= base_url('tickets/view_ticket') . '/' . $ticket['ticket_id'] ?>" class="btn"><i
+                                class="fa-solid fa-eye"></i></a>
 
-                </td>
-            </tr>
+                    </td>
+                </tr>
             <?php endforeach; ?>
         </tbody>
     </table>
@@ -71,14 +76,30 @@ function get_abbreviation($string) {
 }
 ?>
 <script>
-$(document).ready(function() {
-    $('#ticketTable').DataTable({
-        order: [
-            [0, 'asc']
-        ],
-        initComplete: function() {
-            $('.dt-search input').attr('placeholder', 'Keyword');
-        }
+    $(document).ready(function() {
+        $('#ticketTable').DataTable({
+            order: [
+                [0, 'asc']
+            ],
+            initComplete: function() {
+                $('.dt-search input').attr('placeholder', 'Keyword');
+            },
+            stateSave: true,
+            dom: 'f t<"bottom"l p i>',
+            pageLength: 5,
+            pagingType: "simple_numbers",
+            layout: {
+                topStart: null,
+                topEnd: 'search',
+                top: {
+                    start: null,
+                    end: null
+                }
+            }
+        });
+
+        // Move search bar into custom container
+        $('.dt-search').append($('.dataTables_filter'));
     });
-});
+    $.fn.dataTable.version
 </script>

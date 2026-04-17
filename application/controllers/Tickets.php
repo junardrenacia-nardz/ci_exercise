@@ -27,6 +27,21 @@ class Tickets extends CI_Controller {
         $this->load->view('templates/footer');
     }
 
+    public function view_ticket($ticket_id) {
+        if (!$this->session->userdata('logged_in')) {
+            redirect('users');
+        }
+        $employee_id = $this->session->userdata('employee_id');
+        $data['logged_user'] = $this->user_model->get_employee_details($employee_id);
+        $data['title'] = 'Ticket Detail';
+
+        $data['ticket'] = $this->ticket_model->get_tickets($ticket_id);
+        $data['ticket_assigned'] = $this->ticket_model->get_ticket_assigned();
+        $this->load->view('templates/header', $data);
+        $this->load->view('tickets/view_ticket', $data);
+        $this->load->view('templates/footer');
+    }
+
     public function createTicket() {
         if (!$this->session->userdata('logged_in')) {
             redirect('users');

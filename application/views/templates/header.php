@@ -89,15 +89,14 @@
                         <i class="fa-solid fa-user"></i><span>Profile</span>
                     </a>
                 </li>
-                <a href="<?= base_url() ?>users" class="sidebar-link"><i
+                <a href="<?= base_url() ?>users/logout" class="sidebar-link"><i
                         class="fa-solid fa-arrow-right-from-bracket"></i>Logout</a>
             </div>
         </aside>
 
         <div id="main" class="container-fluid g-0">
             <div id="overlayBg"></div>
-            <nav id="nav-toggle"
-                class="navbar px-3 d-flex align-items-center justify-content-between navbar-expand border-bottom">
+            <nav id="nav-toggle" class="navbar px-3 d-flex align-items-center justify-content-between navbar-expand">
                 <div class="d-flex align-items-center">
                     <button class="toggler-btn" type="button"><i class="fa-solid fa-bars"></i></button>
                     <h4 class="ms-2"><?= $title ?></h4>
