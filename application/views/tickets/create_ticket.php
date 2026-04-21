@@ -21,7 +21,10 @@
                         <input type="file" name="fileUploads[]" id="files" class="form-control" multiple
                             accept=".jpg,.jpeg,.png,.pdf,.docx,.ppt,.zip,.pptx">
                     </div>
-                    <ul id="fileList" class="list-group mt-2"></ul>
+                    <div class="fileList-col">
+                        <ul id="fileList" class="list-group mt-2"></ul>
+                    </div>
+
                 </div>
                 <div class="col-md-4 col-sm-12 ps-2">
                     <div class="row">
@@ -170,8 +173,8 @@
 
             // Styling
             previewElement.style.display = 'block';
-            previewElement.style.width = '100px';
-            previewElement.style.marginTop = '5px';
+            previewElement.style.width = '50px';
+            previewElement.style.marginBottom = '5px';
             li.appendChild(previewElement);
 
             wrapper.appendChild(fileInfo);

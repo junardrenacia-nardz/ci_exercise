@@ -53,6 +53,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 $route['tickets'] = 'tickets/index';
 $route['tickets/createTicket'] = 'tickets/createTicket';
 $route['tickets/view_ticket/(:any)'] = 'tickets/view_ticket/$1';
+$route['tickets/reassign_department/(:any)'] = 'tickets/reassign_department/$1';
 
 $route['users'] = 'users/login';
 

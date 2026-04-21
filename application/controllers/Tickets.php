@@ -34,12 +34,47 @@ class Tickets extends CI_Controller {
         $employee_id = $this->session->userdata('employee_id');
         $data['logged_user'] = $this->user_model->get_employee_details($employee_id);
         $data['title'] = 'Ticket Detail';
-
+        $data['departments'] = $this->department_model->get_departments();
         $data['ticket'] = $this->ticket_model->get_tickets($ticket_id);
         $data['ticket_assigned'] = $this->ticket_model->get_ticket_assigned();
+        $data['all_assigned'] = $this->user_model->get_users();
         $this->load->view('templates/header', $data);
         $this->load->view('tickets/view_ticket', $data);
         $this->load->view('templates/footer');
+    }
+
+    public function reassign_department($ticket_id) {
+        if (!$this->session->userdata('logged_in')) {
+            redirect('users');
+        }
+        $employee_id = $this->session->userdata('employee_id');
+        $data['logged_user'] = $this->user_model->get_employee_details($employee_id);
+        $data['title'] = 'Ticket Detail';
+        $data['departments'] = $this->department_model->get_departments();
+        $data['ticket'] = $this->ticket_model->get_tickets($ticket_id);
+        $data['ticket_assigned'] = $this->ticket_model->get_ticket_assigned();
+
+        $this->form_validation->set_rules('selectDepartment', "Department", "required");
+
+        if ($this->form_validation->run() == FALSE) {
+            $this->session->set_flashdata('showModal', 'edit_department');
+            $this->session->set_flashdata('message', [
+                'type' => 'error', // or 'success'
+                'text' => 'Re-assigning failed'
+            ]);
+            return redirect('tickets/view_ticket/' . $ticket_id); // ✅ IMPORTANT
+        } else {
+            $this->session->set_flashdata('showModal', 'modal_department');
+            $this->session->set_flashdata('message', [
+                'type' => 'success', // or 'success'
+                'text' => 'Re-assigning of department is successful'
+            ]);
+            $this->ticket_model->change_department($ticket_id);
+            return redirect('tickets/view_ticket/' . $ticket_id); // ✅ IMPORTANT
+        }
+    }
+
+    public function update_department() {
     }
 
     public function createTicket() {

@@ -7,19 +7,16 @@
     <link rel="stylesheet" href="<?= base_url(); ?>assets/css/bootstrap.css">
     <link rel="stylesheet" href="<?= base_url(); ?>assets/css/style.css">
     <link rel="stylesheet" href="<?= base_url(); ?>assets/css/dataTable-style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
         referrerpolicy="no-referrer" />
     <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
-    <script src="https://code.jquery.com/ui/1.14.1/jquery-ui.js"></script>
+    <script src="https://code.jquery.com/ui/1.14.2/jquery-ui.js"></script>
     <link rel="stylesheet" href="https://cdn.datatables.net/2.3.0/css/dataTables.dataTables.css">
     <script src="https://cdn.datatables.net/2.3.0/js/dataTables.min.js"></script>
-    <link rel="stylesheet" href="https://code.jquery.com/ui/1.14.1/themes/base/jquery-ui.css">
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.14.2/themes/base/jquery-ui.css">
     <!-- <link rel="stylesheet" href="../css/dataTable-styles.css"> -->
     <title><?php echo $title
             ?></title>
-
-
 </head>
 
 <body>
@@ -121,3 +118,11 @@
             </nav>
             <main class="main p-3 mt-5">
                 <div class="container-fluid mt-3">
+                    <div id="alertMessage-col" class="position-fixed bottom-0 end-0 p-3">
+                        <?php if ($msg = $this->session->flashdata('message')): ?>
+                            <div id="alertMessage"
+                                class="alert alert-<?= $msg['type'] === 'success' ? 'success' : 'danger' ?>">
+                                <?= $msg['text'] ?>
+                            </div>
+                        <?php endif; ?>
+                    </div>

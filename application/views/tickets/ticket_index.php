@@ -16,6 +16,14 @@
         </thead>
         <tbody>
             <?php foreach ($ticket_details as $ticket): ?>
+                <?php $count_assign = 0;
+                $inCharge = ""; ?>
+                <?php foreach ($ticket_assigned as $assigned): ?>
+                    <?php if ($ticket['ticket_id'] == $assigned['ticket_id']): ?>
+                        <?php $inCharge = $ticket['department_name'];
+                        $count_assign++ ?>
+                    <?php endif; ?>
+                <?php endforeach; ?>
                 <tr class="">
                     <td class="align-middle"><?php $created = new DateTime($ticket['ticket_created']);
                                                 $today = new DateTime();
@@ -29,23 +37,18 @@
                     <td class="align-middle"><?= $ticket['ticket_name'] ?></td>
                     <td class="align-middle"><?= $ticket['ticket_status'] ?></td>
                     <td class="align-middle">
-                        <?php $count_assign = 0;
-                        $inCharge = "";
-                        foreach ($ticket_assigned as $assigned):
-                            if ($ticket['ticket_id'] == $assigned['ticket_id']): ?>
-                                <?php $inCharge = $ticket['department_name'];
-                                $count_assign++ ?>
-                            <?php endif; ?>
-                        <?php endforeach;
-                        if ($count_assign === 0): ?>
+                        <?php if ($count_assign != 0) : ?>
+                            <div class="text-center fw-bold">
+                                <?= get_abbreviation($inCharge) . " ($count_assign)" ?>
+                            </div>
+                        <?php elseif ($ticket['ticket_status'] == "For Approval"): ?>
+                            <div class="text-center"><b>-</b></div>
+                        <?php
+                        elseif ($count_assign === 0): ?>
                             <div class="text-center">
                                 <a href="" class="btn btn-outline-primary fw-bold rounded-5 p-2 py-1"><i
                                         class="fa-solid fa-plus"></i>
                                     Assign</a>
-                            </div>
-                        <?php else : ?>
-                            <div class="text-center fw-bold">
-                                <?= get_abbreviation($inCharge) . " ($count_assign)" ?>
                             </div>
                         <?php endif; ?>
                     </td class="align-middle">

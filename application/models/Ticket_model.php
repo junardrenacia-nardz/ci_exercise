@@ -10,6 +10,7 @@ class Ticket_model extends CI_Model {
 
                 tt.type_name,
                 td.ticket_status,
+                td.department_id,
 
                 d.department_name,
 
@@ -56,6 +57,7 @@ class Ticket_model extends CI_Model {
         $this->db->join('users u', 'u.user_id = ta.user_id');
         $this->db->join('employees e', 'e.employee_id = u.employee_id');
         $this->db->join('departments d', 'd.department_id = e.department_id');
+        $this->db->where('ta.person_status', 'Assigned');
         $query = $this->db->get();
         return $query->result_array();
     }
@@ -107,5 +109,21 @@ class Ticket_model extends CI_Model {
         if ($this->db->trans_status() === FALSE) {
             return false;
         }
+    }
+
+    public function change_department($ticket_id) {
+        $ticketData = [
+            "department_id" => $this->input->post('selectDepartment'),
+            "ticket_status" => "For Approval"
+        ];
+        $assignedData = ["person_status" => "Reassigned"];
+
+        $this->db->where('ticket_id', $ticket_id);
+        $this->db->update('ticket_details', $ticketData);
+
+        $this->db->where('ticket_id', $ticket_id);
+        $this->db->update('ticket_assigned', $assignedData);
+
+        return true;
     }
 }

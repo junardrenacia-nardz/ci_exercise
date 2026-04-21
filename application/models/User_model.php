@@ -11,6 +11,15 @@ class User_model extends CI_Model {
         return $query->row_array();
     }
 
+
+    public function get_users($id = FALSE) {
+        $this->db->select('u.user_id, e.first_name, e.last_name, e.department_id, e.status');
+        $this->db->from('users u');
+        $this->db->join('employees e', 'e.employee_id = u.employee_id', 'left');
+        $query = $this->db->get();
+        return $query->result_array();
+    }
+
     public function login($password) {
         $email = $this->input->post('email');
 
