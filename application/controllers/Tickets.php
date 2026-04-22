@@ -9,6 +9,7 @@
  * @property CI_Form_validation $form_validation
  * @property User_model $user_model
  * @property CI_Upload $upload
+ * @property CI_Input $input
  */
 
 class Tickets extends CI_Controller {
@@ -41,40 +42,6 @@ class Tickets extends CI_Controller {
         $this->load->view('templates/header', $data);
         $this->load->view('tickets/view_ticket', $data);
         $this->load->view('templates/footer');
-    }
-
-    public function reassign_department($ticket_id) {
-        if (!$this->session->userdata('logged_in')) {
-            redirect('users');
-        }
-        $employee_id = $this->session->userdata('employee_id');
-        $data['logged_user'] = $this->user_model->get_employee_details($employee_id);
-        $data['title'] = 'Ticket Detail';
-        $data['departments'] = $this->department_model->get_departments();
-        $data['ticket'] = $this->ticket_model->get_tickets($ticket_id);
-        $data['ticket_assigned'] = $this->ticket_model->get_ticket_assigned();
-
-        $this->form_validation->set_rules('selectDepartment', "Department", "required");
-
-        if ($this->form_validation->run() == FALSE) {
-            $this->session->set_flashdata('showModal', 'edit_department');
-            $this->session->set_flashdata('message', [
-                'type' => 'error', // or 'success'
-                'text' => 'Re-assigning failed'
-            ]);
-            return redirect('tickets/view_ticket/' . $ticket_id); // ✅ IMPORTANT
-        } else {
-            $this->session->set_flashdata('showModal', 'modal_department');
-            $this->session->set_flashdata('message', [
-                'type' => 'success', // or 'success'
-                'text' => 'Re-assigning of department is successful'
-            ]);
-            $this->ticket_model->change_department($ticket_id);
-            return redirect('tickets/view_ticket/' . $ticket_id); // ✅ IMPORTANT
-        }
-    }
-
-    public function update_department() {
     }
 
     public function createTicket() {
@@ -133,5 +100,70 @@ class Tickets extends CI_Controller {
             $this->ticket_model->create_ticket($fileNames);
             redirect('tickets');
         }
+    }
+
+    public function reassign_department($ticket_id) {
+        if (!$this->session->userdata('logged_in')) {
+            redirect('users');
+        }
+        $this->form_validation->set_rules('selectDepartment', "Department", "required");
+
+        if ($this->form_validation->run() == FALSE) {
+            $this->session->set_flashdata('showModal', 'edit_department');
+            $this->session->set_flashdata('message', [
+                'type' => 'error', // or 'success'
+                'text' => 'Re-assigning failed'
+            ]);
+            return redirect('tickets/view_ticket/' . $ticket_id); // ✅ IMPORTANT
+        } else {
+            $this->session->set_flashdata('showModal', 'modal_department');
+            $this->session->set_flashdata('message', [
+                'type' => 'success', // or 'success'
+                'text' => 'Re-assigning of department is successful'
+            ]);
+            $this->ticket_model->change_department($ticket_id);
+            return redirect('tickets/view_ticket/' . $ticket_id); // ✅ IMPORTANT
+        }
+    }
+
+    public function assign_ticket($ticket_id) {
+        $names = $this->input->post('employeeName') ?? []; // This is an array
+        if (empty($names)) {
+            // force validation failure
+            $this->form_validation->set_rules('employeeName', 'Assignees', 'required');
+        } else {
+            foreach ($names as $key => $name) {
+                $this->form_validation->set_rules(
+                    "employeeName[$key]",
+                    "Assignee #" . ($key + 1),
+                    "required"
+                );
+            }
+        }
+
+        $this->form_validation->set_rules("expectedStart", "Expected Start", "required");
+        $this->form_validation->set_rules("expectedEnd", "Expected End", "required");
+
+        if ($this->form_validation->run() == FALSE) {
+            $this->session->set_flashdata('showModal', 'edit_assign_person');
+            $this->session->set_flashdata('message', [
+                'type' => 'danger', // or 'success'
+                'text' => "Assigning to $ticket_id failed"
+            ]);
+            // ✅ SAVE FORM DATA
+            $this->session->set_flashdata('old_input', $this->input->post());
+            return redirect('tickets/view_ticket/' . $ticket_id);
+        } else {
+            $this->session->set_flashdata('showModal', 'modal_assign_person');
+            $this->session->set_flashdata('message', [
+                'type' => 'success', // or 'success'
+                'text' => "New individual(s) assigned to $ticket_id"
+            ]);
+            return redirect('tickets/view_ticket/' . $ticket_id);
+        }
+    }
+
+    public function clear_session() {
+        return $this->session->unset_userdata('old_input');
     }
 }

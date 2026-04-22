@@ -256,6 +256,16 @@ a#notifications:hover {
 	font-size: 0.8rem;
 }
 
+#modal_assign_person,
+#edit_assign_person table select,
+#edit_assign_person table .removeRow,
+#edit_assign_person input[type="date"],
+#edit_assign_person #addRow,
+#edit_assign_person label,
+#edit_assign_person th {
+	font-size: 0.9rem;
+}
+
 .information-tickets .dates span {
 	margin: 2px 0 10px 0;
 }

@@ -1,4 +1,11 @@
 <?php
+$showModal = $this->session->flashdata('showModal');
+$old = null;
+
+if ($showModal === 'edit_assign_person') {
+    $old = $this->session->flashdata('old_input');
+}
+
 $count_assign = 0;
 $inCharge = [];
 foreach ($ticket_assigned as $assigned):
@@ -159,7 +166,7 @@ endforeach; ?>
     </div>
 </div>
 
-
+<!--ASSIGN Person to the Ticket-->
 <div class="modal fade" id="modal_assign_person" tabindex="-1" aria-hidden="true" data-bs-backdrop="static">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content shadow-lg border-0 rounded-3">
@@ -222,9 +229,6 @@ endforeach; ?>
                     <i class="<?= ($count_assign === 0) ? "fa-solid fa-user-plus" : "fa-solid fa-user-pen" ?> me-1"></i>
                     <?= ($count_assign === 0) ? "Assign Person" : "Edit Assignment" ?>
                 </a>
-
-
-
             </div>
 
         </div>
@@ -246,7 +250,7 @@ endforeach; ?>
 
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
             </div>
-            <form action="">
+            <form action="<?= base_url('tickets/assign_ticket/' . $ticket['ticket_id']) ?>" method="post">
                 <!-- BODY -->
                 <div class="modal-body px-4 py-3">
                     <!-- Person In Charge -->
@@ -261,17 +265,17 @@ endforeach; ?>
                                 </tr>
                             </thead>
                             <tbody>
-                                <?php if ($count_assign !== 0): ?>
-                                    <?php foreach ($inCharge as $person): ?>
+                                <?php if (!empty($old['employeeName'])): ?>
+                                    <?php foreach ($old['employeeName'] as $selectedId): ?>
                                         <tr>
                                             <td>
                                                 <div class="col-md-9">
                                                     <div class="input-wrapper">
-                                                        <select name="employeeName[]" id="employeeName" class="form-control">
-                                                            <option value="">- Select person to be assigned -</option>
+                                                        <select name="employeeName[]" class="form-control">
+                                                            <option value="">- Select person -</option>
                                                             <?php foreach ($all_assigned as $choice): ?>
                                                                 <option value="<?= $choice['user_id'] ?>"
-                                                                    <?= ($person['id'] === $choice['user_id']) ? "selected" : "" ?>>
+                                                                    <?= ($selectedId == $choice['user_id']) ? "selected" : "" ?>>
                                                                     <?= $choice['first_name'] . " " . $choice['last_name'] ?>
                                                                     (#<?= $choice['user_id'] ?>)
                                                                 </option>
@@ -279,14 +283,15 @@ endforeach; ?>
                                                         </select>
                                                         <i class="fa-solid fa-angle-down icon-dropdown"></i>
                                                     </div>
-
                                                 </div>
                                             </td>
-                                            <td class="text-center"><button type="button"
-                                                    class="btn btn-danger removeRow">X</button></td>
+                                            <td class="text-center">
+                                                <button type="button" class="btn btn-danger removeRow">X</button>
+                                            </td>
                                         </tr>
                                     <?php endforeach; ?>
                                 <?php else: ?>
+
                                     <tr>
                                         <td>
                                             <div class="col-md-9">
@@ -295,7 +300,7 @@ endforeach; ?>
                                                         <option value="">- Select person to be assigned -</option>
                                                         <?php foreach ($all_assigned as $choice): ?>
                                                             <option value="<?= $choice['user_id'] ?>"
-                                                                <?= (set_value($choice['user_id'])) ? "selected" : "" ?>>
+                                                                <?= (set_value("employeeName")) ? "selected" : "" ?>>
                                                                 <?= $choice['first_name'] . " " . $choice['last_name'] ?>
                                                                 (#<?= $choice['user_id'] ?>)
                                                             </option>
@@ -309,7 +314,9 @@ endforeach; ?>
                                         <td class="text-center"><button type="button"
                                                 class="btn btn-danger removeRow">X</button></td>
                                     </tr>
+
                                 <?php endif; ?>
+
                             </tbody>
                         </table>
                         <button type="button" id="addRow" class="btn btn-primary">Add
@@ -319,11 +326,13 @@ endforeach; ?>
                     <div class="expected_dates p-3 d-flex justify-content-between">
                         <div class="col-md-6 pe-1">
                             <label for="" class="mb-2">Expected Start Date:</label>
-                            <input type="date" name="expectedStart" id="" class="form-control">
+                            <input type="date" name="expectedStart" id="expectedStart" class="form-control"
+                                value="<?= $old['expectedStart'] ?? '' ?>">
                         </div>
                         <div class="col-md-6 ps-1">
                             <label for="" class="mb-2">Expected End Date:</label>
-                            <input type="date" name="expectedEnd" id="" class="form-control">
+                            <input type="date" name="expectedEnd" id="expectedEnd" class="form-control"
+                                value="<?= $old['expectedEnd'] ?? '' ?>">
                         </div>
                     </div>
 
@@ -336,12 +345,11 @@ endforeach; ?>
                         data-bs-target="#modal_assign_person">
                         Close
                     </button>
-                    <a href="" data-bs-toggle="modal" data-bs-target="#modal_assign_person"
-                        class="btn btn-outline-primary">
+                    <button type="submit" class="btn btn-outline-primary">
                         <i
                             class="<?= ($count_assign === 0) ? "fa-solid fa-user-plus" : "fa-solid fa-user-pen" ?> me-1"></i>
                         <?= ($count_assign === 0) ? "Save" : "Save Changes" ?>
-                    </a>
+                    </button>
                 </div>
             </form>
 
@@ -352,7 +360,7 @@ endforeach; ?>
 
 <!--DEPARTMENTS-->
 <div class="modal fade" id="modal_department" tabindex="-1" aria-hidden="true" data-bs-backdrop="static">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content shadow-lg border-0 rounded-3">
             <div class="modal-header bg-primary text-white">
                 <h5 class="modal-title fw-semibold">Department</h5>
@@ -382,7 +390,7 @@ endforeach; ?>
 <!--CHANGE DEPARTMENT-->
 <div class="modal fade modalEdit" id="edit_department" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false"
     aria-hidden="true">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header bg-primary text-white">
                 <h5 class="modal-title">Re-assign Department</h5>
@@ -395,7 +403,8 @@ endforeach; ?>
                             <select name="selectDepartment" id="selectDepartment" class="form-control">
                                 <option value="">- Select Department -</option>
                                 <?php foreach ($departments as $department): ?>
-                                    <option value="<?= $department['department_id'] ?>">
+                                    <option value="<?= $department['department_id'] ?>"
+                                        <?= ($ticket['department_id'] == $department['department_id']) ? "selected" : "" ?>>
                                         <?= $department['department_name'] ?>
                                     </option>
                                 <?php endforeach; ?>
@@ -427,17 +436,29 @@ endforeach; ?>
         });
     });
 
-    const originalAssignTableHTML = document.querySelector("#assignTableDynamic tbody").innerHTML;
+    const originalRowCount = <?= ($count_assign == 0) ? 1 : $count_assign ?>;
+
+    let originalAssignTableHTML;
+
+    document.addEventListener("DOMContentLoaded", function() {
+        originalAssignTableHTML = document.querySelector("#assignTableDynamic tbody").innerHTML;
+    });
 
     document.querySelectorAll('.edit_assign_person').forEach(function(modal) {
         modal.addEventListener('hidden.bs.modal', function() {
-            this.querySelector('form').reset;
-            updateSelectOptions();
+            fetch("<?= base_url('tickets/clear_session') ?>", {
+                method: "POST"
+            });
+            this.querySelector('form').reset();
+            // remove added rows only (not DB rows)
+            const rows = document.querySelectorAll("#assignTableDynamic tbody tr");
 
-            const tbody = document.querySelector("#assignTableDynamic tbody")
-            if (tbody) {
-                tbody.innerHTML = originalAssignTableHTML;
-            }
+            rows.forEach((row, index) => {
+                if (index >= originalRowCount) {
+                    row.remove();
+                }
+            });
+            updateSelectOptions();
         });
     });
 
@@ -464,7 +485,7 @@ endforeach; ?>
                                 <option value="">- Select person to be assigned -</option>
                                 <?php foreach ($all_assigned as $choice): ?>
                                     <option value="<?= $choice['user_id'] ?>"
-                                        <?= (set_value($choice['user_id'])) ? "selected" : "" ?>>
+                                        <?= (set_value('employeeName')) ? "selected" : "" ?>>
                                         <?= $choice['first_name'] . " " . $choice['last_name'] ?>
                                         (#<?= $choice['user_id'] ?>)
                                     </option>
@@ -527,7 +548,6 @@ endforeach; ?>
         });
     </script>
 <?php endif; ?>
-
 
 <?php
 function get_abbreviation($string) {
