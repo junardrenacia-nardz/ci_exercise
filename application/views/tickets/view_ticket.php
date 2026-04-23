@@ -2,18 +2,18 @@
 $showModal = $this->session->flashdata('showModal');
 $old = null;
 
-if ($showModal === 'edit_assign_person') {
-    $old = $this->session->flashdata('old_input');
-}
-
 $count_assign = 0;
 $inCharge = [];
+$department_assigned;
+
 foreach ($ticket_assigned as $assigned):
     if ($ticket['ticket_id'] == $assigned['ticket_id']):
         $inCharge[] = [
             "name" => $assigned['first_name'] . " " . $assigned['last_name'],
             "id" => $assigned['user_id']
         ];
+
+        $deparment_assigned = $assigned['department_name'];
         $count_assign++;
     endif;
 endforeach; ?>
@@ -250,7 +250,12 @@ endforeach; ?>
 
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
             </div>
-            <form action="<?= base_url('tickets/assign_ticket/' . $ticket['ticket_id']) ?>" method="post">
+            <form action="<?= base_url('tickets/assign_ticket/' . $ticket['ticket_id']) ?>" id="assignForm"
+                method="post">
+                <?php foreach ($inCharge as $previous): ?>
+                    <input type="hidden" name="prev_id[]" value="<?= $previous['id'] ?>">
+                <?php endforeach; ?>
+
                 <!-- BODY -->
                 <div class="modal-body px-4 py-3">
                     <!-- Person In Charge -->
@@ -265,17 +270,18 @@ endforeach; ?>
                                 </tr>
                             </thead>
                             <tbody>
-                                <?php if (!empty($old['employeeName'])): ?>
-                                    <?php foreach ($old['employeeName'] as $selectedId): ?>
+
+                                <?php if ($count_assign > 0): ?>
+                                    <?php foreach ($inCharge as $person): ?>
                                         <tr>
                                             <td>
                                                 <div class="col-md-9">
                                                     <div class="input-wrapper">
-                                                        <select name="employeeName[]" class="form-control">
-                                                            <option value="">- Select person -</option>
+                                                        <select name="employeeName[]" id="employeeName" class="form-control">
+                                                            <option value="">- Select person to be assigned -</option>
                                                             <?php foreach ($all_assigned as $choice): ?>
                                                                 <option value="<?= $choice['user_id'] ?>"
-                                                                    <?= ($selectedId == $choice['user_id']) ? "selected" : "" ?>>
+                                                                    <?= ($choice['user_id'] == $person['id']) ? "selected" : "" ?>>
                                                                     <?= $choice['first_name'] . " " . $choice['last_name'] ?>
                                                                     (#<?= $choice['user_id'] ?>)
                                                                 </option>
@@ -283,15 +289,14 @@ endforeach; ?>
                                                         </select>
                                                         <i class="fa-solid fa-angle-down icon-dropdown"></i>
                                                     </div>
+
                                                 </div>
                                             </td>
-                                            <td class="text-center">
-                                                <button type="button" class="btn btn-danger removeRow">X</button>
-                                            </td>
+                                            <td class="text-center"><button type="button"
+                                                    class="btn btn-danger removeRow">X</button></td>
                                         </tr>
                                     <?php endforeach; ?>
                                 <?php else: ?>
-
                                     <tr>
                                         <td>
                                             <div class="col-md-9">
@@ -314,7 +319,6 @@ endforeach; ?>
                                         <td class="text-center"><button type="button"
                                                 class="btn btn-danger removeRow">X</button></td>
                                     </tr>
-
                                 <?php endif; ?>
 
                             </tbody>
@@ -436,7 +440,29 @@ endforeach; ?>
         });
     });
 
-    const originalRowCount = <?= ($count_assign == 0) ? 1 : $count_assign ?>;
+    document.getElementById("assignForm").addEventListener("submit", function(e) {
+
+        const formData = new FormData(this);
+        const data = {};
+
+        formData.forEach((
+            value,
+            key
+        ) => {
+            if (value === "") return; // 🚨 ADD THIS
+
+            if (data[key]) {
+                data[key].push(value);
+            } else {
+                data[key] = [value];
+            }
+        });
+        localStorage.setItem("assign_old_input", JSON.stringify(data));
+    });
+
+    document.addEventListener("DOMContentLoaded", function() {
+        restoreAssignForm();
+    });
 
     let originalAssignTableHTML;
 
@@ -444,22 +470,12 @@ endforeach; ?>
         originalAssignTableHTML = document.querySelector("#assignTableDynamic tbody").innerHTML;
     });
 
-    document.querySelectorAll('.edit_assign_person').forEach(function(modal) {
-        modal.addEventListener('hidden.bs.modal', function() {
-            fetch("<?= base_url('tickets/clear_session') ?>", {
-                method: "POST"
-            });
-            this.querySelector('form').reset();
-            // remove added rows only (not DB rows)
-            const rows = document.querySelectorAll("#assignTableDynamic tbody tr");
-
-            rows.forEach((row, index) => {
-                if (index >= originalRowCount) {
-                    row.remove();
-                }
-            });
-            updateSelectOptions();
-        });
+    document.getElementById("edit_assign_person").addEventListener('hidden.bs.modal', function() {
+        localStorage.removeItem("assign_old_input");
+        this.querySelector('form').reset();
+        //Restore Original DB rows
+        document.querySelector("#assignTableDynamic tbody").innerHTML = originalAssignTableHTML;
+        updateSelectOptions();
     });
 
     document.addEventListener("DOMContentLoaded", function() {
@@ -472,11 +488,7 @@ endforeach; ?>
         }
     });
 
-    // ADD ROW
-    document.getElementById("addRow").addEventListener("click", () => {
-        let assignTable = document.querySelector("#assignTableDynamic tbody");
-
-        let assignRow = `
+    let assignRow = `
             <tr>
                 <td>
                     <div class="col-md-9">
@@ -500,9 +512,14 @@ endforeach; ?>
                         class="btn btn-danger removeRow">X</button></td>
             </tr>`;
 
+    // ADD ROW
+    document.getElementById("addRow").addEventListener("click", () => {
+        let assignTable = document.querySelector("#assignTableDynamic tbody");
+
+
+
         assignTable.insertAdjacentHTML("beforeend", assignRow);
         updateSelectOptions();
-
     });
 
     // REMOVE ROW
@@ -514,7 +531,7 @@ endforeach; ?>
     })
 
     function updateSelectOptions() {
-        const selects = document.querySelectorAll(".edit_assign_person select[name='employeeName[]']")
+        const selects = document.querySelectorAll(".edit_assign_person select[name='employeeName[]']");
 
         //collect all selected values 
         const selectedValues = Array.from(selects)
@@ -536,6 +553,59 @@ endforeach; ?>
                 }
             })
         })
+    }
+
+    function restoreAssignForm() {
+        const old = JSON.parse(localStorage.getItem("assign_old_input") || "{}");
+
+        if (!old || Object.keys(old).length === 0) return;
+
+        const tbody = document.querySelector("#assignTableDynamic tbody");
+
+        // tbody.innerHTML = "";
+
+        if (old.employeeName) {
+            old.employeeName.forEach(val => {
+                let row = `
+            <tr>
+                <td>
+                    <div class="col-md-9">
+                        <div class="input-wrapper">
+                            <select name="employeeName[]" class="form-control">
+                                <option value="">- Select person to be assigned -</option>
+                                <?php foreach ($all_assigned as $choice): ?>
+                                    <option value="<?= $choice['user_id'] ?>">
+                                        <?= $choice['first_name'] . " " . $choice['last_name'] ?>
+                                        (#<?= $choice['user_id'] ?>)
+                                    </option>
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
+                    </div>
+                </td>
+                <td class="text-center">
+                    <button type="button" class="btn btn-danger removeRow">X</button>
+                </td>
+            </tr>`;
+
+                tbody.insertAdjacentHTML("beforeend", row);
+            });
+
+            const selects = document.querySelectorAll("select[name='employeeName[]']");
+            old.employeeName.forEach((val, i) => {
+                if (selects[i]) selects[i].value = val;
+            });
+        }
+
+        if (old.expectedStart) {
+            document.querySelector("input[name='expectedStart']").value = old.expectedStart[0];
+        }
+
+        if (old.expectedEnd) {
+            document.querySelector("input[name='expectedEnd']").value = old.expectedEnd[0];
+        }
+
+        updateSelectOptions();
     }
 </script>
 

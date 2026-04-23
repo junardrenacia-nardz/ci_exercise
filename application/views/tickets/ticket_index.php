@@ -20,7 +20,7 @@
                 $inCharge = ""; ?>
                 <?php foreach ($ticket_assigned as $assigned): ?>
                     <?php if ($ticket['ticket_id'] == $assigned['ticket_id']): ?>
-                        <?php $inCharge = $ticket['department_name'];
+                        <?php $inCharge = $assigned['department_name'];
                         $count_assign++ ?>
                     <?php endif; ?>
                 <?php endforeach; ?>
@@ -39,7 +39,7 @@
                     <td class="align-middle">
                         <?php if ($count_assign != 0) : ?>
                             <div class="text-center fw-bold">
-                                <?= get_abbreviation($inCharge) . " ($count_assign)" ?>
+                                <?= get_abbreviation($ticket['department_name']) . " ($count_assign)" ?>
                             </div>
                         <?php elseif ($ticket['ticket_status'] == "For Approval"): ?>
                             <div class="text-center"><b>-</b></div>
@@ -89,7 +89,7 @@ function get_abbreviation($string) {
             },
             stateSave: true,
             dom: 'f t<"bottom"l p i>',
-            pageLength: 5,
+            pageLength: 10,
             pagingType: "simple_numbers",
             layout: {
                 topStart: null,

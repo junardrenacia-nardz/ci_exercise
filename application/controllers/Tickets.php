@@ -19,7 +19,7 @@ class Tickets extends CI_Controller {
         }
         $employee_id = $this->session->userdata('employee_id');
         $data['logged_user'] = $this->user_model->get_employee_details($employee_id);
-        $data['title'] = 'My Ticket';
+        $data['title'] = 'My Tickets';
 
         $data['ticket_details'] = $this->ticket_model->get_tickets();
         $data['ticket_assigned'] = $this->ticket_model->get_ticket_assigned();
@@ -34,7 +34,7 @@ class Tickets extends CI_Controller {
         }
         $employee_id = $this->session->userdata('employee_id');
         $data['logged_user'] = $this->user_model->get_employee_details($employee_id);
-        $data['title'] = 'Ticket Detail';
+        $data['title'] = 'Ticket Details';
         $data['departments'] = $this->department_model->get_departments();
         $data['ticket'] = $this->ticket_model->get_tickets($ticket_id);
         $data['ticket_assigned'] = $this->ticket_model->get_ticket_assigned();
@@ -127,6 +127,11 @@ class Tickets extends CI_Controller {
     }
 
     public function assign_ticket($ticket_id) {
+        if (!$this->session->userdata('logged_in')) {
+            redirect('users');
+        }
+        $user_id = $this->session->userdata('user_id');
+
         $names = $this->input->post('employeeName') ?? []; // This is an array
         if (empty($names)) {
             // force validation failure
@@ -159,11 +164,20 @@ class Tickets extends CI_Controller {
                 'type' => 'success', // or 'success'
                 'text' => "New individual(s) assigned to $ticket_id"
             ]);
+
+            if ($this->input->post('prev_id')) {
+                $prevId = $this->input->post('prev_id');
+                $this->ticket_model->assign_person($names, $ticket_id, $prevId);
+                return redirect('tickets/view_ticket/' . $ticket_id);
+            }
+
+            $this->ticket_model->assign_person($names, $ticket_id);
             return redirect('tickets/view_ticket/' . $ticket_id);
         }
     }
 
     public function clear_session() {
-        return $this->session->unset_userdata('old_input');
+        $this->session->set_flashdata('old_input', []);
+        $this->session->set_flashdata('showModal', null);
     }
 }

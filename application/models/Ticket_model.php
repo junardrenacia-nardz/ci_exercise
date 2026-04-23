@@ -61,6 +61,8 @@ class Ticket_model extends CI_Model {
         $query = $this->db->get();
         return $query->result_array();
     }
+
+
     public function create_ticket($fileNames) {
         $query = $this->db->select('ticket_id')
             ->order_by('ticket_id', 'DESC')
@@ -102,6 +104,46 @@ class Ticket_model extends CI_Model {
 
             $this->db->insert('ticket_attachments', $attachmentData);
         }
+
+        $this->db->trans_complete();
+
+        // CHECK IF SUCCESS
+        if ($this->db->trans_status() === FALSE) {
+            return false;
+        }
+    }
+
+    public function assign_person($names, $ticket_id, $users = []) {
+        $this->db->trans_start();
+        if (!empty($users)) {
+            foreach ($users as $user) {
+                $editAssigned = [
+                    "person_status" => "Reassigned",
+                    "task_status" => "Removed"
+                ];
+
+                $this->db->where('user_id', $user);
+                $this->db->update('ticket_assigned', $editAssigned);
+            }
+        }
+
+        foreach ($names as $name) {
+            $assigndata = [
+                "ticket_id" => $ticket_id,
+                "user_id" => $name,
+                "person_status" => "Assigned",
+                "task_status" => "Pending"
+            ];
+            $this->db->insert('ticket_assigned', $assigndata);
+        }
+
+        $ticketUpdate = [
+            "expected_start_date" => $this->input->post("expectedStart"),
+            "expected_resolved_date" => $this->input->post("expectedEnd")
+        ];
+
+        $this->db->where("ticket_id", $ticket_id);
+        $this->db->update("ticket_details", $ticketUpdate);
 
         $this->db->trans_complete();
 
