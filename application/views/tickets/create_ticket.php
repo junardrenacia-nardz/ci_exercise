@@ -1,7 +1,8 @@
 <div class="d-flex justify-content-center w-100 new-ticket-container">
     <div class="rounded-3 p-4" style="background-color: #f2f2f2; width: 1100px;">
         <h5><i class="fa-solid fa-ticket mb-3 me-2"></i> New Ticket</h5>
-        <form action="<?php ?>" id="createNewTicket" method="POST" enctype="multipart/form-data">
+        <form action="<?php base_url('tickets/createTicket') ?>" id="createNewTicket" method="POST"
+            enctype="multipart/form-data">
             <div class="row">
                 <div class="col-md-8 col-sm-12 pe-3">
                     <div class="col-sm-12 form-group">

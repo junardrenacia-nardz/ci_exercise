@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="<?= base_url(); ?>assets/css/bootstrap.css">
     <link rel="stylesheet" href="<?= base_url(); ?>assets/css/style.css">
+    <link rel="stylesheet" href="<?= base_url(); ?>assets/css/process-nav.css">
     <link rel="stylesheet" href="<?= base_url(); ?>assets/css/dataTable-style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
         referrerpolicy="no-referrer" />
@@ -41,16 +42,18 @@
                 </li>
 
                 <li class="sidebar-item">
-                    <a href="#" class="sidebar-link collapsed has-dropdown" data-bs-toggle="collapse"
+                    <a href="#" class="sidebar-link has-dropdown" data-bs-toggle="collapse"
                         data-bs-target="#ticket-items" aria-expanded="true" aria-controls="ticket-items">
                         <i class="fa-solid fa-ticket"></i>
                         <span>Tickets</span>
                     </a>
-                    <ul class="sidebar-dropdown list-unstyled collapse" id="ticket-items" data-bs-parent="#sidebar">
+                    <ul class="sidebar-dropdown list-unstyled collapse show" id="ticket-items">
                         <li class="sidebar-item">
-                            <a href="<?= base_url() ?>tickets" class="sidebar-link"><i class="fa-regular fa-user"></i>My
-                                Ticket</a>
-                            <a href="#" class="sidebar-link"><i class="fa-solid fa-users"></i>All</a>
+                            <a href="" class="sidebar-link"><i class="fa-regular fa-user"></i>My
+                                Tickets</a>
+                            <a href="<?= base_url("tickets/all") ?>" class="sidebar-link"><i
+                                    class="fa-solid fa-users"></i>All
+                                Tickets</a>
                         </li>
                     </ul>
                 </li>
@@ -66,15 +69,15 @@
                 </li> -->
 
                 <li class="sidebar-item">
-                    <a href="#" class="sidebar-link collapsed has-dropdown" data-bs-toggle="collapse"
+                    <a href="#" class="sidebar-link has-dropdown" data-bs-toggle="collapse"
                         data-bs-target="#history-item" aria-expanded="true" aria-controls="history-item">
                         <i class="fa-solid fa-hourglass"></i>
                         <span>Reports</span>
                     </a>
-                    <ul class="sidebar-dropdown list-unstyled collapse" id="history-item" data-bs-parent="#sidebar">
+                    <ul class="sidebar-dropdown list-unstyled collapse show" id="history-item">
                         <li class="sidebar-item">
                             <a href="#" class="sidebar-link"><i class="fa-solid fa-check"></i>Completed</a>
-                            <a href="#" class="sidebar-link"><i class="fa-solid fa-xmark"></i>Undone</a>
+                            <a href="#" class="sidebar-link"><i class="fa-solid fa-xmark"></i>On Going</a>
                         </li>
                     </ul>
                 </li>

@@ -1,0 +1,35 @@
+.process-header .process-list {
+	padding: 0 20px 6px 20px;
+	margin: 0 4px;
+	margin-bottom: 10px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.process-header .process-list span {
+	filter: opacity(0.6);
+}
+
+.process-header .process-list a {
+	font-weight: 700;
+	color: #999;
+}
+
+.process-header .process-list.active {
+	border-bottom: 4px solid rgb(79, 139, 217);
+}
+
+.process-header .process-list:hover {
+	border-bottom: 4px solid rgb(135, 164, 201);
+	filter: opacity(1);
+}
+
+.process-header .process-list a:hover,
+.process-header .process-list.active a {
+	color: black;
+}
+
+.process-header .process-list.active span {
+	filter: opacity(1);
+}

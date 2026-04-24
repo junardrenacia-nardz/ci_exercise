@@ -13,19 +13,53 @@
  */
 
 class Tickets extends CI_Controller {
-    public function index() {
+    public function index($status) {
         if (!$this->session->userdata('logged_in')) {
             redirect('users');
         }
         $employee_id = $this->session->userdata('employee_id');
         $data['logged_user'] = $this->user_model->get_employee_details($employee_id);
-        $data['title'] = 'My Tickets';
+        $data['title'] = 'Tickets';
 
         $data['ticket_details'] = $this->ticket_model->get_tickets();
         $data['ticket_assigned'] = $this->ticket_model->get_ticket_assigned();
-        $this->load->view('templates/header', $data);
-        $this->load->view('tickets/ticket_index', $data);
-        $this->load->view('templates/footer');
+        if ($status == "all") {
+            $data['activeAll'] = true;
+            $this->load->view('templates/header', $data);
+            $this->load->view('templates/process_header', $data);
+            $this->load->view('tickets/ticket_index', $data);
+            $this->load->view('templates/footer');
+        } else if ($status == "approval") {
+            $data['activeApproval'] = true;
+            $this->load->view('templates/header', $data);
+            $this->load->view('templates/process_header', $data);
+            $this->load->view('tickets/process-tickets/ticket_approval', $data);
+            $this->load->view('templates/footer');
+        } else if ($status == "open") {
+            $data['activeOpen'] = true;
+            $this->load->view('templates/header', $data);
+            $this->load->view('templates/process_header', $data);
+            $this->load->view('tickets/process-tickets/ticket_open', $data);
+            $this->load->view('templates/footer');
+        } else if ($status == "pending") {
+            $data['activePending'] = true;
+            $this->load->view('templates/header', $data);
+            $this->load->view('templates/process_header', $data);
+            $this->load->view('tickets/process-tickets/ticket_pending', $data);
+            $this->load->view('templates/footer');
+        } else if ($status == "ongoing") {
+            $data['activeOnGoing'] = true;
+            $this->load->view('templates/header', $data);
+            $this->load->view('templates/process_header', $data);
+            $this->load->view('tickets/process-tickets/ticket_ongoing', $data);
+            $this->load->view('templates/footer');
+        } else if ($status == "testing") {
+            $data['activeTesting'] = true;
+            $this->load->view('templates/header', $data);
+            $this->load->view('templates/process_header', $data);
+            $this->load->view('tickets/process-tickets/ticket_testing', $data);
+            $this->load->view('templates/footer');
+        }
     }
 
     public function view_ticket($ticket_id) {
@@ -155,7 +189,7 @@ class Tickets extends CI_Controller {
                 'type' => 'danger', // or 'success'
                 'text' => "Assigning to $ticket_id failed"
             ]);
-            // ✅ SAVE FORM DATA
+
             $this->session->set_flashdata('old_input', $this->input->post());
             return redirect('tickets/view_ticket/' . $ticket_id);
         } else {
@@ -176,8 +210,8 @@ class Tickets extends CI_Controller {
         }
     }
 
-    public function clear_session() {
-        $this->session->set_flashdata('old_input', []);
-        $this->session->set_flashdata('showModal', null);
+    public function clear_assign_modal_state() {
+        $this->session->unset_userdata('old_input');
+        $this->session->unset_userdata('showModal');
     }
 }

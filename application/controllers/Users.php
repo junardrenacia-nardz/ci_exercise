@@ -35,7 +35,7 @@ class Users extends CI_Controller {
 
                 $this->session->set_userdata($user_data);
                 $this->session->set_flashdata('user_loggedin', 'You are now logged in');
-                redirect('tickets');
+                redirect('tickets/all');
             } else {
                 $this->session->set_flashdata('login_failed', 'Password is incorrect. Login is invalid');
                 $this->load->view('users/login', $data);

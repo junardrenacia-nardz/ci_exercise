@@ -50,11 +50,11 @@ defined('BASEPATH') or exit('No direct script access allowed');
 |		my-controller/my-method	-> my_controller/my_method
 */
 // Tickets
-$route['tickets'] = 'tickets/index';
-$route['tickets/createTicket'] = 'tickets/createTicket';
+$route['tickets/(:any)'] = 'tickets/index/$1';
 $route['tickets/view_ticket/(:any)'] = 'tickets/view_ticket/$1';
 $route['tickets/reassign_department/(:any)'] = 'tickets/reassign_department/$1';
 $route['tickets/assign_ticket/(:any)'] = 'tickets/assign_ticket/$1';
+$route['tickets/clear_assign_modal_state'] = 'tickets/clear_assign_modal_state';
 
 $route['users'] = 'users/login';
 

@@ -122,7 +122,7 @@ class Ticket_model extends CI_Model {
                     "task_status" => "Removed"
                 ];
 
-                $this->db->where('user_id', $user);
+                $this->db->where(['user_id' => $user, "ticket_id" => $ticket_id]);
                 $this->db->update('ticket_assigned', $editAssigned);
             }
         }
