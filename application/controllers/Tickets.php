@@ -13,7 +13,7 @@
  */
 
 class Tickets extends CI_Controller {
-    public function index($status) {
+    public function index($status = "") {
         if (!$this->session->userdata('logged_in')) {
             redirect('users');
         }
@@ -23,6 +23,7 @@ class Tickets extends CI_Controller {
 
         $data['ticket_details'] = $this->ticket_model->get_tickets();
         $data['ticket_assigned'] = $this->ticket_model->get_ticket_assigned();
+        $data['departments'] = $this->department_model->get_departments();
         if ($status == "all") {
             $data['activeAll'] = true;
             $this->load->view('templates/header', $data);
@@ -59,6 +60,12 @@ class Tickets extends CI_Controller {
             $this->load->view('templates/process_header', $data);
             $this->load->view('tickets/process-tickets/ticket_testing', $data);
             $this->load->view('templates/footer');
+        } else if ($status == "closed") {
+            $data['activeClosed'] = true;
+            $this->load->view('templates/header', $data);
+            $this->load->view('templates/process_header', $data);
+            $this->load->view('tickets/process-tickets/ticket_closed', $data);
+            $this->load->view('templates/footer');
         }
     }
 
@@ -79,6 +86,7 @@ class Tickets extends CI_Controller {
     }
 
     public function createTicket() {
+
         if (!$this->session->userdata('logged_in')) {
             redirect('users');
         }

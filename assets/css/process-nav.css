@@ -1,35 +1,87 @@
-.process-header .process-list {
-	padding: 0 20px 6px 20px;
-	margin: 0 4px;
-	margin-bottom: 10px;
+.row-cols-7 {
 	display: flex;
-	justify-content: center;
+	justify-content: space-between;
+}
+
+.row-cols-7 > * {
+	flex: 0 0 auto;
+	width: calc(100% / 7.8);
+}
+
+.row-cols-7 .col {
+	background: var(--card);
+	border: 1px solid var(--border);
+	border-radius: 12px;
+	padding: 12px 16px;
+	transition: all 0.2s ease-in-out;
+}
+
+.row-cols-7 .col:hover {
+	background: var(--primary-light);
+	border-color: var(--primary);
+}
+
+.row-cols-7 .col a {
+	display: flex;
+	justify-content: space-between;
 	align-items: center;
+	text-decoration: none;
 }
 
-.process-header .process-list span {
-	filter: opacity(0.6);
+.row-cols-7 .col span.text {
+	font-size: 0.8rem;
+	font-weight: 600;
+	color: #888;
+	cursor: pointer;
 }
 
-.process-header .process-list a {
+.row-cols-7 .col span.count {
+	font-size: 1.3rem;
 	font-weight: 700;
-	color: #999;
+	color: #555;
+	cursor: pointer;
 }
 
-.process-header .process-list.active {
-	border-bottom: 4px solid rgb(79, 139, 217);
+.row-cols-7 .col.ticket-all {
+	background: var(--primary);
 }
 
-.process-header .process-list:hover {
-	border-bottom: 4px solid rgb(135, 164, 201);
-	filter: opacity(1);
+.row-cols-7 .col.ticket-all span,
+.row-cols-7 .col.ticket-all label {
+	color: white;
 }
 
-.process-header .process-list a:hover,
-.process-header .process-list.active a {
-	color: black;
+.filter_options {
+	width: 100%;
+	max-height: 0;
+	opacity: 0;
+	overflow: hidden;
+	transition:
+		max-height 0.5s ease,
+		opacity 0.5s ease;
 }
 
-.process-header .process-list.active span {
-	filter: opacity(1);
+.filter_options.collapsed {
+	max-height: 300px; /* adjust based on content */
+	opacity: 1;
+}
+/* keep filter_specific beside search */
+.dt-search .filter_specific {
+	order: 0;
+}
+
+/* search input group below */
+.dt-search .dataTables_filter {
+	order: 2;
+	flex-basis: 100%; /* forces new line */
+}
+
+.dt-search .filter_options {
+	order: 3;
+	flex-basis: 100%;
+}
+
+.filter_options form select,
+.filter_options form select option {
+	font-size: 0.8rem;
 }

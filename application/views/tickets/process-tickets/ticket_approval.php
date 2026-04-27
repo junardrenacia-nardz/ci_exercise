@@ -1,14 +1,15 @@
 <div class="container">
     <div class="table-wrapper">
 
-        <table class="table table-striped tbl-custom" id="ticketTable">
+        <table class="table tbl-custom" id="ticketTable">
             <thead>
                 <tr>
-                    <th>Aging Days</th>
+                    <th class="text-center">Aging Days</th>
                     <th>ID</th>
-                    <th>Priority</th>
+                    <th class="text-center">Priority</th>
                     <th>Subject</th>
-                    <th>PIC</th>
+                    <th>Status</th>
+                    <th class="text-center">PIC</th>
                     <th>Created By</th>
                     <th>Last Updated</th>
                     <th>Actions</th>
@@ -19,35 +20,114 @@
                     <?php foreach ($ticket_details as $ticket): ?>
                         <?php if (strtolower($ticket['ticket_status']) == strtolower("For Approval")): ?>
                             <?php $count_assign = 0;
+                            $peopleInCharge = [];
                             $inCharge = ""; ?>
                             <?php foreach ($ticket_assigned as $assigned): ?>
                                 <?php if ($ticket['ticket_id'] == $assigned['ticket_id']): ?>
                                     <?php $inCharge = $assigned['department_name'];
+                                    $peopleInCharge[] = $assigned["first_name"] . " " . $assigned["last_name"];
                                     $count_assign++ ?>
                                 <?php endif; ?>
                             <?php endforeach; ?>
                             <tr class="">
-                                <td class="align-middle"><?php $created = new DateTime($ticket['ticket_created']);
-                                                            $today = new DateTime();
+                                <td class="align-middle text-center">
+                                    <?php $created = new DateTime($ticket['ticket_created']);
+                                    $today = new DateTime();
 
-                                                            $aging = $today->diff($created)->days;
-
-                                                            echo $aging; ?>
+                                    $aging = $today->diff($created)->days;
+                                    ?>
+                                    <?php if ($aging <= 7): ?>
+                                        <div>
+                                            <span class="aging-custom aging-new"><?= $aging ?></span>
+                                        </div>
+                                    <?php elseif ($aging <= 30): ?>
+                                        <div>
+                                            <span class="aging-custom aging-mid"><?= $aging ?></span>
+                                        </div>
+                                    <?php elseif ($aging > 30): ?>
+                                        <div>
+                                            <span class="aging-custom aging-late"><?= $aging ?></span>
+                                        </div>
+                                    <?php endif; ?>
                                 </td>
                                 <td class="align-middle"><?= $ticket['ticket_id'] ?></td>
-                                <td class="align-middle"><?= $ticket['priority'] ?></td>
+                                <td class="align-middle ">
+                                    <?php if (strtolower($ticket['priority']) == strtolower("critical")): ?>
+                                        <div class="d-flex align-items-center justify-content-center">
+                                            <span class="priority-critical badge text-center"><?= ucwords($ticket['priority']) ?></span>
+                                        </div>
+                                    <?php elseif (strtolower($ticket['priority']) == strtolower("high")): ?>
+                                        <div class="d-flex align-items-center justify-content-center">
+                                            <span class="priority-high badge"><?= ucwords($ticket['priority']) ?></span>
+                                        </div>
+                                    <?php elseif (strtolower($ticket['priority']) == strtolower("medium")): ?>
+                                        <div class="d-flex align-items-center justify-content-center">
+                                            <span class="priority-medium badge"><?= ucwords($ticket['priority']) ?></span>
+                                        </div>
+                                    <?php elseif (strtolower($ticket['priority']) == strtolower("low")): ?>
+                                        <div class="d-flex align-items-center justify-content-center">
+                                            <span class="priority-low badge class"><?= ucwords($ticket['priority']) ?></span>
+                                        </div>
+                                    <?php endif; ?>
+                                </td>
                                 <td class="align-middle"><?= $ticket['ticket_name'] ?></td>
                                 <td class="align-middle">
-                                    <?php if ($count_assign != 0) : ?>
-                                        <div class="text-center fw-bold">
-                                            <?= get_abbreviation($ticket['department_name']) . " ($count_assign)" ?>
+                                    <?php if (
+                                        strtolower($ticket['ticket_status']) == strtolower("for approval") ||
+                                        strtolower($ticket['ticket_status']) == strtolower("open")
+                                    ): ?>
+                                        <div class="d-flex align-items-center">
+                                            <div class="status-red"></div>
+                                            <span class="text-center"><?= ucwords($ticket['ticket_status']) ?>
+                                            </span>
                                         </div>
-                                    <?php elseif ($ticket['ticket_status'] == "For Approval"): ?>
+                                    <?php elseif (
+                                        strtolower($ticket['ticket_status']) == strtolower("pending") ||
+                                        strtolower($ticket['ticket_status']) == strtolower("on going")
+                                    ): ?>
+                                        <div class="d-flex align-items-center">
+                                            <div class="status-orange"></div>
+                                            <span class="text-center"><?= ucwords($ticket['ticket_status']) ?>
+                                            </span>
+                                        </div>
+                                    <?php elseif (strtolower($ticket['ticket_status']) == strtolower("for testing")): ?>
+                                        <div class="d-flex align-items-center">
+                                            <div class="status-blue"></div>
+                                            <span class="text-center"><?= ucwords($ticket['ticket_status']) ?>
+                                            </span>
+                                        </div>
+                                    <?php elseif (strtolower($ticket['priority']) == strtolower("closed")): ?>
+                                        <div class="d-flex align-items-center">
+                                            <div class="status-green"></div>
+                                            <span class="text-center"><?= ucwords($ticket['ticket_status']) ?>
+                                            </span>
+                                        </div>
+                                    <?php endif; ?>
+                                </td>
+                                <td class="align-middle">
+                                    <?php if ($count_assign != 0) : ?>
+                                        <?php if ($count_assign == 1): ?>
+                                            <div class="text-center fw-bold">
+                                                <?php foreach ($peopleInCharge as $pic): ?>
+                                                    <?php echo $pic ?>
+                                                <?php endforeach ?>
+                                            </div>
+                                        <?php else: ?>
+                                            <div class="text-center fw-bold has-tooltip" title="
+                                    <?php foreach ($peopleInCharge as $pic): ?>
+                                            <?php echo "$pic, "  ?>
+                                        <?php endforeach ?>
+                                    ">
+                                                <?= get_abbreviation($ticket['department_name']) . " ($count_assign)" ?>
+                                            </div>
+                                        <?php endif; ?>
+
+                                    <?php elseif (strtolower($ticket['ticket_status']) == strtolower("For Approval")): ?>
                                         <div class="text-center"><b>-</b></div>
                                     <?php
                                     elseif ($count_assign === 0): ?>
                                         <div class="text-center">
-                                            <a href="" class="btn btn-outline-primary fw-bold rounded-5 p-2 py-1"><i
+                                            <a href="" class="btn btn-assign fw-bold rounded-5 p-2 py-1"><i
                                                     class="fa-solid fa-plus"></i>
                                                 Assign</a>
                                         </div>
@@ -86,30 +166,5 @@ function get_abbreviation($string) {
 }
 ?>
 <script>
-    $(document).ready(function() {
-        $('#ticketTable').DataTable({
-            order: [
-                [0, 'asc']
-            ],
-            initComplete: function() {
-                $('.dt-search input').attr('placeholder', 'Keyword');
-            },
-            stateSave: true,
-            dom: 'f t<"bottom"l p i>',
-            pageLength: 10,
-            pagingType: "simple_numbers",
-            layout: {
-                topStart: null,
-                topEnd: 'search',
-                top: {
-                    start: null,
-                    end: null
-                }
-            }
-        });
 
-        // Move search bar into custom container
-        $('.dt-search').append($('.dataTables_filter'));
-    });
-    $.fn.dataTable.version
 </script>

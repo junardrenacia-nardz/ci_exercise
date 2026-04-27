@@ -4,20 +4,53 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- =======================
+         CSS (LOCAL STYLES)
+    ======================== -->
     <link rel="stylesheet" href="<?= base_url(); ?>assets/css/bootstrap.css">
     <link rel="stylesheet" href="<?= base_url(); ?>assets/css/style.css">
+    <link rel="stylesheet" href="<?= base_url(); ?>assets/css/ticket-list.css">
     <link rel="stylesheet" href="<?= base_url(); ?>assets/css/process-nav.css">
     <link rel="stylesheet" href="<?= base_url(); ?>assets/css/dataTable-style.css">
+
+    <!-- =======================
+         ICONS
+    ======================== -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
         referrerpolicy="no-referrer" />
+
+    <!-- =======================
+         JQUERY + UI
+    ======================== -->
     <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
     <script src="https://code.jquery.com/ui/1.14.2/jquery-ui.js"></script>
-    <link rel="stylesheet" href="https://cdn.datatables.net/2.3.0/css/dataTables.dataTables.css">
-    <script src="https://cdn.datatables.net/2.3.0/js/dataTables.min.js"></script>
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.14.2/themes/base/jquery-ui.css">
-    <!-- <link rel="stylesheet" href="../css/dataTable-styles.css"> -->
-    <title><?php echo $title
-            ?></title>
+
+    <!-- =======================
+         DATATABLES CORE
+    ======================== -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/2.3.0/css/dataTables.dataTables.min.css">
+    <script src="https://cdn.datatables.net/2.3.0/js/dataTables.min.js"></script>
+
+    <!-- =======================
+         DATATABLES BUTTONS (EXPORT)
+    ======================== -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.2/css/buttons.dataTables.min.css">
+
+    <script src="https://cdn.datatables.net/buttons/2.4.2/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.html5.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.print.min.js"></script>
+
+    <!-- =======================
+         EXPORT DEPENDENCIES
+    ======================== -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
+
+    <title><?= $title ?></title>
 </head>
 
 <body>
@@ -49,17 +82,16 @@
                     </a>
                     <ul class="sidebar-dropdown list-unstyled collapse show" id="ticket-items">
                         <li class="sidebar-item">
-                            <a href="" class="sidebar-link"><i class="fa-regular fa-user"></i>My
-                                Tickets</a>
+                            <a href="" class="sidebar-link"><i class="fa-regular fa-user"></i>
+                                <span>My Tickets</span></a>
                             <a href="<?= base_url("tickets/all") ?>" class="sidebar-link"><i
-                                    class="fa-solid fa-users"></i>All
-                                Tickets</a>
+                                    class="fa-solid fa-users"></i><span>All Tickets</span> </a>
                         </li>
                     </ul>
                 </li>
                 <li class="sidebar-item">
                     <a href="#" class="sidebar-link">
-                        <i class="fa-solid fa-layer-group"></i><span>Categories</span>
+                        <i class="fa-solid fa-building"></i><span>Department</span>
                     </a>
                 </li>
                 <!-- <li class="sidebar-item">
@@ -76,8 +108,8 @@
                     </a>
                     <ul class="sidebar-dropdown list-unstyled collapse show" id="history-item">
                         <li class="sidebar-item">
-                            <a href="#" class="sidebar-link"><i class="fa-solid fa-check"></i>Completed</a>
-                            <a href="#" class="sidebar-link"><i class="fa-solid fa-xmark"></i>On Going</a>
+                            <a href="#" class="sidebar-link"><i class="fa-solid fa-check"></i><span>Completed</span></a>
+                            <a href="#" class="sidebar-link"><i class="fa-solid fa-xmark"></i><span>On Going</span></a>
                         </li>
                     </ul>
                 </li>
@@ -103,10 +135,10 @@
                 </div>
 
                 <div class="d-flex align-items-center">
-                    <a href="<?= base_url() ?>tickets/createTicket" id="createTicket"
-                        class="btn btn-primary rounded-5 text-nowrap mx-1" type="button">
+                    <a href="<?= base_url("create_ticket") ?>" id="createTicket"
+                        class="btn btn-create-ticket rounded-5 text-nowrap mx-1" type="button">
                         <i class="fa-solid fa-ticket me-2"></i>
-                        Create Ticket</a>
+                        <span>Create Ticket</span></a>
                     <div class="input-group">
                         <input id="input-search-all" type="text" class="form-control rounded-5" placeholder="Search">
                         <button class="search-btn-all btn rounded-5 mx-1 p-2 px-3">

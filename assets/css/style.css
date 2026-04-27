@@ -1,5 +1,81 @@
 @import url("https://fonts.googleapis.com/css2?family=Saira+Stencil:ital,wght@0,100..900;1,100..900&display=swap");
 
+:root {
+	/* =========================
+       PRIMARY (Indigo system)
+    ========================== */
+	--primary: #4f46e5;
+	--primary-hover: #4338ca;
+	--primary-active: #3730a3;
+	--primary-light: #eef2ff;
+	--primary-soft: #e0e7ff;
+
+	/* =========================
+       BACKGROUND SYSTEM
+    ========================== */
+	--bg: #f8fafc;
+	--bg-alt: #f1f5f9;
+	--card: #ffffff;
+	--overlay: rgba(15, 23, 42, 0.6);
+
+	/* =========================
+       TEXT SYSTEM
+    ========================== */
+	--text: #1f2937;
+	--text-heading: #111827;
+	--text-muted: #6b7280;
+	--text-subtle: #9ca3af;
+
+	/* =========================
+       BORDER SYSTEM
+    ========================== */
+	--border: #e5e7eb;
+	--border-hover: #d1d5db;
+	--border-dark: #cbd5e1;
+
+	/* =========================
+       STATUS COLORS
+    ========================== */
+	--success: #22c55e;
+	--success-light: #dcfce7;
+	--success-dark: #15803d;
+
+	--warning: #f59e0b;
+	--warning-light: #fef3c7;
+	--warning-dark: #b45309;
+
+	--danger: #ef4444;
+	--danger-light: #fee2e2;
+	--danger-dark: #b91c1c;
+
+	/* =========================
+       INFO / BLUE SYSTEM
+    ========================== */
+	--blue: #1d92eb;
+	--blue-hover: #1579c7;
+	--blue-light: #e0f2fe;
+
+	/* =========================
+       NEUTRAL ACCENTS
+    ========================== */
+	--gray-50: #f9fafb;
+	--gray-100: #f3f4f6;
+	--gray-200: #e5e7eb;
+	--gray-300: #d1d5db;
+	--gray-400: #9ca3af;
+	--gray-500: #6b7280;
+	--gray-600: #4b5563;
+	--gray-700: #374151;
+	--gray-800: #1f2937;
+	--gray-900: #111827;
+}
+
+/* PRIORITIES */
+
+body {
+	background-color: var(--bg);
+}
+
 /* SIDEBAR STYLING  */
 aside li {
 	list-style: none;
@@ -150,7 +226,8 @@ a.sidebar-link:hover {
 	top: 0;
 	z-index: 900;
 	width: 100%;
-	background-color: white;
+	background: #f8fafc;
+	border-bottom: 1px solid #e5e7eb;
 	padding: 0;
 	height: 66px;
 }
@@ -220,54 +297,9 @@ a#notifications:hover {
 	color: gray;
 }
 
-/* TABLES Design */
-.tbl-custom,
-.tbl-custom a {
-	font-size: 0.75rem;
-}
-
-.tbl-custom thead tr th {
-	text-align: center;
-}
-
-.information-tickets .ticket-subject .subject {
-	font-size: 1.3rem;
-	font-weight: bold;
-}
-
-.information-tickets .badge-ticket,
-.information-tickets .ticket-subject .badge-ticket {
-	color: rgb(5, 119, 212);
-	font-size: 0.65rem;
-	background-color: rgba(123, 170, 228, 0.397);
-}
-
-.information-tickets .detail-title span {
-	font-size: 1rem;
-}
-
-.information-tickets .details .person-in-charge,
-.information-tickets .ticket-subject span,
-.information-tickets #ticket_id,
-.information-tickets .title,
-.information-tickets .dates,
-.information-tickets .ticket_description,
-.comment-contents .comment {
-	font-size: 0.8rem;
-}
-
-#modal_assign_person,
-#edit_assign_person table select,
-#edit_assign_person table .removeRow,
-#edit_assign_person input[type="date"],
-#edit_assign_person #addRow,
-#edit_assign_person label,
-#edit_assign_person th {
-	font-size: 0.9rem;
-}
-
-.information-tickets .dates span {
-	margin: 2px 0 10px 0;
+.btn-create-ticket {
+	background-color: var(--primary);
+	color: var(--primary-light);
 }
 
 .custom-tooltip.ui-tooltip {
@@ -281,18 +313,12 @@ a#notifications:hover {
 	max-width: 220px;
 }
 
-.comment-contents {
-	max-height: 60vh;
-	overflow-y: auto;
-}
-
-.fileList-col {
-	max-height: 25vh;
-	overflow-y: auto;
-}
-
 #alertMessage-col {
 	z-index: 9999;
+}
+
+.container {
+	max-width: 70vw;
 }
 
 @media (max-width: 760px) {

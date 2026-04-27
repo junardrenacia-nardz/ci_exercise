@@ -1,25 +1,191 @@
-    <div class="process-header navbar">
-        <ul class="nav list-unstyled ps-0 w-100  d-flex justify-content-center">
-            <li class="process-list <?= isset($activeAll) && $activeAll ? "active" : "" ?>"><a
-                    href="<?= base_url("tickets/all") ?>">All
-                    <span class="badge bg-primary">90</span></a></li>
-            <li class="process-list <?= isset($activeApproval) && $activeApproval ? "active" : "" ?>"><a
-                    href="<?= base_url("tickets/approval") ?>">Approval
-                    <span class="badge bg-primary">90</span></a>
-            </li>
-            <li class="process-list <?= isset($activeOpen) && $activeOpen ? "active" : "" ?>"><a
-                    href="<?= base_url("tickets/open") ?>">To
-                    Assign <span class="badge bg-primary">90</span></a></li>
-            <li class="process-list <?= isset($activePending) && $activePending ? "active" : "" ?>"><a
-                    href="<?= base_url("tickets/pending") ?>">Assigned
-                    <span class="badge bg-primary">90</span></a></li>
-            <li class="process-list <?= isset($activeOnGoing) && $activeOnGoing ? "active" : "" ?>"><a
-                    href="<?= base_url("tickets/ongoing") ?>">On Going
-                    <span class="badge bg-primary">90</span></a></li>
-            <li class="process-list <?= isset($activeTesting) && $activeTesting ? "active" : "" ?>"><a
-                    href="<?= base_url("tickets/testing") ?>">Testing
-                    <span class="badge bg-primary">90</span></a></li>
-            <li class="process-list <?= isset($activeClosed) && $activeClosed ? "active" : "" ?>"><a href="">Closed
-                    <span class="badge bg-primary">90</span></a></li>
-        </ul>
+    <?php
+        $count_all = 0;
+        $count_approval = 0;
+        $count_open = 0;
+        $count_pending = 0;
+        $count_ongoing = 0;
+        $count_testing = 0;
+        $count_closed = 0;
+        ?>
+    <div class="container dataTables_filter">
+            <div class="row row-cols-7 mx-0 px-0 g-0 w-100 my-2">
+                    <div class="col">
+                            <a href="<?= base_url("tickets/approval") ?>">
+                                    <span class="text">For Approval</span>
+                                    <span class="count">
+                                            <?php foreach ($ticket_details as $ticket) {
+                                                        if (strtolower($ticket['ticket_status']) == strtolower("For Approval")) {
+                                                                $count_approval++;
+                                                        }
+                                                }
+                                                echo $count_approval; ?>
+                                    </span>
+                            </a>
+                    </div>
+                    <div class="col">
+                            <a href="<?= base_url("tickets/open") ?>">
+                                    <span class="text">To Assign</span>
+                                    <span class="count">
+                                            <?php foreach ($ticket_details as $ticket) {
+                                                        if (strtolower($ticket['ticket_status']) == strtolower("open")) {
+                                                                $count_open++;
+                                                        }
+                                                }
+                                                echo $count_open; ?>
+                                    </span>
+                            </a>
+                    </div>
+                    <div class="col">
+                            <a href="<?= base_url("tickets/pending") ?>">
+                                    <span class="text">Assigned</span>
+                                    <span class="count">
+                                            <?php foreach ($ticket_details as $ticket) {
+                                                        if (strtolower($ticket['ticket_status']) == strtolower("pending")) {
+                                                                $count_pending++;
+                                                        }
+                                                }
+                                                echo $count_pending; ?>
+                                    </span>
+                            </a>
+                    </div>
+                    <div class="col">
+                            <a href="<?= base_url("tickets/ongoing") ?>">
+                                    <span class="text">On Going</span>
+                                    <span class="count">
+                                            <?php foreach ($ticket_details as $ticket) {
+                                                        if (strtolower($ticket['ticket_status']) == strtolower("on going")) {
+                                                                $count_ongoing++;
+                                                        }
+                                                }
+                                                echo $count_ongoing; ?>
+                                    </span>
+                            </a>
+                    </div>
+                    <div class="col">
+                            <a href="<?= base_url("tickets/testing") ?>">
+                                    <span class="text">For Testing</span>
+                                    <span class="count">
+                                            <?php foreach ($ticket_details as $ticket) {
+                                                        if (strtolower($ticket['ticket_status']) == strtolower("testing")) {
+                                                                $count_testing++;
+                                                        }
+                                                }
+                                                echo $count_testing; ?>
+                                    </span>
+                            </a>
+                    </div>
+                    <div class="col">
+                            <a href="<?= base_url("tickets/closed") ?>">
+                                    <span class="text">Closed</span>
+                                    <span class="count">
+                                            <?php foreach ($ticket_details as $ticket) {
+                                                        if (strtolower($ticket['ticket_status']) == strtolower("closed")) {
+                                                                $count_closed++;
+                                                        }
+                                                }
+                                                echo $count_closed; ?>
+                                    </span>
+                            </a>
+                    </div>
+                    <div class="col ticket-all">
+                            <a href="<?= base_url("tickets/all") ?>">
+                                    <span class="text">All</span>
+                                    <span class="count">
+                                            <?php foreach ($ticket_details as $ticket) {
+                                                        $count_all++;
+                                                }
+                                                echo $count_all; ?>
+                                    </span>
+                            </a>
+
+                    </div>
+            </div>
     </div>
+
+    <div class="filter_specific d-flex">
+            <div class="dropdown me-2">
+                    <button class="btn btn-success dropdown-toggle btn-filter-export" type="button" data-bs-toggle="dropdown"
+                            aria-expanded="false">
+                            <i class="fa-solid fa-download"></i> Export Data
+                    </button>
+
+                    <ul class="dropdown-menu">
+                            <li><a class="dropdown-item btn-export-excel" href="#">Export as Excel</a></li>
+                            <li><a class="dropdown-item btn-export-pdf" href="#">Export as PDF</a></li>
+                    </ul>
+            </div>
+            <!-- <button class="btn btn-success btn-filter-export btn-export"><i class="fa-solid fa-download"></i> Export
+            Data</button> -->
+            <button class="btn btn-primary btn-filter-export btn-filter" onclick="toggleFilterOptions()"><i
+                            class="fa-solid fa-filter"></i> Filter</button>
+    </div>
+
+    <div class="filter_options mb-3">
+            <form id="filterForm">
+                    <h5 class="text-start">Filters</h5>
+                    <div class="row">
+                            <div class="col-md-3">
+                                    <div class="input-wrapper">
+                                            <select name="filterStatus" id="filterStatus" class="form-control">
+                                                    <option value="">- Select Status -</option>
+                                                    <option value="For Approval">For Approval</option>
+                                                    <option value="Open">Open</option>
+                                                    <option value="Pending">Pending</option>
+                                                    <option value="On Going">On Going</option>
+                                                    <option value="For Testing">For Testing</option>
+                                                    <option value="Closed">Closed</option>
+                                            </select>
+                                            <i class="fa-solid fa-angle-down icon-dropdown"></i>
+                                    </div>
+
+                            </div>
+                            <div class="col-md-3">
+                                    <div class="input-wrapper">
+                                            <select name="filterPriority" id="filterPriority" class="form-control">
+                                                    <option value="">- Select Priority -</option>
+                                                    <option value="Low">Low</option>
+                                                    <option value="Medium">Medium</option>
+                                                    <option value="High">High</option>
+                                                    <option value="Critical">Critical</option>
+                                            </select>
+                                            <i class="fa-solid fa-angle-down icon-dropdown"></i>
+                                    </div>
+
+                            </div>
+                            <div class="col-md-3">
+                                    <div class="input-wrapper">
+                                            <select name="filterDepartment" id="filterDepartment" class="form-control">
+                                                    <option value="">- Select Department -</option>
+                                                    <?php foreach ($departments as $department): ?>
+                                                            <option value="<?= $department['department_name'] ?>">
+                                                                    <?= $department['department_name'] ?>
+                                                            </option>
+                                                    <?php endforeach; ?>
+                                            </select>
+                                            <i class="fa-solid fa-angle-down icon-dropdown"></i>
+                                    </div>
+
+                            </div>
+                            <div class="col-md-3 text-start">
+                                    <button type="reset" class="btn btn-danger has-tooltip" title="Reset"><i
+                                                    class="fa-solid fa-arrow-rotate-right"></i></button>
+                            </div>
+                    </div>
+
+
+
+            </form>
+
+    </div>
+
+
+
+    <script>
+            const filterToggle = document.querySelector(".btn-filter");
+            const filterOptions = document.querySelector(".filter_options");
+
+            function toggleFilterOptions() {
+                    filterOptions.classList.toggle("collapsed");
+
+            }
+    </script>

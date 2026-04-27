@@ -1,5 +1,6 @@
 <div class="d-flex justify-content-center w-100 new-ticket-container">
-    <div class="rounded-3 p-4" style="background-color: #f2f2f2; width: 1100px;">
+    <div class="rounded-3 p-4"
+        style="background-color: white; width: 1100px; box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);">
         <h5><i class="fa-solid fa-ticket mb-3 me-2"></i> New Ticket</h5>
         <form action="<?php base_url('tickets/createTicket') ?>" id="createNewTicket" method="POST"
             enctype="multipart/form-data">

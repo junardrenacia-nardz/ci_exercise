@@ -16,10 +16,9 @@
                 </tr>
             </thead>
             <tbody>
-
                 <?php if (!empty($ticket_details)): ?>
                     <?php foreach ($ticket_details as $ticket): ?>
-                        <?php if (strtolower($ticket['ticket_status']) == strtolower("Open")): ?>
+                        <?php if (strtolower($ticket['ticket_status']) == strtolower("Closed")): ?>
                             <?php $count_assign = 0;
                             $peopleInCharge = [];
                             $inCharge = ""; ?>
@@ -146,6 +145,7 @@
                             </tr>
                         <?php endif; ?>
                     <?php endforeach; ?>
+
                 <?php endif; ?>
             </tbody>
         </table>

@@ -44,3 +44,7 @@ searchBtnToggler.addEventListener("click", function () {
 		inputSearchAll.style.display = "none";
 	}
 });
+
+$(function () {
+	$(".has-tooltip").tooltip();
+});

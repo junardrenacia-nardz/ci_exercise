@@ -1,11 +1,16 @@
 div.dt-container .dt-search input {
 	border: 1px solid #aaa;
-	padding: 15px 10px !important;
+	padding: 20px 12px !important;
 	background-color: transparent;
-	border-radius: 15px !important;
+	border-radius: 10px !important;
 	color: inherit;
 	margin-left: 10px;
 	height: 30px;
+	width: 15%;
+}
+
+div.dt-container .dt-search {
+	text-align: right !important;
 }
 
 div.dt-container .dt-search input:focus {
@@ -70,4 +75,12 @@ div.dt-container .dt-search {
 	justify-content: space-between;
 	align-items: center;
 	margin-top: 20px;
+}
+
+.dt-search {
+	display: flex;
+	justify-content: end;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 10px;
 }

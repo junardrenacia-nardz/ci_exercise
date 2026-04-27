@@ -17,7 +17,8 @@ foreach ($ticket_assigned as $assigned):
         $count_assign++;
     endif;
 endforeach; ?>
-<div class="container w-100 rounded-3 p-4" style="background-color: #f2f2f2;">
+<div class="w-100 rounded-3 p-4 mx-auto"
+    style="background-color: white; max-width: 1290px ; box-shadow: 0 6px 18px rgba(0, 0, 0, 0.25);">
     <div class="ticket-details d-flex justify-content-between">
         <div class="information-tickets col-md-7 pe-3">
             <div class="ticket-subject d-flex align-items-center mb-1">
@@ -279,11 +280,13 @@ endforeach; ?>
                                                         <select name="employeeName[]" class="form-control">
                                                             <option value="">- Select person to be assigned -</option>
                                                             <?php foreach ($all_assigned as $choice): ?>
-                                                                <option value="<?= $choice['user_id'] ?>"
-                                                                    <?= ($selectedId == $choice['user_id']) ? "selected" : "" ?>>
-                                                                    <?= $choice['first_name'] . " " . $choice['last_name'] ?>
-                                                                    (#<?= $choice['user_id'] ?>)
-                                                                </option>
+                                                                <?php if ($choice['department_id'] == $ticket['department_id']): ?>
+                                                                    <option value="<?= $choice['user_id'] ?>"
+                                                                        <?= ($selectedId == $choice['user_id']) ? "selected" : "" ?>>
+                                                                        <?= $choice['first_name'] . " " . $choice['last_name'] ?>
+                                                                        (#<?= $choice['user_id'] ?>)
+                                                                    </option>
+                                                                <?php endif; ?>
                                                             <?php endforeach; ?>
                                                         </select>
                                                         <i class="fa-solid fa-angle-down icon-dropdown"></i>
@@ -304,10 +307,13 @@ endforeach; ?>
                                                         <select name="employeeName[]" id="employeeName" class="form-control">
                                                             <option value="">- Select person to be assigned -</option>
                                                             <?php foreach ($all_assigned as $choice): ?>
-                                                                <option value="<?= $choice['user_id'] ?>">
-                                                                    <?= $choice['first_name'] . " " . $choice['last_name'] ?>
-                                                                    (#<?= $choice['user_id'] ?>)
-                                                                </option>
+                                                                <?php if ($choice['department_id'] == $ticket['department_id']): ?>
+                                                                    <option value="<?= $choice['user_id'] ?>">
+                                                                        <?= $choice['first_name'] . " " . $choice['last_name'] ?>
+                                                                        (#<?= $choice['user_id'] ?>)
+                                                                    </option>
+                                                                <?php endif; ?>
+
                                                             <?php endforeach; ?>
                                                         </select>
                                                         <i class="fa-solid fa-angle-down icon-dropdown"></i>
@@ -327,11 +333,14 @@ endforeach; ?>
                                                             <select name="employeeName[]" id="employeeName" class="form-control">
                                                                 <option value="">- Select person to be assigned -</option>
                                                                 <?php foreach ($all_assigned as $choice): ?>
-                                                                    <option value="<?= $choice['user_id'] ?>"
-                                                                        <?= ($choice['user_id'] == $person['id']) ? "selected" : "" ?>>
-                                                                        <?= $choice['first_name'] . " " . $choice['last_name'] ?>
-                                                                        (#<?= $choice['user_id'] ?>)
-                                                                    </option>
+                                                                    <?php if ($choice['department_id'] == $ticket['department_id']): ?>
+                                                                        <option value="<?= $choice['user_id'] ?>"
+                                                                            <?= ($choice['user_id'] == $person['id']) ? "selected" : "" ?>>
+                                                                            <?= $choice['first_name'] . " " . $choice['last_name'] ?>
+                                                                            (#<?= $choice['user_id'] ?>)
+                                                                        </option>
+                                                                    <?php endif; ?>
+
                                                                 <?php endforeach; ?>
                                                             </select>
                                                             <i class="fa-solid fa-angle-down icon-dropdown"></i>
@@ -517,11 +526,13 @@ endforeach; ?>
                             <select name="employeeName[]" id="employeeName" class="form-control">
                                 <option value="">- Select person to be assigned -</option>
                                 <?php foreach ($all_assigned as $choice): ?>
-                                    <option value="<?= $choice['user_id'] ?>"
-                                        <?= (set_value('employeeName')) ? "selected" : "" ?>>
-                                        <?= $choice['first_name'] . " " . $choice['last_name'] ?>
-                                        (#<?= $choice['user_id'] ?>)
-                                    </option>
+                                    <?php if ($choice['department_id'] == $ticket['department_id']): ?>
+                                        <option value="<?= $choice['user_id'] ?>"
+                                            <?= (set_value('employeeName')) ? "selected" : "" ?>>
+                                            <?= $choice['first_name'] . " " . $choice['last_name'] ?>
+                                            (#<?= $choice['user_id'] ?>)
+                                        </option>
+                                    <?php endif; ?>
                                 <?php endforeach; ?>
                             </select>
                             <i class="fa-solid fa-angle-down icon-dropdown"></i>

@@ -55,6 +55,7 @@ $route['tickets/view_ticket/(:any)'] = 'tickets/view_ticket/$1';
 $route['tickets/reassign_department/(:any)'] = 'tickets/reassign_department/$1';
 $route['tickets/assign_ticket/(:any)'] = 'tickets/assign_ticket/$1';
 $route['tickets/clear_assign_modal_state'] = 'tickets/clear_assign_modal_state';
+$route["create_ticket"] = "tickets/createTicket";
 
 $route['users'] = 'users/login';
 
