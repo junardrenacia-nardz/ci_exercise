@@ -90,7 +90,7 @@ class Ticket_model extends CI_Model {
             'priority' => $this->input->post('priority'),
             'department_id' => $this->input->post('selectDepartment'),
             'requester_id' => $this->session->userdata('user_id'),
-            'ticket_status' => 'Open'
+            'ticket_status' => 'For Approval'
         ];
 
         $this->db->insert('ticket_details', $ticketData);

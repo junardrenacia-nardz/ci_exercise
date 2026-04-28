@@ -17,7 +17,7 @@ foreach ($ticket_assigned as $assigned):
         $count_assign++;
     endif;
 endforeach; ?>
-<div class="w-100 rounded-3 p-4 mx-auto"
+<div class="w-100 rounded-3 p-4 mx-auto mb-5"
     style="background-color: white; max-width: 1290px ; box-shadow: 0 6px 18px rgba(0, 0, 0, 0.25);">
     <div class="ticket-details d-flex justify-content-between">
         <div class="information-tickets col-md-7 pe-3">

@@ -2,78 +2,84 @@
 
 :root {
 	/* =========================
-       PRIMARY (Indigo system)
-    ========================== */
-	--primary: #4f46e5;
-	--primary-hover: #4338ca;
-	--primary-active: #3730a3;
-	--primary-light: #eef2ff;
-	--primary-soft: #e0e7ff;
+	   PRIMARY (System Ink - NOT blue, NOT gray)
+	   feels like ink on paper UI
+	========================= */
+	--primary: #1f2933; /* deep ink slate */
+	--primary-hover: #111827; /* near-black ink */
+	--primary-active: #0b1220; /* pressed ink */
+	--primary-soft: #eceff3; /* paper tint */
+	--primary-light: #f5f7fa; /* UI surface */
 
 	/* =========================
-       BACKGROUND SYSTEM
-    ========================== */
-	--bg: #f8fafc;
-	--bg-alt: #f1f5f9;
+	   BACKGROUND (Paper system)
+	========================= */
+	--bg: #f7f7f5; /* soft paper white */
+	--bg-alt: #efefec; /* aged paper layer */
 	--card: #ffffff;
-	--overlay: rgba(15, 23, 42, 0.6);
+	--overlay: rgba(20, 24, 28, 0.55);
 
 	/* =========================
-       TEXT SYSTEM
-    ========================== */
-	--text: #1f2937;
-	--text-heading: #111827;
-	--text-muted: #6b7280;
-	--text-subtle: #9ca3af;
+	   TEXT (Ink hierarchy)
+	========================= */
+	--text: #121826; /* strong ink */
+	--text-heading: #0b0f14;
+	--text-muted: #5b6472; /* faded ink */
+	--text-subtle: #8a94a6; /* dust ink */
 
 	/* =========================
-       BORDER SYSTEM
-    ========================== */
-	--border: #e5e7eb;
-	--border-hover: #d1d5db;
-	--border-dark: #cbd5e1;
+	   BORDER (Soft graphite lines)
+	========================= */
+	--border: #e3e6ea;
+	--border-hover: #cfd6dd;
+	--border-dark: #9aa4b2;
 
 	/* =========================
-       STATUS COLORS
-    ========================== */
-	--success: #22c55e;
-	--success-light: #dcfce7;
-	--success-dark: #15803d;
+	   STATUS SYSTEM (Dust + Earth tones)
+	   → no bright colors, only "material states"
+	========================= */
 
-	--warning: #f59e0b;
-	--warning-light: #fef3c7;
-	--warning-dark: #b45309;
+	/* ⚪ Open (fresh paper) */
+	--status-open: #aab2bd;
 
-	--danger: #ef4444;
-	--danger-light: #fee2e2;
-	--danger-dark: #b91c1c;
+	/* 🌫 Pending (dust / waiting state) */
+	--status-pending: #b5b0a6;
+
+	/* 🪵 On Going (wood / active work) */
+	--status-progress: #8f8576;
+
+	/* 🪨 For Testing (stone / verification) */
+	--status-review: #7f8b85;
+
+	/* 🧾 Closed (ink faded / archived) */
+	--status-closed: #6c7682;
+
+	/* 🧱 Critical (rust ink / broken state) */
+	--status-danger: #7a6a63;
 
 	/* =========================
-       INFO / BLUE SYSTEM
-    ========================== */
-	--blue: #1d92eb;
-	--blue-hover: #1579c7;
-	--blue-light: #e0f2fe;
-
-	/* =========================
-       NEUTRAL ACCENTS
-    ========================== */
-	--gray-50: #f9fafb;
-	--gray-100: #f3f4f6;
-	--gray-200: #e5e7eb;
-	--gray-300: #d1d5db;
-	--gray-400: #9ca3af;
-	--gray-500: #6b7280;
-	--gray-600: #4b5563;
-	--gray-700: #374151;
-	--gray-800: #1f2937;
-	--gray-900: #111827;
+	   NEUTRAL SCALE (structured UI system)
+	========================= */
+	--gray-50: #f7f7f5;
+	--gray-100: #efefec;
+	--gray-200: #e3e6ea;
+	--gray-300: #cfd6dd;
+	--gray-400: #aab2bd;
+	--gray-500: #8a94a6;
+	--gray-600: #6f7a8a;
+	--gray-700: #525c6b;
+	--gray-800: #2b3440;
+	--gray-900: #121826;
 }
 
 /* PRIORITIES */
 
 body {
 	background-color: var(--bg);
+}
+
+.no-transition * {
+	transition: none !important;
 }
 
 /* SIDEBAR STYLING  */
@@ -92,22 +98,6 @@ main {
 	overflow-y: auto;
 }
 
-#overlayBg {
-	position: fixed;
-	inset: 0;
-	background: rgba(0, 0, 0, 0.2);
-	backdrop-filter: blur(10px);
-	opacity: 0;
-	pointer-events: none;
-	transition: 0.3s ease;
-	z-index: 999;
-}
-
-#overlayBg.active {
-	opacity: 1;
-	pointer-events: auto;
-}
-
 .sidebar-item a i,
 .sidebar-footer a i {
 	width: 30px;
@@ -120,20 +110,31 @@ main {
 	height: 100vh;
 	z-index: 1000;
 	font-family: "Saira Stencil", sans-serif;
-	max-width: 300px;
-	min-width: 300px;
+	max-width: 240px;
+	min-width: 240px;
 	transition: all 0.35s ease-in-out;
-	background-color: black;
+	background-color: var(--primary);
 	display: flex;
 	flex-direction: column;
 }
 
 #sidebar.collapsed {
-	margin-left: -300px;
+	margin-left: -240px;
+}
+
+#sidebar ul.sidebar-dropdown {
+	background-color: var(--primary-hover);
+	box-shadow: inset 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
 #main {
-	transition: all 0.35s ease-in-out;
+	margin-left: 0px;
+	transition: margin-left 0.35s ease-in-out;
+}
+
+#main.collapsed {
+	margin-left: 240px;
+	transition: margin-left 0.35s ease-in-out;
 }
 
 .toggler-btn {
@@ -148,6 +149,9 @@ main {
 	cursor: pointer;
 	border: 0;
 	display: none;
+	position: absolute;
+	top: 1.1rem;
+	right: 1.5rem;
 }
 
 .toggler-btn i,
@@ -199,8 +203,9 @@ a.sidebar-link {
 	padding-left: 50px;
 }
 
-a.sidebar-link:hover {
-	background-color: #ccc;
+a.sidebar-link:hover,
+a.sidebar-link.active {
+	background-color: var(--primary-active);
 }
 
 .sidebar-link[data-bs-toggle="collapse"]::after {
@@ -222,7 +227,7 @@ a.sidebar-link:hover {
 }
 
 #nav-toggle {
-	position: fixed;
+	position: sticky;
 	top: 0;
 	z-index: 900;
 	width: 100%;
@@ -275,16 +280,6 @@ a#notifications:hover {
 	display: none;
 }
 
-#createNewTicket .form-control,
-#createNewTicket .form-label {
-	font-family: "Poppins", sans-serif;
-	font-size: 0.8rem;
-}
-
-#createNewTicket .form-control {
-	margin-bottom: 15px;
-}
-
 .input-wrapper {
 	position: relative;
 }
@@ -321,6 +316,21 @@ a#notifications:hover {
 	max-width: 70vw;
 }
 
+#createNewTicket .form-control,
+#createNewTicket .form-label {
+	font-family: "Poppins", sans-serif;
+	font-size: 0.8rem;
+}
+
+#createNewTicket .form-control {
+	margin-bottom: 15px;
+}
+
+.form-group span {
+	font-size: 0.8rem;
+	color: red;
+}
+
 @media (max-width: 760px) {
 	#sidebar {
 		margin-left: 0vw;
@@ -334,5 +344,14 @@ a#notifications:hover {
 
 	.sidebar-toggler {
 		display: block;
+	}
+
+	#main {
+		max-width: 100vw;
+		min-width: 100vw;
+	}
+
+	#main.collapsed {
+		margin-left: 200vw;
 	}
 }

@@ -101,6 +101,10 @@ class Tickets extends CI_Controller {
         $data['title'] = 'Create Ticket';
 
         $this->form_validation->set_rules('ticketSubject', 'Subject', 'required');
+        $this->form_validation->set_rules('ticketDescription', "Ticket Description", "required");
+        $this->form_validation->set_rules("selectDepartment", "Department", "required");
+        $this->form_validation->set_rules("requestType", "Request Type", "required");
+        $this->form_validation->set_rules("priority", "Priority", "required");
 
         if ($this->form_validation->run() == FALSE) {
             $this->load->view('templates/header', $data);
@@ -140,7 +144,8 @@ class Tickets extends CI_Controller {
             }
 
             $this->ticket_model->create_ticket($fileNames);
-            redirect('tickets');
+            $this->session->unset_userdata('temp_files');
+            redirect('tickets/all');
         }
     }
 
@@ -221,5 +226,60 @@ class Tickets extends CI_Controller {
     public function clear_assign_modal_state() {
         $this->session->unset_userdata('old_input');
         $this->session->unset_userdata('showModal');
+    }
+
+    public function uploadTemp() {
+        $files_uploaded = $_FILES['files'];
+        $count = count($_FILES['fileUploads']['name']);
+        $uploaded = [];
+
+        for ($i = 0; $i < $count; $i++) {
+            $_FILES['file']['name'] = $files_uploaded['name'][$i];
+            $_FILES['file']['type'] = $files_uploaded['type'][$i];
+            $_FILES['file']['tmp_name'] = $files_uploaded['tmp_name'][$i];
+            $_FILES['file']['error'] = $files_uploaded['error'][$i];
+            $_FILES['file']['size'] = $files_uploaded['size'][$i];
+
+            $config['upload_path'] = './assets/images/ticket_attachments';
+            $config['allowed_types'] = 'gif|jpg|png|jpeg|docx|ppt|pptx|zip|rar|pdf';
+            $config['encrypt_name']  = TRUE;
+
+            $this->upload->initialize($config);
+
+            if ($this->upload->do_upload('file')) {
+                $uploadData = $this->upload->data();
+                $uploaded[] = [
+                    'encryptedName' => $uploadData['file_name'],
+                    'origName'      => $uploadData['orig_name']
+                ];
+            } else {
+                echo $this->upload->display_errors();
+            }
+        }
+
+        // store in session
+        $this->session->set_userdata('temp_files', $uploaded);
+
+        echo json_encode(['files' => $uploaded]);
+    }
+
+    public function dashboard() {
+        if (!$this->session->userdata('logged_in')) {
+            redirect('users');
+        }
+
+        $data['ticket_details'] = $this->ticket_model->get_tickets();
+        $data['ticket_assigned'] = $this->ticket_model->get_ticket_assigned();
+        $data['departments'] = $this->department_model->get_departments();
+        $data['ticket_types'] = $this->ticket_type_model->get_ticket_types();
+        $data['priorities'] = $this->priority_model->get_priorities();
+
+        $employee_id = $this->session->userdata('employee_id');
+        $data['logged_user'] = $this->user_model->get_employee_details($employee_id);
+
+        $data['title'] = "Dashboard";
+        $this->load->view("templates/header", $data);
+        $this->load->view("dashboards/dashboard");
+        $this->load->view("templates/footer");
     }
 }

@@ -1,28 +1,42 @@
 const toggler = document.querySelector(".toggler-btn");
 const toggler_sidebar = document.querySelector(".sidebar-toggler");
 const sidebar = document.querySelector("#sidebar");
-const overlay_bg = document.querySelector("#overlayBg");
 const main_container = document.querySelector("#main");
 
-function toggleSidebar() {
-	sidebar.classList.toggle("collapsed");
-	overlay_bg.classList.toggle(
-		"active",
-		!sidebar.classList.contains("collapsed"),
-	);
-}
-
-toggler.addEventListener("click", toggleSidebar);
-toggler_sidebar.addEventListener("click", toggleSidebar);
-
-// click outside (overlay closes sidebar)
-overlay_bg.addEventListener("click", () => {
-	sidebar.classList.add("collapsed");
-	overlay_bg.classList.toggle(
-		"active",
-		!sidebar.classList.contains("collapsed"),
-	);
+toggler.addEventListener("click", function () {
+	// sidebar.classList.toggle("collapsed");
+	// main_container.classList.toggle("collapsed");
+	const isCollapsed = sidebar.classList.contains("collapsed");
+	setSidebarState(!isCollapsed);
 });
+toggler_sidebar.addEventListener("click", function () {
+	// sidebar.classList.toggle("collapsed");
+	// main_container.classList.toggle("collapsed");
+	const isCollapsed = sidebar.classList.contains("collapsed");
+	setSidebarState(!isCollapsed);
+});
+
+document.addEventListener("DOMContentLoaded", function () {
+	const savedState = localStorage.getItem("sidebarCollapsed");
+
+	if (savedState === "true") {
+		setSidebarState(true);
+	} else {
+		setSidebarState(false);
+	}
+
+	requestAnimationFrame(() => {
+		document.body.classList.remove("no-transition");
+	});
+});
+
+// helper
+function setSidebarState(collapsed) {
+	sidebar.classList.toggle("collapsed", collapsed);
+	main_container.classList.toggle("collapsed", !collapsed);
+
+	localStorage.setItem("sidebarCollapsed", collapsed);
+}
 
 const searchBtnToggler = document.querySelector(".search-btn-all");
 const inputSearchAll = document.querySelector("#input-search-all");

@@ -1,4 +1,4 @@
-<div class="container">
+<div class="p-2">
     <div class="table-wrapper">
 
         <table class="table tbl-custom" id="ticketTable">

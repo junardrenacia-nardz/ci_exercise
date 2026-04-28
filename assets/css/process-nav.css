@@ -21,11 +21,15 @@
 	border-color: var(--primary);
 }
 
-.row-cols-7 .col a {
+.row-cols-7 a .col {
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
 	text-decoration: none;
+}
+
+.row-cols-7 a .col.active {
+	border-bottom: 4px solid var(--primary);
 }
 
 .row-cols-7 .col span.text {

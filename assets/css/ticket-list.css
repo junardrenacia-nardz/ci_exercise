@@ -1,71 +1,73 @@
 :root {
 	/* =========================
-       PRIMARY (Indigo system)
-    ========================== */
-	--primary: #4f46e5;
-	--primary-hover: #4338ca;
-	--primary-active: #3730a3;
-	--primary-light: #eef2ff;
-	--primary-soft: #e0e7ff;
+	   PRIMARY (System Ink - NOT blue, NOT gray)
+	   feels like ink on paper UI
+	========================= */
+	--primary: #1f2933; /* deep ink slate */
+	--primary-hover: #111827; /* near-black ink */
+	--primary-active: #0b1220; /* pressed ink */
+	--primary-soft: #eceff3; /* paper tint */
+	--primary-light: #f5f7fa; /* UI surface */
 
 	/* =========================
-       BACKGROUND SYSTEM
-    ========================== */
-	--bg: #f8fafc;
-	--bg-alt: #f1f5f9;
+	   BACKGROUND (Paper system)
+	========================= */
+	--bg: #f7f7f5; /* soft paper white */
+	--bg-alt: #efefec; /* aged paper layer */
 	--card: #ffffff;
-	--overlay: rgba(15, 23, 42, 0.6);
+	--overlay: rgba(20, 24, 28, 0.55);
 
 	/* =========================
-       TEXT SYSTEM
-    ========================== */
-	--text: #1f2937;
-	--text-heading: #111827;
-	--text-muted: #6b7280;
-	--text-subtle: #9ca3af;
+	   TEXT (Ink hierarchy)
+	========================= */
+	--text: #121826; /* strong ink */
+	--text-heading: #0b0f14;
+	--text-muted: #5b6472; /* faded ink */
+	--text-subtle: #8a94a6; /* dust ink */
 
 	/* =========================
-       BORDER SYSTEM
-    ========================== */
-	--border: #e5e7eb;
-	--border-hover: #d1d5db;
-	--border-dark: #cbd5e1;
+	   BORDER (Soft graphite lines)
+	========================= */
+	--border: #e3e6ea;
+	--border-hover: #cfd6dd;
+	--border-dark: #9aa4b2;
 
 	/* =========================
-       STATUS COLORS
-    ========================== */
-	--success: #22c55e;
-	--success-light: #dcfce7;
-	--success-dark: #15803d;
+	   STATUS SYSTEM (Dust + Earth tones)
+	   → no bright colors, only "material states"
+	========================= */
 
-	--warning: #f59e0b;
-	--warning-light: #fef3c7;
-	--warning-dark: #b45309;
+	/* ⚪ Open (fresh paper) */
+	--status-open: #aab2bd;
 
-	--danger: #ef4444;
-	--danger-light: #fee2e2;
-	--danger-dark: #b91c1c;
+	/* 🌫 Pending (dust / waiting state) */
+	--status-pending: #b5b0a6;
+
+	/* 🪵 On Going (wood / active work) */
+	--status-progress: #8f8576;
+
+	/* 🪨 For Testing (stone / verification) */
+	--status-review: #7f8b85;
+
+	/* 🧾 Closed (ink faded / archived) */
+	--status-closed: #6c7682;
+
+	/* 🧱 Critical (rust ink / broken state) */
+	--status-danger: #7a6a63;
 
 	/* =========================
-       INFO / BLUE SYSTEM
-    ========================== */
-	--blue: #1d92eb;
-	--blue-hover: #1579c7;
-	--blue-light: #e0f2fe;
-
-	/* =========================
-       NEUTRAL ACCENTS
-    ========================== */
-	--gray-50: #f9fafb;
-	--gray-100: #f3f4f6;
-	--gray-200: #e5e7eb;
-	--gray-300: #d1d5db;
-	--gray-400: #9ca3af;
-	--gray-500: #6b7280;
-	--gray-600: #4b5563;
-	--gray-700: #374151;
-	--gray-800: #1f2937;
-	--gray-900: #111827;
+	   NEUTRAL SCALE (structured UI system)
+	========================= */
+	--gray-50: #f7f7f5;
+	--gray-100: #efefec;
+	--gray-200: #e3e6ea;
+	--gray-300: #cfd6dd;
+	--gray-400: #aab2bd;
+	--gray-500: #8a94a6;
+	--gray-600: #6f7a8a;
+	--gray-700: #525c6b;
+	--gray-800: #2b3440;
+	--gray-900: #121826;
 }
 
 .priority-critical {
@@ -90,10 +92,12 @@
 	font-size: 0.6rem;
 }
 
-.status-red,
-.status-orange,
-.status-blue,
-.status-green {
+.status-approval,
+.status-open,
+.status-pending,
+.status-ongoing,
+.status-testing,
+.status-closed {
 	display: inline-block;
 	width: 10px;
 	height: 10px;
@@ -101,19 +105,27 @@
 	margin-right: 6px;
 }
 
-.status-red {
-	background-color: var(--danger);
+.status-approval {
+	background-color: var(--gray-200);
 }
 
-.status-orange {
+.status-open {
+	background-color: var(--gray-500);
+}
+
+.status-pending {
+	background-color: var(--warning-light);
+}
+
+.status-ongoing {
 	background-color: var(--warning);
 }
 
-.status-blue {
+.status-testing {
 	background-color: var(--blue);
 }
 
-.status-green {
+.status-closed {
 	background-color: var(--success);
 }
 
@@ -236,4 +248,38 @@
 
 .filter_specific .btn-filter-export {
 	border-radius: 8px !important;
+}
+
+.filter_specific .btn-export {
+	background: var(--primary-light);
+	color: var(--primary);
+	border: 1px solid var(--primary-soft);
+}
+
+.filter_specific .btn-filter {
+	background: var(--bg);
+	color: var(--text);
+	border: 1px solid var(--border);
+}
+
+.table-wrapper {
+	min-width: 600px;
+	overflow-x: auto;
+}
+
+.tbl-custom tbody tr:hover {
+	transform: translateY(-1px);
+	box-shadow: 0 6px 16px rgba(79, 70, 229, 0.08);
+}
+
+.tbl-custom {
+	border-collapse: separate;
+	border-spacing: 0 8px;
+}
+
+.tbl-custom tbody tr {
+	background: #ffffff;
+	box-shadow: 0 1px 2px rgba(15, 23, 42, 0.05);
+	border-radius: 10px;
+	transition: all 0.2s ease;
 }
