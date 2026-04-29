@@ -1,4 +1,4 @@
-<div class="d-flex justify-content-center w-100 new-ticket-container">
+<div class="d-flex justify-content-center w-100 new-ticket-container mt-4">
     <div class="container rounded-3 p-4 mb-3"
         style="background-color: white; width: 1100px; box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);">
         <h5><i class="fa-solid fa-ticket mb-3 me-2"></i> New Ticket</h5>
@@ -64,26 +64,6 @@
                                 <i class="fa-solid fa-angle-down icon-dropdown"></i>
                             </div>
                             <span><?= form_error("requestType") ?></span>
-                        </div>
-
-                        <div class="col-sm-12 form-group">
-                            <label for="" class="form-label">Level of Priority:</label>
-                            <div class="input-wrapper">
-                                <select name="priority" id="priority" class="form-control" disabled>
-                                    <option value="">- Select Priority -</option>
-                                    <option value="Critical"
-                                        <?= (set_value("priority") == "Critical") ? "selected" : "" ?>>Critical
-                                    </option>
-                                    <option value="High" <?= (set_value("priority") == "High") ? "selected" : "" ?>>High
-                                    </option>
-                                    <option value="Medium" <?= (set_value("priority") == "Medium") ? "selected" : "" ?>>
-                                        Medium</option>
-                                    <option value="Low" <?= (set_value("priority") == "Low") ? "selected" : "" ?>>Low
-                                    </option>
-                                </select>
-                                <i class="fa-solid fa-angle-down icon-dropdown"></i>
-                            </div>
-                            <span><?= form_error("priority") ?></span>
                         </div>
                     </div>
 
@@ -240,17 +220,14 @@
         const subject = document.getElementById("ticketSubject");
         const description = document.getElementById("ticketDescription");
         const requestType = document.getElementById("requestType");
-        const priority = document.getElementById("priority");
+
 
         subject.value = "";
-        description.value = " "
+        description.value = ""
         department.value = '';
 
         requestType.value = "";
         requestType.disabled = true
-
-        priority.value = ""
-        priority.disabled = true
 
         // 🔹 (optional) clear validation messages
         form.querySelectorAll("span").forEach(span => span.innerHTML = "");
@@ -259,8 +236,7 @@
     // Ticket Type per Department
     document.addEventListener("DOMContentLoaded", function() {
         const department = document.getElementById("selectDepartment");
-        const requestType = document.getElementById("requestType");
-        const priority = document.getElementById('priority');
+        const requestType = document.getElementById("requestType");;
 
         const allOptions = Array.from(requestType.querySelectorAll("option"));
 
@@ -269,12 +245,10 @@
 
             if (selectedDept === "") {
                 requestType.disabled = true;
-                priority.disabled = true;
                 return;
             }
 
             requestType.disabled = false;
-            priority.disabled = false;
 
             allOptions.forEach(option => {
                 if (option.dataset.department === selectedDept) {
@@ -297,6 +271,5 @@
 
     document.getElementById("createNewTicket").addEventListener("submit", function() {
         document.getElementById("requestType").disabled = false;
-        document.getElementById("priority").disabled = false;
     });
 </script>

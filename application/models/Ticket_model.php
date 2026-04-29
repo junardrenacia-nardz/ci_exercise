@@ -26,7 +26,7 @@ class Ticket_model extends CI_Model {
                 td.solution_applied,
                 td.ticket_updated,
 
-                p.employee_id AS requester_employee_id,
+                u.employee_id AS requester_employee_id,
                 e.first_name  AS requester_first_name,
                 e.last_name AS requester_last_name
             ');
@@ -35,8 +35,8 @@ class Ticket_model extends CI_Model {
         $this->db->from('ticket_details td');
         $this->db->join('ticket_type tt', 'tt.ticket_type_id = td.ticket_type_id', 'left');
         $this->db->join('departments d', 'd.department_id = td.department_id');
-        $this->db->join('permitted_requester p', 'p.permission_id = td.requester_id');
-        $this->db->join('employees e', 'e.employee_id = p.employee_id', 'left');
+        $this->db->join('users u', 'u.user_id = td.requester_id');
+        $this->db->join('employees e', 'e.employee_id = u.employee_id', 'left');
 
         if ($id) {
             $this->db->where('td.ticket_id', $id);
@@ -128,16 +128,26 @@ class Ticket_model extends CI_Model {
         }
 
         foreach ($names as $name) {
-            $assigndata = [
-                "ticket_id" => $ticket_id,
-                "user_id" => $name,
-                "person_status" => "Assigned",
-                "task_status" => "Pending"
-            ];
-            $this->db->insert('ticket_assigned', $assigndata);
+            if (!$this->check_assigned($name, $ticket_id)) {
+                $assigndata = [
+                    "ticket_id" => $ticket_id,
+                    "user_id" => $name,
+                    "person_status" => "Assigned",
+                    "task_status" => "Pending"
+                ];
+                $this->db->insert('ticket_assigned', $assigndata);
+            } else {
+                $assigndata = [
+                    "person_status" => "Assigned",
+                    "task_status" => "Pending"
+                ];
+                $this->db->where(['ticket_id' => $ticket_id, "user_id" => $name]);
+                $this->db->update('ticket_assigned', $assigndata);
+            }
         }
 
         $ticketUpdate = [
+            "ticket_status" => "pending",
             "expected_start_date" => $this->input->post("expectedStart"),
             "expected_resolved_date" => $this->input->post("expectedEnd")
         ];
@@ -167,5 +177,21 @@ class Ticket_model extends CI_Model {
         $this->db->update('ticket_assigned', $assignedData);
 
         return true;
+    }
+
+    public function get_comments($ticket_id) {
+        $this->db->select("c.user_id, c.comment, e.first_name, e.last_name, d.department_name");
+        $this->db->from("comments c");
+        $this->db->join("users u", "u.user_id = c.user_id", 'left');
+        $this->db->join("employees e", "e.employee_id = u.employee_id", 'left');
+        $this->db->join("departments d", "d.department_id = e.department_id", 'left');
+        $this->db->where("ticket_id", $ticket_id);
+        $query = $this->db->get();
+        return $query->result_array();
+    }
+
+    public function check_assigned($user, $ticket_id) {
+        $this->db->where(['user_id' => $user, 'ticket_id' => $ticket_id]);
+        return $this->db->count_all_results('ticket_assigned') > 0;
     }
 }

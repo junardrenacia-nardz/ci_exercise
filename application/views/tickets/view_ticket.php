@@ -17,7 +17,7 @@ foreach ($ticket_assigned as $assigned):
         $count_assign++;
     endif;
 endforeach; ?>
-<div class="w-100 rounded-3 p-4 mx-auto mb-5"
+<div class="w-100 rounded-3 mt-4 p-4 mx-auto mb-5"
     style="background-color: white; max-width: 1290px ; box-shadow: 0 6px 18px rgba(0, 0, 0, 0.25);">
     <div class="ticket-details d-flex justify-content-between">
         <div class="information-tickets col-md-7 pe-3">
@@ -122,43 +122,14 @@ endforeach; ?>
                 </div>
 
                 <div class="comment-contents p-3 mt-3 bg-light">
-                    <div class="comment my-2 d-flex flex-column">
-                        <span class="mb-1"><b class="fs-6 me-1">Sample User</b> <i class="fw-regular">(samp
-                                Department)</i></span>
-                        <span><?= $ticket['ticket_description'] ?></span>
-                    </div>
-                    <div class="comment my-2 d-flex flex-column">
-                        <span class="mb-1"><b class="fs-6 me-1">Sample User</b> <i class="fw-regular">(samp
-                                Department)</i></span>
-                        <span><?= $ticket['ticket_description'] ?></span>
-                    </div>
-                    <div class="comment my-2 d-flex flex-column">
-                        <span class="mb-1"><b class="fs-6 me-1">Sample User</b> <i class="fw-regular">(samp
-                                Department)</i></span>
-                        <span><?= $ticket['ticket_description'] ?></span>
-                    </div>
-                    <div class="comment my-2 d-flex flex-column">
-                        <span class="mb-1"><b class="fs-6 me-1">Sample User</b> <i class="fw-regular">(samp
-                                Department)</i></span>
-                        <span><?= $ticket['ticket_description'] ?></span>
-                    </div>
-                    <div class="comment my-2 d-flex flex-column">
-                        <span class="mb-1"><b class="fs-6 me-1">Sample User</b> <i class="fw-regular">(samp
-                                Department)</i></span>
-                        <span><?= $ticket['ticket_description'] ?></span>
-                    </div>
-                    <div class="comment d-flex flex-column">
-                        <span class="mb-1"><b class="fs-6 me-1">Sample User</b> <i class="fw-regular">(samp
-                                Department)</i></span>
-                        <span><?= $ticket['ticket_description'] ?></span>
-                    </div>
-                    <div class="comment my-2 d-flex flex-column">
-                        <span class="mb-1"><b class="fs-6 me-1">Sample User</b> <i class="fw-regular">(samp
-                                Department)</i></span>
-                        <span><?= $ticket['ticket_description'] ?></span>
-                    </div>
-
-
+                    <?php foreach ($comments as $comment): ?>
+                        <div class="comment my-2 d-flex flex-column">
+                            <span class="mb-1"><b
+                                    class="fs-6 me-1"><?= $comment['first_name'] . " " . $comment['last_name'] ?></b> <i
+                                    class="fw-regular">(<?= $comment['department_name'] ?>)</i></span>
+                            <span><?= $comment['comment'] ?></span>
+                        </div>
+                    <?php endforeach; ?>
                 </div>
 
             </div>
@@ -178,7 +149,8 @@ endforeach; ?>
                     <?= ($count_assign === 0) ? "Assign Ticket" : "Re-assign Ticket" ?>
                 </h5>
 
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                <button type="button" class="btn-close btn-close-white btn-close-reload"
+                    data-bs-dismiss="modal"></button>
             </div>
 
             <!-- BODY -->
@@ -222,7 +194,7 @@ endforeach; ?>
 
             <!-- FOOTER -->
             <div class="modal-footer border-0 px-4 pb-4 d-flex justify-content-between">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                <button type="button" class="btn btn-secondary btn-close-reload" data-bs-dismiss="modal">
                     Close
                 </button>
 
@@ -249,7 +221,8 @@ endforeach; ?>
                     <?= ($count_assign === 0) ? "Assign Ticket" : "Edit Assigned Ticket" ?>
                 </h5>
 
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                <button type="button" class="btn-close btn-close-white btn-close-reload"
+                    data-bs-dismiss="modal"></button>
             </div>
             <form action="<?= base_url('tickets/assign_ticket/' . $ticket['ticket_id']) ?>" method="post">
 
@@ -481,28 +454,22 @@ endforeach; ?>
         originalAssignTableHTML = document.querySelector("#assignTableDynamic tbody").innerHTML;
     });
 
-    document.querySelectorAll('.edit_assign_person').forEach(function(modal) {
-        modal.addEventListener('hidden.bs.modal', function() {
+    // document.querySelectorAll('.edit_assign_person').forEach(function(modal) {
+    //     modal.addEventListener('hidden.bs.modal', function() {
 
-            fetch("<?= base_url('tickets/clear_assign_modal_state') ?>", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                }
-            })
 
-            this.querySelector('form').reset();
-            // remove added rows only (not DB rows)
-            const rows = document.querySelectorAll("#assignTableDynamic tbody tr");
+    //         this.querySelector('form').reset();
+    //         // remove added rows only (not DB rows)
+    //         const rows = document.querySelectorAll("#assignTableDynamic tbody tr");
 
-            rows.forEach((row, index) => {
-                if (index >= originalRowCount) {
-                    row.remove();
-                }
-            });
-            updateSelectOptions();
-        });
-    });
+    //         rows.forEach((row, index) => {
+    //             if (index >= originalRowCount) {
+    //                 row.remove();
+    //             }
+    //         });
+    //         updateSelectOptions();
+    //     });
+    // });
 
     document.addEventListener("DOMContentLoaded", function() {
         updateSelectOptions();
@@ -601,8 +568,18 @@ function get_abbreviation($string) {
             return implode('', $matches[0]);
         }
     }
-
     // Return original string if it's just one word or empty
     return $string;
 }
 ?>
+
+
+<script id="reload-fix">
+    document.querySelectorAll('.btn-close-reload').forEach(btn => {
+        btn.addEventListener('click', function() {
+            setTimeout(() => {
+                location.reload();
+            }, 250); // 1000ms = 1 second
+        });
+    });
+</script>

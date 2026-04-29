@@ -62,7 +62,7 @@ $isViewTicket = strpos($current, 'tickets/view_ticket/') === 0; ?>
         <aside id="sidebar" class="">
             <div id="sidebar-logo" class="sidebar-logo d-flex justify-content-center align-items-center pt-5 px-4 ">
                 <a href="#">
-                    <img src="<?= base_url("assets/images/background/logo.png") ?>" width="120" alt="" srcset="">
+                    <img src="<?= base_url("assets/images/background/logo-black.png") ?>" width="120" alt="" srcset="">
                 </a>
 
                 <button class="sidebar-toggler" type="button"><i class="fa-solid fa-bars"></i></button>
@@ -161,6 +161,10 @@ $isViewTicket = strpos($current, 'tickets/view_ticket/') === 0; ?>
                         <i class="fa-regular fa-bell" style="font-size: 18px;"></i></a>
                     <h6 class="text-nowrap mx-1 me-2 px-1">
                         <?= $logged_user['first_name'] . ' ' . $logged_user['last_name'] ?></h6>
+                    <div class="user-icon d-flex align-items-center">
+                        <i class="fa-regular fa-user"></i>
+                    </div>
+
                 </div>
 
             </nav>

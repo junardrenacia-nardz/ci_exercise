@@ -80,6 +80,7 @@ class Tickets extends CI_Controller {
         $data['ticket'] = $this->ticket_model->get_tickets($ticket_id);
         $data['ticket_assigned'] = $this->ticket_model->get_ticket_assigned();
         $data['all_assigned'] = $this->user_model->get_users();
+        $data['comments'] = $this->ticket_model->get_comments($ticket_id);
         $this->load->view('templates/header', $data);
         $this->load->view('tickets/view_ticket', $data);
         $this->load->view('templates/footer');
@@ -104,7 +105,6 @@ class Tickets extends CI_Controller {
         $this->form_validation->set_rules('ticketDescription', "Ticket Description", "required");
         $this->form_validation->set_rules("selectDepartment", "Department", "required");
         $this->form_validation->set_rules("requestType", "Request Type", "required");
-        $this->form_validation->set_rules("priority", "Priority", "required");
 
         if ($this->form_validation->run() == FALSE) {
             $this->load->view('templates/header', $data);

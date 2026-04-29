@@ -37,24 +37,18 @@
 	   → no bright colors, only "material states"
 	========================= */
 
-	/* ⚪ Open (fresh paper) */
-	--status-open: #aab2bd;
-
-	/* 🌫 Pending (dust / waiting state) */
-	--status-pending: #b5b0a6;
-
-	/* 🪵 On Going (wood / active work) */
-	--status-progress: #8f8576;
-
-	/* 🪨 For Testing (stone / verification) */
-	--status-review: #7f8b85;
-
-	/* 🧾 Closed (ink faded / archived) */
-	--status-closed: #6c7682;
-
-	/* 🧱 Critical (rust ink / broken state) */
-	--status-danger: #7a6a63;
-
+	--success: #22c55e;
+	--success-light: #dcfce7;
+	--success-dark: #15803d;
+	--warning: #f59e0b;
+	--warning-light: #ffe571;
+	--warning-dark: #b45309;
+	--danger: #ef4444;
+	--danger-light: #fee2e2;
+	--danger-dark: #b91c1c; /* ========================= INFO / BLUE SYSTEM (Indigo-aligned) ========================== */
+	--blue: #3b82f6;
+	--blue-hover: #2563eb;
+	--blue-light: #dbeafe;
 	/* =========================
 	   NEUTRAL SCALE (structured UI system)
 	========================= */
@@ -87,7 +81,7 @@
 .priority-high,
 .priority-medium,
 .priority-low {
-	border-radius: 999px;
+	border-radius: 6px;
 	margin-right: 6px;
 	font-size: 0.6rem;
 }
@@ -256,10 +250,20 @@
 	border: 1px solid var(--primary-soft);
 }
 
+.filter_specific .btn-export:hover {
+	background-color: var(--primary);
+	color: var(--bg);
+}
+
 .filter_specific .btn-filter {
 	background: var(--bg);
 	color: var(--text);
 	border: 1px solid var(--border);
+}
+
+.filter_specific .btn-filter:hover {
+	background-color: var(--gray-700);
+	color: var(--bg);
 }
 
 .table-wrapper {

@@ -8,7 +8,7 @@
     $open = $pending = $closed = $critical = 0;
 
     $statusCounts = ['Open' => 0, 'Pending' => 0, 'Closed' => 0];
-    $priorityCounts = ['Critical' => 0, 'High' => 0, 'Medium' => 0, 'Low' => 0];
+    $priorityCounts = ['Critical' => 0, 'High' => 0, 'Medium' => 0, 'Low' => 0, "" => 0];
 
     foreach ($ticket_details as $t) {
         $status = strtolower($t['ticket_status']);

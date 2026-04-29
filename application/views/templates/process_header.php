@@ -125,34 +125,37 @@ Data</button> -->
         <form id="filterForm">
                 <h5 class="text-start">Filters</h5>
                 <div class="row">
-                        <div class="col-md-3">
-                                <div class="input-wrapper">
-                                        <select name="filterStatus" id="filterStatus" class="form-control">
-                                                <option value="">- Select Status -</option>
-                                                <option value="For Approval">For Approval</option>
-                                                <option value="Open">Open</option>
-                                                <option value="Pending">Pending</option>
-                                                <option value="On Going">On Going</option>
-                                                <option value="For Testing">For Testing</option>
-                                                <option value="Closed">Closed</option>
-                                        </select>
-                                        <i class="fa-solid fa-angle-down icon-dropdown"></i>
+                        <?php if ($current == "tickets/all"): ?>
+                                <div class="col-md-3">
+                                        <div class="input-wrapper">
+                                                <select name="filterStatus" id="filterStatus" class="form-control">
+                                                        <option value="">- Select Status -</option>
+                                                        <option value="For Approval">For Approval</option>
+                                                        <option value="Open">Open</option>
+                                                        <option value="Pending">Pending</option>
+                                                        <option value="On Going">On Going</option>
+                                                        <option value="For Testing">For Testing</option>
+                                                        <option value="Closed">Closed</option>
+                                                </select>
+                                                <i class="fa-solid fa-angle-down icon-dropdown"></i>
+                                        </div>
                                 </div>
+                        <?php endif; ?>
+                        <?php if ($current !== "tickets/approval"): ?>
+                                <div class="col-md-3">
+                                        <div class="input-wrapper">
+                                                <select name="filterPriority" id="filterPriority" class="form-control">
+                                                        <option value="">- Select Priority -</option>
+                                                        <option value="Low">Low</option>
+                                                        <option value="Medium">Medium</option>
+                                                        <option value="High">High</option>
+                                                        <option value="Critical">Critical</option>
+                                                </select>
+                                                <i class="fa-solid fa-angle-down icon-dropdown"></i>
+                                        </div>
 
-                        </div>
-                        <div class="col-md-3">
-                                <div class="input-wrapper">
-                                        <select name="filterPriority" id="filterPriority" class="form-control">
-                                                <option value="">- Select Priority -</option>
-                                                <option value="Low">Low</option>
-                                                <option value="Medium">Medium</option>
-                                                <option value="High">High</option>
-                                                <option value="Critical">Critical</option>
-                                        </select>
-                                        <i class="fa-solid fa-angle-down icon-dropdown"></i>
                                 </div>
-
-                        </div>
+                        <?php endif; ?>
                         <div class="col-md-3">
                                 <div class="input-wrapper">
                                         <select name="filterDepartment" id="filterDepartment" class="form-control">
