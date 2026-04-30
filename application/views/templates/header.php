@@ -1,6 +1,21 @@
 <?php $current = uri_string();
 $isViewTicket = strpos($current, 'tickets/view_ticket/') === 0; ?>
 
+<?php
+function name_abbr($first, $last) {
+    $first_name = strtoupper(substr($first, 0, 1));
+    $last_name = strtoupper(substr($last, 0, 1));
+
+    $initial = $first_name . $last_name;
+
+    return $initial;
+}
+?>
+
+<script>
+    const BASE_URL = "<?= base_url() ?>";
+</script>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -11,6 +26,7 @@ $isViewTicket = strpos($current, 'tickets/view_ticket/') === 0; ?>
     <!-- =======================
          CSS (LOCAL STYLES)
     ======================== -->
+    <link rel="stylesheet" href="<?= base_url(); ?>assets/css/root.css">
     <link rel="stylesheet" href="<?= base_url(); ?>assets/css/bootstrap.css">
     <link rel="stylesheet" href="<?= base_url(); ?>assets/css/style.css">
     <link rel="stylesheet" href="<?= base_url(); ?>assets/css/ticket-list.css">
@@ -146,7 +162,7 @@ $isViewTicket = strpos($current, 'tickets/view_ticket/') === 0; ?>
                     <h4 class="ms-2"><?= $title ?></h4>
                 </div>
 
-                <div class="d-flex align-items-center">
+                <div class="d-flex align-items-center justify-content-end">
                     <a href="<?= base_url("create_ticket") ?>" id="createTicket"
                         class="btn btn-create-ticket rounded-5 text-nowrap mx-1" type="button">
                         <i class="fa-solid fa-ticket me-2"></i>
@@ -161,8 +177,12 @@ $isViewTicket = strpos($current, 'tickets/view_ticket/') === 0; ?>
                         <i class="fa-regular fa-bell" style="font-size: 18px;"></i></a>
                     <h6 class="text-nowrap mx-1 me-2 px-1">
                         <?= $logged_user['first_name'] . ' ' . $logged_user['last_name'] ?></h6>
-                    <div class="user-icon d-flex align-items-center">
-                        <i class="fa-regular fa-user"></i>
+                    <div class="user-icon d-flex align-items-center mx-1"
+                        style="background: <?= ($logged_user['gender'] == "male") ? "var(--gender-male)" : "var(--gender-female)" ?> ;">
+                        <b class="d-flex align-items-center"><?= name_abbr(
+                                                                    $logged_user['first_name'],
+                                                                    $logged_user['last_name']
+                                                                ); ?></b>
                     </div>
 
                 </div>

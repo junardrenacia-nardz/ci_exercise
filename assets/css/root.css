@@ -1,0 +1,73 @@
+:root {
+	/* =========================
+	   PRIMARY (System Ink - NOT blue, NOT gray)
+	   feels like ink on paper UI
+	========================= */
+	--primary: #1f2933; /* deep ink slate */
+	--primary-hover: #111827; /* near-black ink */
+	--primary-active: #0b1220; /* pressed ink */
+	--primary-soft: #eceff3; /* paper tint */
+	--primary-light: #f5f7fa; /* UI surface */
+
+	/* =========================
+	   BACKGROUND (Paper system)
+	========================= */
+	--bg: #f7f7f5; /* soft paper white */
+	--bg-alt: #efefec; /* aged paper layer */
+	--card: #ffffff;
+	--overlay: rgba(20, 24, 28, 0.55);
+
+	/* =========================
+	   TEXT (Ink hierarchy)
+	========================= */
+	--text: #121826; /* strong ink */
+	--text-heading: #0b0f14;
+	--text-muted: #5b6472; /* faded ink */
+	--text-subtle: #8a94a6; /* dust ink */
+
+	/* =========================
+	   BORDER (Soft graphite lines)
+	========================= */
+	--border: #e3e6ea;
+	--border-hover: #cfd6dd;
+	--border-dark: #9aa4b2;
+
+	/* =========================
+	   STATUS SYSTEM (Dust + Earth tones)
+	   → no bright colors, only "material states"
+	========================= */
+
+	--success: #22c55e;
+	--success-light: #dcfce7;
+	--success-dark: #15803d;
+	--warning: #f59e0b;
+	--warning-light: #ffe571;
+	--warning-dark: #b45309;
+	--danger: #ef4444;
+	--danger-light: #fee2e2;
+	--danger-dark: #b91c1c; /* ========================= INFO / BLUE SYSTEM (Indigo-aligned) ========================== */
+	--blue: #3b82f6;
+	--blue-hover: #2563eb;
+	--blue-light: #dbeafe;
+
+	/* =========================
+	   NEUTRAL SCALE (structured UI system)
+	========================= */
+	--gray-50: #f7f7f5;
+	--gray-100: #efefec;
+	--gray-200: #e3e6ea;
+	--gray-300: #cfd6dd;
+	--gray-400: #aab2bd;
+	--gray-500: #8a94a6;
+	--gray-600: #6f7a8a;
+	--gray-700: #525c6b;
+	--gray-800: #2b3440;
+	--gray-900: #121826;
+
+	--accent-clay: #c2410c;
+	--accent-clay-light: #feddc7;
+	--accent-clay-muted: #9a3412;
+
+	--gender-male: var(--primary-hover);
+	--gender-female: var(--accent-clay);
+}

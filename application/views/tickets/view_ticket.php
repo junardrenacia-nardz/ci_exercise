@@ -100,36 +100,57 @@ endforeach; ?>
             <div class="ticket-button d-flex justify-content-end">
                 <?php if ($ticket['ticket_status'] !== "For Approval"): ?>
                     <?php if ($count_assign == 0): ?>
-                        <a href="" class="btn btn-primary me-2" data-bs-toggle="modal" data-bs-target="#modal_assign_person">
+                        <a href="" class="btn assign-reassign-btn me-2" data-bs-toggle="modal"
+                            data-bs-target="#modal_assign_person">
 
                             <i class="fa-solid fa-plus me-1"></i> Assign PIC</a>
                     <?php else: ?>
-                        <a href="" class="btn btn-primary me-2" data-bs-toggle="modal" data-bs-target="#modal_assign_person">
+                        <a href="" class="btn assign-reassign-btn me-2" data-bs-toggle="modal"
+                            data-bs-target="#modal_assign_person">
                             <i class="fa-solid fa-user-group me-1"></i> Re-assign PIC</a>
                     <?php endif; ?>
 
                 <?php endif; ?>
 
-                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal_department">
+                <button class="btn assign-reassign-btn" data-bs-toggle="modal" data-bs-target="#modal_department">
                     <i class="fa-solid fa-building-user me-1"></i> Re-assign Dept.</button>
             </div>
 
             <div class="comments-col w-100 mt-5">
-                <div class="d-flex justify-content-between align-items-center">
-                    <h6>Comments</h6>
-                    <a href="" class="btn btn-success">
-                        <i class="fa-solid fa-plus"></i> New</a>
+                <div class="d-flex align-items-center comment-btn">
+                    <div class="fs-6 fw-bold me-2">Comments</div>
+                    <a href="" class="" data-bs-toggle="modal" data-bs-target="#add_comment">
+                        <i class="fa-solid fa-plus"></i></a>
                 </div>
 
-                <div class="comment-contents p-3 mt-3 bg-light">
-                    <?php foreach ($comments as $comment): ?>
-                        <div class="comment my-2 d-flex flex-column">
-                            <span class="mb-1"><b
-                                    class="fs-6 me-1"><?= $comment['first_name'] . " " . $comment['last_name'] ?></b> <i
-                                    class="fw-regular">(<?= $comment['department_name'] ?>)</i></span>
-                            <span><?= $comment['comment'] ?></span>
+                <div class="comment-contents px-3 py-2 mt-2">
+                    <?php if (!empty($comments)): ?>
+                        <?php foreach ($comments as $comment): ?>
+                            <div class="d-flex align-items-start my-3">
+                                <div class="avatar-col align-middle">
+                                    <div class="avatar me-2"
+                                        style="background: <?= ($comment['gender'] == "male") ? "var(--gender-male)" : "var(--gender-female)" ?> ;">
+                                        <?= name_abbr($comment['first_name'], $comment['last_name']); ?>
+                                    </div>
+                                </div>
+
+                                <div class="comment d-flex flex-column">
+                                    <span class="mb-1">
+                                        <b class="me-1"
+                                            style="font-size: 15px;"><?= $comment['first_name'] . " " . $comment['last_name'] ?></b>
+                                        <i class="fw-regular"
+                                            style="font-size: 15px;">(<?= get_abbreviation($comment['department_name']) ?>)</i></span>
+                                    <span><?= $comment['comment'] ?></span>
+                                </div>
+                            </div>
+
+                        <?php endforeach; ?>
+                    <?php else: ?>
+                        <div class="comment my-1 d-flex flex-column">
+                            <span class="me-1 text-center" style="font-size: 15px;">No comments yet.</span>
                         </div>
-                    <?php endforeach; ?>
+                    <?php endif; ?>
+
                 </div>
 
             </div>
@@ -144,7 +165,7 @@ endforeach; ?>
         <div class="modal-content shadow-lg border-0 rounded-3">
 
             <!-- HEADER -->
-            <div class="modal-header bg-primary text-white">
+            <div class="modal-header">
                 <h5 class="modal-title fw-semibold">
                     <?= ($count_assign === 0) ? "Assign Ticket" : "Re-assign Ticket" ?>
                 </h5>
@@ -160,7 +181,7 @@ endforeach; ?>
                 <div class="p-3 bg-light rounded-3 mb-3">
                     <label class="text-muted small mb-1">Department</label>
                     <div class="fw-semibold fs-6">
-                        <i class="fa-solid fa-building me-2 text-primary"></i>
+                        <i class="fa-solid fa-building me-2"></i>
                         <?= $ticket['department_name'] ?>
                     </div>
                 </div>
@@ -198,7 +219,7 @@ endforeach; ?>
                     Close
                 </button>
 
-                <a href="" data-bs-toggle="modal" data-bs-target="#edit_assign_person" class="btn btn-outline-primary">
+                <a href="" data-bs-toggle="modal" data-bs-target="#edit_assign_person" class="btn submit-btn">
                     <i class="<?= ($count_assign === 0) ? "fa-solid fa-user-plus" : "fa-solid fa-user-pen" ?> me-1"></i>
                     <?= ($count_assign === 0) ? "Assign Person" : "Edit Assignment" ?>
                 </a>
@@ -216,7 +237,7 @@ endforeach; ?>
         <div class="modal-content shadow-lg border-0 rounded-3">
 
             <!-- HEADER -->
-            <div class="modal-header bg-primary text-white">
+            <div class="modal-header">
                 <h5 class="modal-title fw-semibold">
                     <?= ($count_assign === 0) ? "Assign Ticket" : "Edit Assigned Ticket" ?>
                 </h5>
@@ -321,15 +342,15 @@ endforeach; ?>
 
                                                     </div>
                                                 </td>
-                                                <td class="text-center"><button type="button"
-                                                        class="btn btn-danger removeRow">X</button></td>
+                                                <td class="text-center"><button type="button" class="btn removeRow"
+                                                        style="background: #ef4444; color: white;">X</button></td>
                                             </tr>
                                         <?php endforeach; ?>
                                     <?php endif; ?>
                                 <?php endif; ?>
                             </tbody>
                         </table>
-                        <button type="button" id="addRow" class="btn btn-primary">Add
+                        <button type="button" id="addRow" class="btn " style="background-color: #3b82f6;">Add
                             Row</button>
                     </div>
 
@@ -355,7 +376,7 @@ endforeach; ?>
                         data-bs-target="#modal_assign_person">
                         Close
                     </button>
-                    <button type="submit" class="btn btn-outline-primary">
+                    <button type="submit" class="btn submit-btn">
                         <i
                             class="<?= ($count_assign === 0) ? "fa-solid fa-user-plus" : "fa-solid fa-user-pen" ?> me-1"></i>
                         <?= ($count_assign === 0) ? "Save" : "Save Changes" ?>
@@ -372,7 +393,7 @@ endforeach; ?>
 <div class="modal fade" id="modal_department" tabindex="-1" aria-hidden="true" data-bs-backdrop="static">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content shadow-lg border-0 rounded-3">
-            <div class="modal-header bg-primary text-white">
+            <div class="modal-header">
                 <h5 class="modal-title fw-semibold">Department</h5>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
             </div>
@@ -382,8 +403,8 @@ endforeach; ?>
                     <div class="d-flex mt-2">
                         <input type="text" value="<?= $ticket['department_name'] ?>" class="form-control" readonly>
                         <a href="" data-bs-toggle="modal" data-bs-target="#edit_department"
-                            class="btn btn-primary p-2 px-3 ms-2 has-tooltip" title="Change Department"><i
-                                class="fa-solid fa-dice"></i></a>
+                            class="btn p-2 px-3 ms-2 has-tooltip modal-btn d-flex align-items-center"
+                            title="Change Department"><i class="fa-solid fa-dice" style="font-size: 20px;"></i></a>
                     </div>
 
                 </div>
@@ -402,7 +423,7 @@ endforeach; ?>
     aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
-            <div class="modal-header bg-primary text-white">
+            <div class="modal-header">
                 <h5 class="modal-title">Re-assign Department</h5>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
             </div>
@@ -427,13 +448,71 @@ endforeach; ?>
                 <div class="modal-footer border-0">
                     <button type="button" class="btn btn-secondary" data-bs-toggle="modal"
                         data-bs-target="#modal_department">Back</button>
-                    <button type="submit" class="btn btn-primary">Save changes</button>
+                    <button type="submit" class="btn submit-btn">Save changes</button>
                 </div>
             </form>
 
         </div>
     </div>
 </div>
+
+<!--COMMENTS Modal-->
+<div class="modal fade" id="add_comment" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Add New Comment</h5>
+                <button type="button" class="btn-close btn-close-white btn-close-reload"
+                    data-bs-dismiss="modal"></button>
+            </div>
+            <form action="<?php echo base_url("comments/") . $ticket['ticket_id'] ?>" method="post"
+                enctype="multipart/form-data">
+                <div class="form-content comment-sheet">
+                    <!-- Identity (display only) -->
+                    <div class="comment-identity">
+                        <div class="avatar"
+                            style="background: <?= ($logged_user['gender'] == "male") ? "var(--gender-male)" : "var(--gender-female)" ?> ;">
+                            <?= name_abbr($logged_user['first_name'], $logged_user['last_name']); ?>
+                        </div>
+
+                        <div class="identity-info">
+                            <div class="name"><?= $logged_user['first_name'] . ' ' . $logged_user['last_name'] ?></div>
+                            <div class="department"><?= $ticket['department_name'] ?></div>
+                        </div>
+                    </div>
+
+                    <!-- Comment Area -->
+                    <div class="comment-body">
+                        <label>Comment</label>
+                        <textarea name="comment" rows="4" placeholder="Write your comment here..."
+                            required><?= set_value("comment") ?></textarea>
+                    </div>
+
+                    <!-- Attachment Footer -->
+                    <div class="comment-attachment">
+                        <label class="attachment-box">
+                            <input type="file" name="fileUploads[]" id="files" multiple
+                                accept=".jpg,.jpeg,.png,.pdf,.docx,.ppt,.zip,.pptx">
+                            <span>📎 Attach file <i class="text-black">(optional)</i></span>
+                        </label>
+                        <small>PDF, JPG, PNG — max 5MB</small>
+                    </div>
+                    <div class="fileList-col mt-2">
+                        <ul id="fileList" class="list-group mt-2"></ul>
+                    </div>
+
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-close-reload" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn">Add Comment</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
 
 <script>
     $(function() {
@@ -572,14 +651,3 @@ function get_abbreviation($string) {
     return $string;
 }
 ?>
-
-
-<script id="reload-fix">
-    document.querySelectorAll('.btn-close-reload').forEach(btn => {
-        btn.addEventListener('click', function() {
-            setTimeout(() => {
-                location.reload();
-            }, 250); // 1000ms = 1 second
-        });
-    });
-</script>

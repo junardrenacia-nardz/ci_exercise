@@ -178,18 +178,6 @@ class Ticket_model extends CI_Model {
 
         return true;
     }
-
-    public function get_comments($ticket_id) {
-        $this->db->select("c.user_id, c.comment, e.first_name, e.last_name, d.department_name");
-        $this->db->from("comments c");
-        $this->db->join("users u", "u.user_id = c.user_id", 'left');
-        $this->db->join("employees e", "e.employee_id = u.employee_id", 'left');
-        $this->db->join("departments d", "d.department_id = e.department_id", 'left');
-        $this->db->where("ticket_id", $ticket_id);
-        $query = $this->db->get();
-        return $query->result_array();
-    }
-
     public function check_assigned($user, $ticket_id) {
         $this->db->where(['user_id' => $user, 'ticket_id' => $ticket_id]);
         return $this->db->count_all_results('ticket_assigned') > 0;

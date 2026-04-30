@@ -1,77 +1,5 @@
 @import url("https://fonts.googleapis.com/css2?family=Saira+Stencil:ital,wght@0,100..900;1,100..900&display=swap");
 
-:root {
-	/* =========================
-	   PRIMARY (System Ink - NOT blue, NOT gray)
-	   feels like ink on paper UI
-	========================= */
-	--primary: #1f2933; /* deep ink slate */
-	--primary-hover: #111827; /* near-black ink */
-	--primary-active: #0b1220; /* pressed ink */
-	--primary-soft: #eceff3; /* paper tint */
-	--primary-light: #f5f7fa; /* UI surface */
-
-	/* =========================
-	   BACKGROUND (Paper system)
-	========================= */
-	--bg: #f7f7f5; /* soft paper white */
-	--bg-alt: #efefec; /* aged paper layer */
-	--card: #ffffff;
-	--overlay: rgba(20, 24, 28, 0.55);
-
-	/* =========================
-	   TEXT (Ink hierarchy)
-	========================= */
-	--text: #121826; /* strong ink */
-	--text-heading: #0b0f14;
-	--text-muted: #5b6472; /* faded ink */
-	--text-subtle: #8a94a6; /* dust ink */
-
-	/* =========================
-	   BORDER (Soft graphite lines)
-	========================= */
-	--border: #e3e6ea;
-	--border-hover: #cfd6dd;
-	--border-dark: #9aa4b2;
-
-	/* =========================
-	   STATUS SYSTEM (Dust + Earth tones)
-	   → no bright colors, only "material states"
-	========================= */
-
-	/* ⚪ Open (fresh paper) */
-	--status-open: #aab2bd;
-
-	/* 🌫 Pending (dust / waiting state) */
-	--status-pending: #b5b0a6;
-
-	/* 🪵 On Going (wood / active work) */
-	--status-progress: #8f8576;
-
-	/* 🪨 For Testing (stone / verification) */
-	--status-review: #7f8b85;
-
-	/* 🧾 Closed (ink faded / archived) */
-	--status-closed: #6c7682;
-
-	/* 🧱 Critical (rust ink / broken state) */
-	--status-danger: #7a6a63;
-
-	/* =========================
-	   NEUTRAL SCALE (structured UI system)
-	========================= */
-	--gray-50: #f7f7f5;
-	--gray-100: #efefec;
-	--gray-200: #e3e6ea;
-	--gray-300: #cfd6dd;
-	--gray-400: #aab2bd;
-	--gray-500: #8a94a6;
-	--gray-600: #6f7a8a;
-	--gray-700: #525c6b;
-	--gray-800: #2b3440;
-	--gray-900: #121826;
-}
-
 /* PRIORITIES */
 
 body {
@@ -149,7 +77,7 @@ main {
 
 .sidebar-toggler {
 	background-color: transparent;
-	color: white;
+	color: black;
 	cursor: pointer;
 	border: 0;
 	display: none;
@@ -259,12 +187,20 @@ a.sidebar-link.active {
 	height: 66px;
 }
 
-#nav-toggle .user-icon i {
-	background-color: var(--border-dark);
-	padding: 10px;
-	border-radius: 999px;
-	font-size: 15px;
+#nav-toggle .user-icon,
+.avatar {
+	padding: 7px 10px;
+	border-radius: 50%;
+	background-color: #000000;
 	color: white;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	font-weight: 800;
+}
+
+.avatar-col {
+	width: 50px;
 }
 /* Main Scrollbar */
 main.main::-webkit-scrollbar,
@@ -326,6 +262,10 @@ a#notifications:hover {
 	background-color: var(--primary);
 	color: var(--primary-light);
 }
+.btn-create-ticket:hover {
+	background-color: var(--accent-clay);
+	color: var(--primary-light);
+}
 
 .custom-tooltip.ui-tooltip {
 	background: #ffffff !important;
@@ -382,6 +322,40 @@ a#notifications:hover {
 	}
 
 	#main.collapsed {
-		margin-left: 200vw;
+		margin-left: 0vw;
 	}
+}
+
+.modal-header {
+	background-color: var(--accent-clay);
+}
+
+.modal-header h5,
+.modal-header button {
+	color: var(--bg);
+}
+
+.modal .modal-content i {
+	color: var(--accent-clay);
+}
+
+.modal .modal-content .submit-btn,
+.modal .modal-content .modal-btn {
+	background-color: var(--accent-clay-light);
+	color: var(--accent-clay);
+}
+
+.modal .modal-content .submit-btn:hover,
+.modal .modal-content .modal-btn:hover {
+	box-shadow: 0px 0px 3px var(--accent-clay);
+}
+
+button.remove-attachment {
+	border: none;
+	background-color: transparent;
+}
+
+button.remove-attachment i {
+	font-size: 30px;
+	color: var(--danger);
 }

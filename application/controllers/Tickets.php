@@ -1,5 +1,7 @@
 <?php
 
+use Dom\Comment;
+
 /**
  * @property CI_Session $session
  * @property Department_model $department_model
@@ -10,6 +12,7 @@
  * @property User_model $user_model
  * @property CI_Upload $upload
  * @property CI_Input $input
+ * @property Comment_model $comment_model
  */
 
 class Tickets extends CI_Controller {
@@ -21,7 +24,7 @@ class Tickets extends CI_Controller {
         $data['logged_user'] = $this->user_model->get_employee_details($employee_id);
         $data['title'] = 'Tickets';
 
-        $data['ticket_details'] = $this->ticket_model->get_tickets();
+        $data['ticket_details'] = $this->ticket_model->get_tickets() ?? [];
         $data['ticket_assigned'] = $this->ticket_model->get_ticket_assigned();
         $data['departments'] = $this->department_model->get_departments();
         if ($status == "all") {
@@ -80,7 +83,7 @@ class Tickets extends CI_Controller {
         $data['ticket'] = $this->ticket_model->get_tickets($ticket_id);
         $data['ticket_assigned'] = $this->ticket_model->get_ticket_assigned();
         $data['all_assigned'] = $this->user_model->get_users();
-        $data['comments'] = $this->ticket_model->get_comments($ticket_id);
+        $data['comments'] = $this->comment_model->get_comments($ticket_id);
         $this->load->view('templates/header', $data);
         $this->load->view('tickets/view_ticket', $data);
         $this->load->view('templates/footer');

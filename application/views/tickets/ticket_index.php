@@ -1,3 +1,9 @@
+<?php
+
+/** @var array $ticket_details */
+/** @var array $ticket_assigned */
+?>
+
 <div class="p-2">
     <div class="table-wrapper">
 

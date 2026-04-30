@@ -62,3 +62,11 @@ searchBtnToggler.addEventListener("click", function () {
 $(function () {
 	$(".has-tooltip").tooltip();
 });
+
+document.querySelectorAll(".btn-close-reload").forEach((btn) => {
+	btn.addEventListener("click", function () {
+		setTimeout(() => {
+			location.reload();
+		}, 250); // 1000ms = 1 second
+	});
+});

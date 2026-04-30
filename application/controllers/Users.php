@@ -30,7 +30,8 @@ class Users extends CI_Controller {
                     'user_id' => $user_id['user_id'],
                     'employee_id' => $user_id['employee_id'],
                     'email' => $email,
-                    'logged_in' => true
+                    'logged_in' => true,
+                    'gender' => $user_id['gender']
                 ];
 
                 $this->session->set_userdata($user_data);
