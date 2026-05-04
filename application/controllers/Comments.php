@@ -7,8 +7,10 @@
  * @property CI_Upload $upload
  */
 
-class Comments extends CI_Controller {
-    public function addComments($ticket_id) {
+class Comments extends CI_Controller
+{
+    public function addComments($ticket_id)
+    {
         if (!$this->session->userdata('logged_in')) {
             redirect('users');
         }
@@ -43,8 +45,9 @@ class Comments extends CI_Controller {
                 $_FILES['file']['size'] = $files_uploaded['size'][$i];
 
                 $config['upload_path'] = './assets/images/comment_attachments';
+                $config['allowed_types'] = 'gif|jpg|png|jpeg|docx|ppt|pptx|zip|rar|pdf';
                 $config['max_size'] = 5000; // 2MB
-                $config['encrypt_name']  = TRUE;
+                $config['encrypt_name'] = TRUE;
 
                 $this->upload->initialize($config);
 
@@ -52,7 +55,7 @@ class Comments extends CI_Controller {
                     $uploadData = $this->upload->data();
                     $fileNames[] = [
                         'encryptedName' => $uploadData['file_name'],
-                        'origName'      => $uploadData['orig_name']
+                        'origName' => $uploadData['orig_name']
                     ];
                 } else {
                     if (!empty($_FILES['file']['name'])) {
@@ -71,5 +74,11 @@ class Comments extends CI_Controller {
             $this->comment_model->add_comment($fileNames, $ticket_id, $user_id);
             return redirect('tickets/view_ticket/' . $ticket_id);
         }
+    }
+
+    public function get_attachments($ticket_id, $comment_id)
+    {
+        $files = $this->comment_model->get_comment_attachments($ticket_id, $comment_id);
+        echo json_encode($files);
     }
 }

@@ -1,9 +1,3 @@
-<?php
-
-/** @var array $ticket_details */
-/** @var array $ticket_assigned */
-?>
-
 <div class="p-2">
     <div class="table-wrapper">
 
@@ -134,7 +128,7 @@
                             </td>
                             <td class="align-middle text-center"><?php echo $ticket['department_name'] ?></td>
                             <td class="align-middle">
-                                <?php if ($count_assign != 0) : ?>
+                                <?php if ($count_assign != 0): ?>
                                     <?php if ($count_assign == 1): ?>
                                         <div class="text-center fw-bold">
                                             <?php foreach ($peopleInCharge as $pic): ?>
@@ -144,7 +138,7 @@
                                     <?php else: ?>
                                         <div class="text-center fw-bold has-tooltip" title="
                                     <?php foreach ($peopleInCharge as $pic): ?>
-                                            <?php echo "$pic, "  ?>
+                                            <?php echo "$pic, " ?>
                                         <?php endforeach ?>
                                     ">
                                             <?= get_abbreviation($ticket['department_name']) . " ($count_assign)" ?>
@@ -155,7 +149,7 @@
                                     <div class="text-center">
                                         <h5>-</h5>
                                     </div>
-                                <?php
+                                    <?php
                                 elseif ($count_assign === 0): ?>
                                     <div class="text-center">
                                         <a href="" class="btn btn-assign fw-bold rounded-5 p-2 py-1"><i
@@ -165,7 +159,7 @@
                                 <?php endif; ?>
                             </td class="align-middle">
                             <td class="align-middle">
-                                <?= $ticket['requester_first_name'] . " " . $ticket['requester_last_name']  ?>
+                                <?= $ticket['requester_first_name'] . " " . $ticket['requester_last_name'] ?>
                             </td>
                             <td class="align-middle"><?= date('m-d-Y', strtotime($ticket['ticket_updated'])) ?></td>
                             <td class="align-middle">

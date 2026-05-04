@@ -59,6 +59,7 @@ $route["create_ticket"] = "tickets/createTicket";
 
 // Comments
 $route['comments/(:any)'] = "comments/addComments/$1";
+$route['comments/get_attachments/(:any)/(:any)'] = 'comments/get_attachments/$1/$2';
 
 // Dashboard
 $route["dashboard"] = "tickets/dashboard";

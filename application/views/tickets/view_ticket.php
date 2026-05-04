@@ -19,8 +19,8 @@ foreach ($ticket_assigned as $assigned):
 endforeach; ?>
 <div class="w-100 rounded-3 mt-4 p-4 mx-auto mb-5"
     style="background-color: white; max-width: 1290px ; box-shadow: 0 6px 18px rgba(0, 0, 0, 0.25);">
-    <div class="ticket-details d-flex justify-content-between">
-        <div class="information-tickets col-md-7 pe-3">
+    <div class="ticket-details d-flex justify-content-between p-3">
+        <div class="information-tickets col-md-8 pe-3">
             <div class="ticket-subject d-flex align-items-center mb-1">
                 <span class="subject me-2"><?= $ticket['ticket_name'] ?></span>
                 <span class="badge p-1 badge-ticket fw-bold">Main Ticket</span>
@@ -93,10 +93,18 @@ endforeach; ?>
                     </div>
 
                 </div>
+                <div class="mt-3">
+                    <button class="btn btn-outline-secondary btn-sm attachment-btn" data-bs-toggle="modal"
+                        data-bs-target="#ticket_attachments">
+
+                        <i class="fa-solid fa-paperclip me-1"></i>
+                        <span>Attachments</span>
+                    </button>
+                </div>
             </div>
         </div>
 
-        <div class="comments col-md-5">
+        <div class="comments col-md-4">
             <div class="ticket-button d-flex justify-content-end">
                 <?php if ($ticket['ticket_status'] !== "For Approval"): ?>
                     <?php if ($count_assign == 0): ?>
@@ -117,33 +125,55 @@ endforeach; ?>
             </div>
 
             <div class="comments-col w-100 mt-5">
-                <div class="d-flex align-items-center comment-btn">
-                    <div class="fs-6 fw-bold me-2">Comments</div>
-                    <a href="" class="" data-bs-toggle="modal" data-bs-target="#add_comment">
-                        <i class="fa-solid fa-plus"></i></a>
+                <div class="d-flex align-items-center justify-content-between comment-btn">
+                    <div class="fs-6 fw-bold ">Comments <span>(<?= count($comments) ?>)</span></div>
+                    <a href="" class="d-flex align-items-center" data-bs-toggle="modal" data-bs-target="#add_comment">
+                        <i class="fa-solid fa-plus me-2"></i><span>New</span></a>
                 </div>
 
                 <div class="comment-contents px-3 py-2 mt-2">
                     <?php if (!empty($comments)): ?>
                         <?php foreach ($comments as $comment): ?>
                             <div class="d-flex align-items-start my-3">
-                                <div class="avatar-col align-middle">
+                                <div class="avatar-col d-flex justify-content-between align-items-center">
                                     <div class="avatar me-2"
                                         style="background: <?= ($comment['gender'] == "male") ? "var(--gender-male)" : "var(--gender-female)" ?> ;">
                                         <?= name_abbr($comment['first_name'], $comment['last_name']); ?>
                                     </div>
+
                                 </div>
 
-                                <div class="comment d-flex flex-column">
-                                    <span class="mb-1">
-                                        <b class="me-1"
-                                            style="font-size: 15px;"><?= $comment['first_name'] . " " . $comment['last_name'] ?></b>
-                                        <i class="fw-regular"
-                                            style="font-size: 15px;">(<?= get_abbreviation($comment['department_name']) ?>)</i></span>
+                                <div class="comment d-flex flex-column w-100">
+                                    <div class="comment-date d-flex flex-column mb-1">
+                                        <span>
+                                            <b class="me-1"
+                                                style="font-size: 15px;"><?= $comment['first_name'] . " " . $comment['last_name'] ?></b>
+                                            <i class="fw-regular"
+                                                style="font-size: 15px;">(<?= get_abbreviation($comment['department_name']) ?>)</i></span>
+                                        <span
+                                            style="font-size: 0.7rem; color: var(--text-muted); font-weight: 600;"><?= date('m-d-Y', strtotime($comment['comment_created_at'])) . "  " . date('h:i:s a', strtotime($comment['comment_created_at'])) ?></span>
+                                    </div>
+
                                     <span><?= $comment['comment'] ?></span>
+
+                                    <?php
+                                    $hasAttachment = 0;
+                                    foreach ($comment_attachments as $ca) {
+                                        if ($comment['comment_id'] === $ca['comment_id']) {
+                                            $hasAttachment++;
+                                        }
+                                    } ?>
+
+                                    <?php if ($hasAttachment > 0): ?>
+                                        <div class="mt-2 ">
+                                            <a class="py-1 view-attachment" data-comment-id="<?= $comment['comment_id']; ?>"
+                                                data-bs-toggle="modal" data-bs-target="#comment_attachments">View Attachments</a>
+                                        </div>
+                                    <?php endif; ?>
+
                                 </div>
                             </div>
-
+                            <hr>
                         <?php endforeach; ?>
                     <?php else: ?>
                         <div class="comment my-1 d-flex flex-column">
@@ -190,7 +220,7 @@ endforeach; ?>
                 <div class="p-3 border rounded-3">
                     <label class="text-muted small mb-2 d-block">Person in Charge</label>
 
-                    <?php if ($count_assign !== 0) : ?>
+                    <?php if ($count_assign !== 0): ?>
                         <ul class="list-unstyled mb-0">
                             <?php foreach ($inCharge as $person): ?>
                                 <li class="d-flex align-items-center justify-content-between mb-2 p-2 bg-light rounded">
@@ -428,6 +458,7 @@ endforeach; ?>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
             </div>
             <form method="POST" action="<?php echo base_url("tickets/reassign_department/") . $ticket['ticket_id'] ?>">
+                <input type="hidden" name="oldDepartment" value="<?= $ticket['department_id'] ?>">
                 <div class="modal-body">
                     <div class="col-12">
                         <div class="input-wrapper">
@@ -514,12 +545,99 @@ endforeach; ?>
 </div>
 
 
+<!--COMMENT Attachments Modal-->
+<div class="modal fade" id="comment_attachments" tabindex="-1" aria-hidden="true" data-bs-backdrop="static">
+    <div class="modal-dialog modal-attachment modal-dialog-centered">
+        <div class="modal-content shadow-lg border-0 rounded-3 modal-attachment">
+            <div class="modal-body px-3 py-3">
+                <div class="d-flex justify-content-between attachment-close w-100 ps-5">
+                    <h5 class="attachment-header-title"></h5>
+                    <button type="button" class="btn-close btn-close-black" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="attachment-content d-flex flex-column my-4 mt-5 mx-3 overflow-y-auto overflow-x-hidden">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="ticket_attachments" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-body attachment-content">
+                <div class="d-flex justify-content-between attachment-close w-100 ps-5">
+                    <h5>Ticket Attachments</h5>
+                    <button type="button" class="btn-close btn-close-black" data-bs-dismiss="modal"></button>
+                </div>
+
+
+                <?php
+                $images = [];
+                $files = [];
+
+                foreach ($ticket_attachments as $file) {
+                    $ext = strtolower(pathinfo($file['attachment'], PATHINFO_EXTENSION));
+
+                    if (in_array($ext, ['jpg', 'jpeg', 'png', 'gif'])) {
+                        $images[] = $file;
+                    } else {
+                        $files[] = $file;
+                    }
+                }
+                ?>
+
+                <!-- IMAGES -->
+                <div class="mt-5 mb-3 mx-3">
+                    <h6 class="section-title">Images</h6>
+
+                    <?php if (!empty($images)): ?>
+                        <div class="image-attachments">
+                            <?php foreach ($images as $img): ?>
+                                <a href="<?= base_url('assets/images/ticket_attachments/' . $img['attachment']) ?>"
+                                    target="_blank" title="<?= $img['orig_name'] ?>" class="has-tooltip">
+                                    <img src="<?= base_url('assets/images/ticket_attachments/' . $img['attachment']) ?>">
+                                </a>
+                            <?php endforeach; ?>
+                        </div>
+                    <?php else: ?>
+                        <p class="text-muted">No Images Attached</p>
+                    <?php endif; ?>
+                </div>
+
+                <!-- FILES -->
+                <div class="mx-3 mb-3">
+                    <h6 class="section-title">Files</h6>
+
+                    <?php if (!empty($files)): ?>
+                        <div class="file-attachments">
+                            <?php foreach ($files as $f): ?>
+                                <div class="file-item">
+                                    <span class="file-name"><?= $f['orig_name'] ?></span>
+                                    <a href="<?= base_url('assets/images/ticket_attachments/' . $f['attachment']) ?>"
+                                        target="_blank">
+                                        <i class="fa-solid fa-download" style='color: #666666;'></i>
+                                    </a>
+                                </div>
+                            <?php endforeach; ?>
+                        </div>
+                    <?php else: ?>
+                        <p class="text-muted">No Files Attached</p>
+                    <?php endif; ?>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
 <script>
-    $(function() {
+    $(function () {
         $(".has-tooltip").tooltip();
     });
-    document.querySelectorAll('.modalEdit').forEach(function(modal) {
-        modal.addEventListener('hidden.bs.modal', function() {
+    document.querySelectorAll('.modalEdit').forEach(function (modal) {
+        modal.addEventListener('hidden.bs.modal', function () {
             this.querySelector('form').reset();
             updateSelectOptions();
         });
@@ -529,32 +647,15 @@ endforeach; ?>
 
     let originalAssignTableHTML;
 
-    document.addEventListener("DOMContentLoaded", function() {
+    document.addEventListener("DOMContentLoaded", function () {
         originalAssignTableHTML = document.querySelector("#assignTableDynamic tbody").innerHTML;
     });
 
-    // document.querySelectorAll('.edit_assign_person').forEach(function(modal) {
-    //     modal.addEventListener('hidden.bs.modal', function() {
-
-
-    //         this.querySelector('form').reset();
-    //         // remove added rows only (not DB rows)
-    //         const rows = document.querySelectorAll("#assignTableDynamic tbody tr");
-
-    //         rows.forEach((row, index) => {
-    //             if (index >= originalRowCount) {
-    //                 row.remove();
-    //             }
-    //         });
-    //         updateSelectOptions();
-    //     });
-    // });
-
-    document.addEventListener("DOMContentLoaded", function() {
+    document.addEventListener("DOMContentLoaded", function () {
         updateSelectOptions();
     });
 
-    document.addEventListener("change", function(e) {
+    document.addEventListener("change", function (e) {
         if (e.target.matches("select[name='employeeName[]']")) {
             updateSelectOptions();
         }
@@ -631,7 +732,7 @@ endforeach; ?>
 
 <?php if ($this->session->flashdata('showModal')): ?>
     <script>
-        document.addEventListener("DOMContentLoaded", function() {
+        document.addEventListener("DOMContentLoaded", function () {
             var modalId = "<?= $this->session->flashdata('showModal'); ?>";
             var myModal = new bootstrap.Modal(document.getElementById(modalId));
             myModal.show();
@@ -651,3 +752,81 @@ function get_abbreviation($string) {
     return $string;
 }
 ?>
+
+<script>
+    document.addEventListener('click', function (e) {
+        if (e.target.classList.contains('view-attachment')) {
+
+            let commentId = e.target.dataset.commentId;
+
+            // Clear old content
+            document.querySelector('.attachment-content').innerHTML = '';
+
+            // AJAX request to get attachments
+            fetch("<?= base_url('comments/get_attachments/') . $ticket['ticket_id'] . "/" ?>" + commentId)
+                .then(response => response.json())
+                .then(data => {
+
+                    let title = document.querySelector('.attachment-header-title');
+                    title.textContent = data[0]?.first_name + " " + data[0]?.last_name;
+
+
+                    let container = document.querySelector('.attachment-content');
+                    container.innerHTML = `
+                        <div class="attachment-section">
+                            <h6 class="section-title">Images</h6>
+                            <div class="image-attachments"></div>
+                        </div>
+
+                        <div class="attachment-section mt-4">
+                            <h6 class="section-title">Files</h6>
+                            <div class="file-attachments"></div>
+                        </div>
+                    `;
+
+                    let imageContainer = container.querySelector('.image-attachments');
+                    let fileContainer = container.querySelector('.file-attachments');
+
+                    let images = '';
+                    let files = '';
+
+                    data.forEach(file => {
+
+                        let ext = file.attachment.split('.').pop().toLowerCase();
+                        let filePath = "<?= base_url('assets/images/comment_attachments/') ?>" + file
+                            .attachment;
+
+                        // IMAGES
+                        if (['jpg', 'jpeg', 'png', 'gif'].includes(ext)) {
+                            images += `
+                                <a href="${filePath}" target="_blank" title="${file.orig_name}" class="has-tooltip">
+                                    <img src="${filePath}">
+                                </a>
+                            `;
+                        }
+
+                        // FILES
+                        else {
+                            files += `
+                                <div class="file-item">
+                                    <span class="file-name">${file.orig_name}</span>
+                                    <a href="${filePath}" target="_blank" class="file-download">
+                                     <i class="fa-solid fa-download" style = 'color: #666666;'></i>
+                                    </a>
+                                </div>
+                            `;
+                        }
+                    });
+
+                    imageContainer.innerHTML = images ?
+                        images :
+                        `<p class="text-muted">No Images Attached</p>`;
+
+                    fileContainer.innerHTML = files ?
+                        files :
+                        `<p class="text-muted">No Files Attached</p>`;
+
+                });
+        }
+    });
+</script>

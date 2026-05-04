@@ -81,19 +81,34 @@ class Users extends CI_Controller {
         redirect('users');
     }
 
+    public function user_index() {
+        if (!$this->session->userdata('logged_in')) {
+            redirect('users');
+        }
+        $employee_id = $this->session->userdata('employee_id');
+        $data['logged_user'] = $this->user_model->get_employee_details($employee_id);
+        $data['title'] = 'User Management';
+
+        $data['users'] = $this->user_model->get_users();
+
+        $this->load->view('templates/header', $data);
+        $this->load->view('users/user-management/user_index', $data);
+        $this->load->view('templates/footer');
+    }
+
 
 
     function validate_password($password) {
         if (strlen($password) < 8) {
             $this->form_validation->set_message([
                 'validate_password' =>
-                "Password must have at least 8 character"
+                    "Password must have at least 8 character"
             ]);
             return false;
         } else if (!preg_match('/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&-])[A-Za-z\d@$!%*?&-]{8,}$/', $password)) {
             $this->form_validation->set_message([
                 'validate_password' =>
-                "Password must be the combination of Letters, Numbers, and Special Characters"
+                    "Password must be the combination of Letters, Numbers, and Special Characters"
             ]);
             return false;
         }
@@ -105,13 +120,13 @@ class Users extends CI_Controller {
         if (!preg_match('/^09/', $contact)) {
             $this->form_validation->set_message([
                 'validate_contact' =>
-                'Must start with "09"'
+                    'Must start with "09"'
             ]);
             return false;
         } else if (!preg_match('/^09\d{9}$/', $contact)) {
             $this->form_validation->set_message([
                 'validate_contact' =>
-                "Must have the length of 11 digits"
+                    "Must have the length of 11 digits"
             ]);
             return false;
         }
@@ -127,4 +142,6 @@ class Users extends CI_Controller {
             return false;
         }
     }
+
+
 }

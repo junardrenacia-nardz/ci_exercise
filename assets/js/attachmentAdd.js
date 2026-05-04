@@ -30,7 +30,7 @@ function renderList() {
 		const fileInfo = document.createElement("div");
 		fileInfo.innerHTML = `<span>${file.name}</span>`;
 
-		// Remove button
+		// Remove button0
 		const btn = document.createElement("button");
 		btn.classList.add("remove-attachment");
 		btn.innerHTML =
@@ -67,8 +67,7 @@ function renderList() {
 			previewElement.src = URL.createObjectURL(file);
 		} else {
 			// Show icon based on extension
-			previewElement = document.createElement("img");
-
+			previewElement = document.createElement("img")
 			const iconPath = fileIcons[ext] || fileIcons["default"];
 			previewElement.src = BASE_URL + iconPath;
 		}
@@ -121,20 +120,4 @@ resetBtn.addEventListener("click", (e) => {
 	selectedFiles = [];
 	updateInputFiles();
 	renderList();
-
-	// 🔹 Reset dropdown states
-	const department = document.getElementById("selectDepartment");
-	const subject = document.getElementById("ticketSubject");
-	const description = document.getElementById("ticketDescription");
-	const requestType = document.getElementById("requestType");
-
-	subject.value = "";
-	description.value = "";
-	department.value = "";
-
-	requestType.value = "";
-	requestType.disabled = true;
-
-	// 🔹 (optional) clear validation messages
-	form.querySelectorAll("span").forEach((span) => (span.innerHTML = ""));
 });

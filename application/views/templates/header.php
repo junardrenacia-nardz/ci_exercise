@@ -1,3 +1,11 @@
+<?php
+
+/** @var array $ticket_details */
+/** @var array $ticket_assigned */
+/** @var array $logged_user */
+/** @var string $title */
+?>
+
 <?php $current = uri_string();
 $isViewTicket = strpos($current, 'tickets/view_ticket/') === 0; ?>
 
@@ -13,6 +21,7 @@ function name_abbr($first, $last) {
 ?>
 
 <script>
+    // BASE_URL JS
     const BASE_URL = "<?= base_url() ?>";
 </script>
 
@@ -95,25 +104,23 @@ function name_abbr($first, $last) {
 
                 <li class="sidebar-item">
                     <a href="#" class="sidebar-link has-dropdown <?= ($current == "tickets/all" || $current == "tickets/approval" || $current == "tickets/open"
-                                                                        || $current == "tickets/pending" || $current == "tickets/ongoing"
-                                                                        || $current == "tickets/testing" || $current == "tickets/closed"
-                                                                        || $isViewTicket) ? "active" : "" ?>"
-                        data-bs-toggle="collapse" data-bs-target="#ticket-items" aria-expanded="true"
-                        aria-controls="ticket-items">
+                        || $current == "tickets/pending" || $current == "tickets/ongoing"
+                        || $current == "tickets/testing" || $current == "tickets/closed"
+                        || $isViewTicket) ? "active" : "" ?>" data-bs-toggle="collapse" data-bs-target="#ticket-items"
+                        aria-expanded="true" aria-controls="ticket-items">
                         <i class="fa-solid fa-ticket"></i>
                         <span>Tickets</span>
                     </a>
                     <ul class="sidebar-dropdown list-unstyled collapse <?= ($current == "tickets/all" || $current == "tickets/approval" || $current == "tickets/open"
-                                                                            || $current == "tickets/pending" || $current == "tickets/ongoing"
-                                                                            || $current == "tickets/testing" || $current == "tickets/closed"
-                                                                            || $isViewTicket) ? "show" : "" ?>"
-                        id="ticket-items">
+                        || $current == "tickets/pending" || $current == "tickets/ongoing"
+                        || $current == "tickets/testing" || $current == "tickets/closed"
+                        || $isViewTicket) ? "show" : "" ?>" id="ticket-items">
                         <li class="sidebar-item">
                             <a href="" class="sidebar-link"><i class="fa-regular fa-user"></i>
                                 <span>My Tickets</span></a>
                             <a href="<?= base_url("tickets/all") ?>"
                                 class="sidebar-link <?= ($current == "tickets/all" || $current == "tickets/approval" || $current == "tickets/open"
-                                                        || $current == "tickets/pending" || $current == "tickets/ongoing" || $current == "tickets/testing" || $current == "tickets/closed") ? "active" : "" ?>"><i
+                                    || $current == "tickets/pending" || $current == "tickets/ongoing" || $current == "tickets/testing" || $current == "tickets/closed") ? "active" : "" ?>"><i
                                     class="fa-solid fa-users"></i><span>All Tickets</span> </a>
                         </li>
                     </ul>
@@ -142,14 +149,23 @@ function name_abbr($first, $last) {
                         </li>
                     </ul>
                 </li>
+
+                <li class="sidebar-header">Management</li>
+                <li class="sidebar-item">
+                    <a href="#" class="sidebar-link">
+                        <i class="fa-solid fa-address-card"></i><span>My Profile</span>
+                    </a>
+                </li>
+                <li class="sidebar-item">
+                    <a href="<?= base_url("users/user_index") ?>"
+                        class="sidebar-link <?= ($current == "users/user_index") ? "active" : "" ?>"">
+                        <i class=" fa-solid fa-bars-progress"></i><span>Users</span>
+                    </a>
+                </li>
             </ul>
 
             <div class="sidebar-footer">
-                <li class="sidebar-item">
-                    <a href="#" class="sidebar-link">
-                        <i class="fa-solid fa-user"></i><span>Profile</span>
-                    </a>
-                </li>
+
                 <a href="<?= base_url() ?>users/logout" class="sidebar-link"><i
                         class="fa-solid fa-arrow-right-from-bracket"></i>Logout</a>
             </div>
@@ -176,13 +192,14 @@ function name_abbr($first, $last) {
                     <a href="#" id="notifications" class="btn rounded-5 text-nowrap mx-1 p-2 px-3" type="button">
                         <i class="fa-regular fa-bell" style="font-size: 18px;"></i></a>
                     <h6 class="text-nowrap mx-1 me-2 px-1">
-                        <?= $logged_user['first_name'] . ' ' . $logged_user['last_name'] ?></h6>
+                        <?= $logged_user['first_name'] . ' ' . $logged_user['last_name'] ?>
+                    </h6>
                     <div class="user-icon d-flex align-items-center mx-1"
                         style="background: <?= ($logged_user['gender'] == "male") ? "var(--gender-male)" : "var(--gender-female)" ?> ;">
                         <b class="d-flex align-items-center"><?= name_abbr(
-                                                                    $logged_user['first_name'],
-                                                                    $logged_user['last_name']
-                                                                ); ?></b>
+                            $logged_user['first_name'],
+                            $logged_user['last_name']
+                        ); ?></b>
                     </div>
 
                 </div>
@@ -192,8 +209,7 @@ function name_abbr($first, $last) {
                 <div class="container-fluid mt-2">
                     <div id="alertMessage-col" class="position-fixed bottom-0 end-0 p-3">
                         <?php if ($msg = $this->session->flashdata('message')): ?>
-                            <div id="alertMessage"
-                                class="alert alert-<?= $msg['type'] === 'success' ? 'success' : 'danger' ?>">
+                            <div id="alertMessage" class="alert alert-<?= $msg['type'] ?>">
                                 <?= $msg['text'] ?>
                             </div>
                         <?php endif; ?>

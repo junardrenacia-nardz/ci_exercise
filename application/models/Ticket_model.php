@@ -166,7 +166,8 @@ class Ticket_model extends CI_Model {
     public function change_department($ticket_id) {
         $ticketData = [
             "department_id" => $this->input->post('selectDepartment'),
-            "ticket_status" => "For Approval"
+            "ticket_status" => "For Approval",
+            "priority" => NULL
         ];
         $assignedData = ["person_status" => "Reassigned"];
 
@@ -181,5 +182,11 @@ class Ticket_model extends CI_Model {
     public function check_assigned($user, $ticket_id) {
         $this->db->where(['user_id' => $user, 'ticket_id' => $ticket_id]);
         return $this->db->count_all_results('ticket_assigned') > 0;
+    }
+
+    public function get_ticket_attachment($ticket_id) {
+        $this->db->where(["ticket_id" => $ticket_id]);
+        $query = $this->db->get('ticket_attachments');
+        return $query->result_array();
     }
 }

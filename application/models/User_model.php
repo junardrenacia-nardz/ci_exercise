@@ -13,9 +13,13 @@ class User_model extends CI_Model {
 
 
     public function get_users($id = FALSE) {
-        $this->db->select('u.user_id, e.first_name, e.last_name, e.department_id, e.status, e.gender');
+        $this->db->select('CONCAT("UID-", LPAD(u.user_id, 5, "0")) as user_id, u.email, u.last_active, u.created_at, e.first_name, e.last_name, e.department_id, e.status,
+                    e.gender, a.access_name, d.department_name, p.position_name');
         $this->db->from('users u');
         $this->db->join('employees e', 'e.employee_id = u.employee_id', 'left');
+        $this->db->join('access_types a', 'a.access_id = u.access_id', 'left');
+        $this->db->join('departments d', 'd.department_id = e.department_id', 'left');
+        $this->db->join('positions p', 'p.position_id = e.position_id');
         $query = $this->db->get();
         return $query->result_array();
     }
@@ -84,5 +88,9 @@ class User_model extends CI_Model {
         } else {
             return false;
         }
+    }
+
+    public function get_user_lists() {
+
     }
 }

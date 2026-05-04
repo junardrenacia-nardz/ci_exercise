@@ -81,9 +81,11 @@ class Tickets extends CI_Controller {
         $data['title'] = 'Ticket Details';
         $data['departments'] = $this->department_model->get_departments();
         $data['ticket'] = $this->ticket_model->get_tickets($ticket_id);
+        $data['ticket_attachments'] = $this->ticket_model->get_ticket_attachment($ticket_id);
         $data['ticket_assigned'] = $this->ticket_model->get_ticket_assigned();
         $data['all_assigned'] = $this->user_model->get_users();
         $data['comments'] = $this->comment_model->get_comments($ticket_id);
+        $data['comment_attachments'] = $this->comment_model->get_comment_attachments($ticket_id);
         $this->load->view('templates/header', $data);
         $this->load->view('tickets/view_ticket', $data);
         $this->load->view('templates/footer');
@@ -131,7 +133,7 @@ class Tickets extends CI_Controller {
 
                 $config['upload_path'] = './assets/images/ticket_attachments';
                 $config['allowed_types'] = 'gif|jpg|png|jpeg|docx|ppt|pptx|zip|rar|pdf';
-                $config['encrypt_name']  = TRUE;
+                $config['encrypt_name'] = TRUE;
 
                 $this->upload->initialize($config);
 
@@ -139,7 +141,7 @@ class Tickets extends CI_Controller {
                     $uploadData = $this->upload->data();
                     $fileNames[] = [
                         'encryptedName' => $uploadData['file_name'],
-                        'origName'      => $uploadData['orig_name']
+                        'origName' => $uploadData['orig_name']
                     ];
                 } else {
                     echo $this->upload->display_errors();
@@ -161,18 +163,29 @@ class Tickets extends CI_Controller {
         if ($this->form_validation->run() == FALSE) {
             $this->session->set_flashdata('showModal', 'edit_department');
             $this->session->set_flashdata('message', [
-                'type' => 'error', // or 'success'
+                'type' => 'danger', // or 'success'
                 'text' => 'Re-assigning failed'
             ]);
             return redirect('tickets/view_ticket/' . $ticket_id); // ✅ IMPORTANT
         } else {
-            $this->session->set_flashdata('showModal', 'modal_department');
-            $this->session->set_flashdata('message', [
-                'type' => 'success', // or 'success'
-                'text' => 'Re-assigning of department is successful'
-            ]);
-            $this->ticket_model->change_department($ticket_id);
-            return redirect('tickets/view_ticket/' . $ticket_id); // ✅ IMPORTANT
+            $oldDept = $this->input->post('oldDepartment');
+            $newDept = $this->input->post('selectDepartment');
+            if ($oldDept !== $newDept) {
+                $this->session->set_flashdata('message', [
+                    'type' => 'success', // or 'success'
+                    'text' => 'Re-assigning of department is successful'
+                ]);
+                $this->ticket_model->change_department($ticket_id);
+                return redirect('tickets/view_ticket/' . $ticket_id); // ✅ IMPORTANT
+            } else {
+                $this->session->set_flashdata('showModal', 'modal_department');
+                $this->session->set_flashdata('message', [
+                    'type' => 'info', // or 'success'
+                    'text' => 'The same department was chosen. No update happened'
+                ]);
+                return redirect('tickets/view_ticket/' . $ticket_id); // ✅ IMPORTANT
+            }
+
         }
     }
 
@@ -245,7 +258,7 @@ class Tickets extends CI_Controller {
 
             $config['upload_path'] = './assets/images/ticket_attachments';
             $config['allowed_types'] = 'gif|jpg|png|jpeg|docx|ppt|pptx|zip|rar|pdf';
-            $config['encrypt_name']  = TRUE;
+            $config['encrypt_name'] = TRUE;
 
             $this->upload->initialize($config);
 
@@ -253,7 +266,7 @@ class Tickets extends CI_Controller {
                 $uploadData = $this->upload->data();
                 $uploaded[] = [
                     'encryptedName' => $uploadData['file_name'],
-                    'origName'      => $uploadData['orig_name']
+                    'origName' => $uploadData['orig_name']
                 ];
             } else {
                 echo $this->upload->display_errors();
