@@ -117,7 +117,8 @@ $current = uri_string();
         </div>
         <!-- <button class="btn btn-success btn-filter-export btn-export"><i class="fa-solid fa-download"></i> Export
 Data</button> -->
-        <button class="btn btn-filter-export btn-filter" onclick="toggleFilterOptions()"><i class="fa-solid fa-filter"></i>
+        <button class="btn btn-filter-export btn-filter" onclick="toggleFilterOptions()"><i
+                        class="fa-solid fa-filter"></i>
                 Filter</button>
 </div>
 

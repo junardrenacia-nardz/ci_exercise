@@ -90,6 +90,8 @@ class Users extends CI_Controller {
         $data['title'] = 'User Management';
 
         $data['users'] = $this->user_model->get_users();
+        $data['roles'] = $this->user_model->get_roles();
+        $data['departments'] = $this->department_model->get_departments();
 
         $this->load->view('templates/header', $data);
         $this->load->view('users/user-management/user_index', $data);

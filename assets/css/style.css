@@ -359,3 +359,15 @@ button.remove-attachment i {
 	font-size: 30px;
 	color: var(--danger);
 }
+
+.btn-hover {
+	transition: all 0.35s ease-in-out;
+}
+
+.btn-hover {
+	background-color: var(--accent-clay);
+}
+
+.btn {
+	transition: all 0.2s ease-in-out !important;
+}

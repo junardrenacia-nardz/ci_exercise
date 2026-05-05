@@ -66,7 +66,7 @@
 
 /* TABLES Design */
 .tbl-custom {
-	margin-top: 15px !important;
+	margin-top: 8px !important;
 }
 
 .tbl-custom,
@@ -90,9 +90,6 @@
 
 .tbl-custom tr th {
 	text-align: center;
-}
-.tbl-custom tr {
-	border: transparent;
 }
 
 .btn-assign {
@@ -213,6 +210,8 @@
 
 .filter_specific .btn-filter-export {
 	border-radius: 8px !important;
+	padding: 7px 10px;
+	border: 1px solid var(--gray-200) !important;
 }
 
 .filter_specific .btn-export {
@@ -420,4 +419,21 @@ a.view-attachment {
 .attachment-btn:hover {
 	background: #f5f5f5;
 	color: #707070;
+}
+
+/* Whole control hover */
+.action-group {
+	transition: all 0.15s ease;
+	display: inline-flex;
+	align-items: stretch;
+	border: 1px solid var(--border);
+	background: var(--card);
+	border-radius: 6px;
+	transition: all 0.15s ease;
+}
+
+.action-group .action-item:hover {
+	background: var(--gray-100);
+	border-color: var(--border-hover);
+	box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
 }

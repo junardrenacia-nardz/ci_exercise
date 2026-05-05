@@ -527,7 +527,7 @@ endforeach; ?>
                                 accept=".jpg,.jpeg,.png,.pdf,.docx,.ppt,.zip,.pptx">
                             <span>📎 Attach file <i class="text-black">(optional)</i></span>
                         </label>
-                        <small>PDF, JPG, PNG — max 5MB</small>
+                        <small>PDF, JPG, PNG, PDF, ... — max 5MB</small>
                     </div>
                     <div class="fileList-col mt-2">
                         <ul id="fileList" class="list-group mt-2"></ul>

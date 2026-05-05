@@ -39,6 +39,7 @@ function name_abbr($first, $last) {
     <link rel="stylesheet" href="<?= base_url(); ?>assets/css/bootstrap.css">
     <link rel="stylesheet" href="<?= base_url(); ?>assets/css/style.css">
     <link rel="stylesheet" href="<?= base_url(); ?>assets/css/ticket-list.css">
+    <link rel="stylesheet" href="<?= base_url(); ?>assets/css/user-style.css">
     <link rel="stylesheet" href="<?= base_url(); ?>assets/css/process-nav.css">
     <link rel="stylesheet" href="<?= base_url(); ?>assets/css/dataTable-style.css">
 

@@ -90,7 +90,9 @@ class User_model extends CI_Model {
         }
     }
 
-    public function get_user_lists() {
+    public function get_roles() {
 
+        $query = $this->db->get('access_types');
+        return $query->result_array();
     }
 }

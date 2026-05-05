@@ -1,0 +1,90 @@
+.user-action-btn a {
+	border: none;
+	color: var(--text);
+	font-size: 0.8rem;
+	padding: 10px 0px;
+	width: 30px;
+	border-radius: 2px;
+	color: var(--text-muted);
+}
+
+.user-util button.btn-add-user {
+	background-color: var(--primary);
+	color: var(--bg);
+	transition: all 0.35ms ease-in-out;
+	font-size: 0.8rem;
+}
+
+.user-util button.btn-add-user:hover {
+	background-color: var(--accent-clay);
+}
+
+.user-filter .btn-filter-export {
+	border: 1px solid var(--border) !important;
+	padding: 5px 10px;
+	border-radius: 8px;
+}
+
+.user-filter .btn-filter {
+	white-space: nowrap;
+	background-color: var(--primary-soft);
+	color: var(--primary);
+}
+
+.user-filter .btn-filter:hover {
+	background-color: var(--gray-200);
+	border: 1px solid var(--border-hover);
+}
+
+.user-filter .btn-export {
+	background: var(--card);
+	border: 1px solid var(--border);
+	color: var(--text);
+}
+
+.user-filter .btn-export:hover {
+	background-color: var(--gray-100);
+}
+
+.top-bar {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+}
+
+.user-filter {
+	flex: 1; /* 🔥 makes it fill remaining space */
+	display: flex;
+	align-items: center;
+}
+
+.dt-search {
+	flex-shrink: 0; /* keep search width */
+}
+
+.user-util {
+	flex-shrink: 0; /* keep button size */
+}
+
+#userTable_wrapper .dt-search {
+	margin-bottom: 20px !important;
+}
+
+.filter-option {
+	max-width: 0;
+	opacity: 0;
+	overflow: hidden;
+	transition:
+		max-width 0.5s ease,
+		opacity 0.5s ease;
+}
+
+.filter-option.collapsed {
+	max-width: 100%; /* adjust based on content */
+	opacity: 1;
+}
+
+.filter-option form select,
+.filter-option form select option {
+	font-size: 0.8rem;
+}

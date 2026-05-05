@@ -163,8 +163,54 @@
                             </td>
                             <td class="align-middle"><?= date('m-d-Y', strtotime($ticket['ticket_updated'])) ?></td>
                             <td class="align-middle">
-                                <a href="<?= base_url('tickets/view_ticket') . '/' . $ticket['ticket_id'] ?>"
-                                    class="btn has-tooltip" title="View Ticket"><i class="fa-solid fa-eye"></i></a>
+
+                                <div class="d-inline-flex align-items-stretch rounded-2 action-group">
+                                    <!-- View -->
+                                    <a href="<?= base_url('tickets/view_ticket') . '/' . $ticket['ticket_id'] ?>"
+                                        class="action-item btn btn-sm d-flex align-items-center px-2" style="
+                                                    border: none;
+                                                    color: var(--text);
+                                                    font-size: 0.7rem;
+                                            ">
+                                        <i class="fa-solid fa-eye me-1" style="color: var(--text-muted);"></i>
+                                        View
+                                    </a>
+
+                                    <!-- Divider -->
+                                    <div style="width: 1px; background: var(--border);"></div>
+
+                                    <!-- Dropdown -->
+                                    <div class="dropdown d-flex">
+                                        <button
+                                            class="action-item btn btn-sm d-flex align-items-center justify-content-center px-2"
+                                            type="button" data-toggle="dropdown" style="
+                                                border: none;
+                                                color: var(--text-muted);
+                                                font-size: 0.7rem;
+                                            ">
+                                            <i class="fa-solid fa-caret-down"></i>
+                                        </button>
+
+                                        <div class="dropdown-menu" style="
+                                                border: 1px solid var(--border);
+                                                background: var(--card);
+                                                width: max-content;
+                                                 min-width: unset;
+                                            ">
+                                            <?php if (strtolower($ticket['ticket_status']) == strtolower('for approval')): ?>
+
+                                                <a class="dropdown-item" href="#"><i class="fa-solid fa-thumbs-up me-2"></i>
+                                                    Approve</a>
+                                                <a class="dropdown-item" href="#"><i class="fa-solid fa-thumbs-down me-2"></i>
+                                                    Reject</a>
+                                            <?php endif; ?>
+                                            <a class="dropdown-item" href="#"><i class="fa-solid fa-clipboard-list me-2"></i>
+                                                Audit
+                                                Trail</a>
+                                        </div>
+                                    </div>
+
+                                </div>
 
                             </td>
                         </tr>
