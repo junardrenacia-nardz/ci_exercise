@@ -24,52 +24,17 @@ class Tickets extends CI_Controller {
         $data['logged_user'] = $this->user_model->get_employee_details($employee_id);
         $data['title'] = 'Tickets';
 
-        $data['ticket_details'] = $this->ticket_model->get_tickets() ?? [];
+        $data['ticket_details'] = $this->ticket_model->get_tickets(FALSE, $status) ?? [];
+        $data['tickets_count'] = $this->ticket_model->get_tickets_count();
         $data['ticket_assigned'] = $this->ticket_model->get_ticket_assigned();
         $data['departments'] = $this->department_model->get_departments();
-        if ($status == "all") {
-            $data['activeAll'] = true;
-            $this->load->view('templates/header', $data);
-            $this->load->view('templates/process_header', $data);
-            $this->load->view('tickets/ticket_index', $data);
-            $this->load->view('templates/footer');
-        } else if ($status == "approval") {
-            $data['activeApproval'] = true;
-            $this->load->view('templates/header', $data);
-            $this->load->view('templates/process_header', $data);
-            $this->load->view('tickets/process-tickets/ticket_approval', $data);
-            $this->load->view('templates/footer');
-        } else if ($status == "open") {
-            $data['activeOpen'] = true;
-            $this->load->view('templates/header', $data);
-            $this->load->view('templates/process_header', $data);
-            $this->load->view('tickets/process-tickets/ticket_open', $data);
-            $this->load->view('templates/footer');
-        } else if ($status == "pending") {
-            $data['activePending'] = true;
-            $this->load->view('templates/header', $data);
-            $this->load->view('templates/process_header', $data);
-            $this->load->view('tickets/process-tickets/ticket_pending', $data);
-            $this->load->view('templates/footer');
-        } else if ($status == "ongoing") {
-            $data['activeOnGoing'] = true;
-            $this->load->view('templates/header', $data);
-            $this->load->view('templates/process_header', $data);
-            $this->load->view('tickets/process-tickets/ticket_ongoing', $data);
-            $this->load->view('templates/footer');
-        } else if ($status == "testing") {
-            $data['activeTesting'] = true;
-            $this->load->view('templates/header', $data);
-            $this->load->view('templates/process_header', $data);
-            $this->load->view('tickets/process-tickets/ticket_testing', $data);
-            $this->load->view('templates/footer');
-        } else if ($status == "closed") {
-            $data['activeClosed'] = true;
-            $this->load->view('templates/header', $data);
-            $this->load->view('templates/process_header', $data);
-            $this->load->view('tickets/process-tickets/ticket_closed', $data);
-            $this->load->view('templates/footer');
-        }
+
+        $data['status'] = strtolower($status);
+
+        $this->load->view('templates/header', $data);
+        $this->load->view('templates/process_header', $data);
+        $this->load->view('tickets/ticket_index', $data);
+        $this->load->view('templates/footer');
     }
 
     public function view_ticket($ticket_id) {
@@ -86,6 +51,7 @@ class Tickets extends CI_Controller {
         $data['all_assigned'] = $this->user_model->get_users();
         $data['comments'] = $this->comment_model->get_comments($ticket_id);
         $data['comment_attachments'] = $this->comment_model->get_comment_attachments($ticket_id);
+
         $this->load->view('templates/header', $data);
         $this->load->view('tickets/view_ticket', $data);
         $this->load->view('templates/footer');

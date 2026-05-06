@@ -23,6 +23,7 @@ function name_abbr($first, $last) {
 <script>
     // BASE_URL JS
     const BASE_URL = "<?= base_url() ?>";
+    const showModal = "<?= $this->session->flashdata('showModal'); ?>";
 </script>
 
 <!DOCTYPE html>
@@ -39,7 +40,7 @@ function name_abbr($first, $last) {
     <link rel="stylesheet" href="<?= base_url(); ?>assets/css/bootstrap.css">
     <link rel="stylesheet" href="<?= base_url(); ?>assets/css/style.css">
     <link rel="stylesheet" href="<?= base_url(); ?>assets/css/ticket-list.css">
-    <link rel="stylesheet" href="<?= base_url(); ?>assets/css/user-style.css">
+    <link rel="stylesheet" href="<?= base_url(); ?>assets/css/users-management.css">
     <link rel="stylesheet" href="<?= base_url(); ?>assets/css/process-nav.css">
     <link rel="stylesheet" href="<?= base_url(); ?>assets/css/dataTable-style.css">
 
@@ -215,3 +216,19 @@ function name_abbr($first, $last) {
                             </div>
                         <?php endif; ?>
                     </div>
+
+
+
+
+                    <?php
+                    function get_abbreviation($string) {
+                        // Condition: Only proceed if there is more than 1 word
+                        if (str_word_count($string) > 1) {
+                            if (preg_match_all('/\b(\w)/', strtoupper($string), $matches)) {
+                                return implode('', $matches[0]);
+                            }
+                        }
+                        // Return original string if it's just one word or empty
+                        return $string;
+                    }
+                    ?>

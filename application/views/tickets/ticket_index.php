@@ -8,7 +8,9 @@
                     <th>ID</th>
                     <th class="text-center">Priority</th>
                     <th>Subject</th>
-                    <th>Status</th>
+                    <?php if ($status === "all"): ?>
+                        <th>Status</th>
+                    <?php endif ?>
                     <th class="text-center">Dept</th>
                     <th class="text-center">PIC</th>
                     <th>Created By</th>
@@ -75,57 +77,59 @@
                                 <?php endif; ?>
                             </td>
                             <td class="align-middle"><?= $ticket['ticket_name'] ?></td>
-                            <td class="align-middle">
-                                <?php if (
-                                    strtolower($ticket['ticket_status']) == strtolower("for approval")
-                                ): ?>
-                                    <div class="d-flex align-items-center">
-                                        <div class="status-approval"></div>
-                                        <span class="text-start"><?= ucwords($ticket['ticket_status']) ?>
-                                        </span>
-                                    </div>
-                                <?php elseif (
-                                    strtolower($ticket['ticket_status']) == strtolower("open")
-                                ): ?>
-                                    <div class="d-flex align-items-center">
-                                        <div class="status-open"></div>
-                                        <span class="text-start"><?= ucwords($ticket['ticket_status']) ?>
-                                        </span>
-                                    </div>
-                                <?php elseif (
-                                    strtolower($ticket['ticket_status']) == strtolower("pending")
-                                ): ?>
-                                    <div class="d-flex align-items-center">
-                                        <div class="status-pending"></div>
-                                        <span class="text-start"><?= ucwords($ticket['ticket_status']) ?>
-                                        </span>
-                                    </div>
-                                <?php elseif (
-                                    strtolower($ticket['ticket_status']) == strtolower("on going")
-                                ): ?>
-                                    <div class="d-flex align-items-center">
-                                        <div class="status-ongoing"></div>
-                                        <span class="text-start"><?= ucwords($ticket['ticket_status']) ?>
-                                        </span>
-                                    </div>
-                                <?php elseif (
-                                    strtolower($ticket['ticket_status']) == strtolower("testing")
-                                ): ?>
-                                    <div class="d-flex align-items-center">
-                                        <div class="status-testing"></div>
-                                        <span class="text-start">For <?= ucwords($ticket['ticket_status']) ?>
-                                        </span>
-                                    </div>
-                                <?php elseif (
-                                    strtolower($ticket['ticket_status']) == strtolower("closed")
-                                ): ?>
-                                    <div class="d-flex align-items-center">
-                                        <div class="status-closed"></div>
-                                        <span class="text-start"><?= ucwords($ticket['ticket_status']) ?>
-                                        </span>
-                                    </div>
-                                <?php endif; ?>
-                            </td>
+                            <?php if ($status === "all"): ?>
+                                <td class="align-middle">
+                                    <?php if (
+                                        strtolower($ticket['ticket_status']) == strtolower("for approval")
+                                    ): ?>
+                                        <div class="d-flex align-items-center">
+                                            <div class="status-approval"></div>
+                                            <span class="text-start"><?= ucwords($ticket['ticket_status']) ?>
+                                            </span>
+                                        </div>
+                                    <?php elseif (
+                                        strtolower($ticket['ticket_status']) == strtolower("open")
+                                    ): ?>
+                                        <div class="d-flex align-items-center">
+                                            <div class="status-open"></div>
+                                            <span class="text-start"><?= ucwords($ticket['ticket_status']) ?>
+                                            </span>
+                                        </div>
+                                    <?php elseif (
+                                        strtolower($ticket['ticket_status']) == strtolower("pending")
+                                    ): ?>
+                                        <div class="d-flex align-items-center">
+                                            <div class="status-pending"></div>
+                                            <span class="text-start"><?= ucwords($ticket['ticket_status']) ?>
+                                            </span>
+                                        </div>
+                                    <?php elseif (
+                                        strtolower($ticket['ticket_status']) == strtolower("on going")
+                                    ): ?>
+                                        <div class="d-flex align-items-center">
+                                            <div class="status-ongoing"></div>
+                                            <span class="text-start"><?= ucwords($ticket['ticket_status']) ?>
+                                            </span>
+                                        </div>
+                                    <?php elseif (
+                                        strtolower($ticket['ticket_status']) == strtolower("testing")
+                                    ): ?>
+                                        <div class="d-flex align-items-center">
+                                            <div class="status-testing"></div>
+                                            <span class="text-start">For <?= ucwords($ticket['ticket_status']) ?>
+                                            </span>
+                                        </div>
+                                    <?php elseif (
+                                        strtolower($ticket['ticket_status']) == strtolower("closed")
+                                    ): ?>
+                                        <div class="d-flex align-items-center">
+                                            <div class="status-closed"></div>
+                                            <span class="text-start"><?= ucwords($ticket['ticket_status']) ?>
+                                            </span>
+                                        </div>
+                                    <?php endif; ?>
+                                </td>
+                            <?php endif; ?>
                             <td class="align-middle text-center"><?php echo $ticket['department_name'] ?></td>
                             <td class="align-middle">
                                 <?php if ($count_assign != 0): ?>
@@ -220,16 +224,3 @@
         </table>
     </div>
 </div>
-
-<?php
-function get_abbreviation($string) {
-    // Condition: Only proceed if there is more than 1 word
-    if (str_word_count($string) > 1) {
-        if (preg_match_all('/\b(\w)/', strtoupper($string), $matches)) {
-            return implode('', $matches[0]);
-        }
-    }
-    // Return original string if it's just one word or empty
-    return $string;
-}
-?>

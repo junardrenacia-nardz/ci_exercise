@@ -19,31 +19,24 @@
 	background-color: var(--accent-clay);
 }
 
-.user-filter .btn-filter-export {
-	border: 1px solid var(--border) !important;
-	padding: 5px 10px;
-	border-radius: 8px;
-}
-
-.user-filter .btn-filter {
-	white-space: nowrap;
-	background-color: var(--primary-soft);
+.user-util .btn-filter-export {
+	background-color: var(--primary-light);
 	color: var(--primary);
-}
-
-.user-filter .btn-filter:hover {
-	background-color: var(--gray-200);
 	border: 1px solid var(--border-hover);
+	height: 40px;
+	border-radius: 8px;
+	transition: all 0.2s ease-in-out;
 }
 
-.user-filter .btn-export {
-	background: var(--card);
-	border: 1px solid var(--border);
-	color: var(--text);
+.user-filter .btn-filter-export:hover,
+.user-util .btn-filter-export:hover {
+	background-color: var(--primary-soft);
+	border-color: var(--border);
 }
 
-.user-filter .btn-export:hover {
-	background-color: var(--gray-100);
+.user-filter .btn-filter-export:active,
+.user-util .btn-filter-export:active {
+	background-color: var(--primary-light);
 }
 
 .top-bar {
@@ -87,4 +80,37 @@
 .filter-option form select,
 .filter-option form select option {
 	font-size: 0.8rem;
+}
+
+.create-account label,
+.create-account input,
+.create-account select {
+	font-size: 0.8rem;
+}
+
+.create-account span.text-danger {
+	font-size: 0.8rem;
+}
+
+#approve_user .modal-dialog {
+	max-height: 80vh;
+	overflow-y: auto;
+}
+
+#approve_user .modal-body .btn {
+	width: 30px;
+	height: 30px;
+	padding: 0;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+#approve_user .modal-body .btn i {
+	font-size: 1.2rem;
+	color: var(--text-muted) !important;
+}
+
+#approve_user .modal-body .btn:hover {
+	border: 3px solid var(--border-hover);
 }

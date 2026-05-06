@@ -1,36 +1,35 @@
 <?php
 
 class Ticket_model extends CI_Model {
-    public function get_tickets($id = FALSE) {
+    public function get_tickets($id = FALSE, $status = "all") {
         $this->db->order_by('td.ticket_id', 'DESC');
         $this->db->select('
-                td.ticket_id,
-                td.ticket_name,
-                td.ticket_description,
+            td.ticket_id,
+            td.ticket_name,
+            td.ticket_description,
 
-                tt.type_name,
-                td.ticket_status,
-                td.department_id,
+            tt.type_name,
+            td.ticket_status,
+            td.department_id,
 
-                d.department_name,
+            d.department_name,
 
-                td.ticket_created,
-                td.priority,
-                td.expected_start_date,
-                td.expected_resolved_date,
-                td.actual_start_date,
-                td.resolved_date,
-                td.days_since_resolved,
-                td.root_cause,
-                td.step_taken,
-                td.solution_applied,
-                td.ticket_updated,
+            td.ticket_created,
+            td.priority,
+            td.expected_start_date,
+            td.expected_resolved_date,
+            td.actual_start_date,
+            td.resolved_date,
+            td.days_since_resolved,
+            td.root_cause,
+            td.step_taken,
+            td.solution_applied,
+            td.ticket_updated,
 
-                u.employee_id AS requester_employee_id,
-                e.first_name  AS requester_first_name,
-                e.last_name AS requester_last_name
-            ');
-
+            u.employee_id AS requester_employee_id,
+            e.first_name  AS requester_first_name,
+            e.last_name AS requester_last_name
+        ');
 
         $this->db->from('ticket_details td');
         $this->db->join('ticket_type tt', 'tt.ticket_type_id = td.ticket_type_id', 'left');
@@ -44,8 +43,27 @@ class Ticket_model extends CI_Model {
             return $query->row_array();
         }
 
+        // Status filter
+        if ($status !== "all") {
+
+            $map = [
+                'approval' => 'for approval',
+                'ongoing' => 'on going'
+            ];
+
+            $status = $map[$status] ?? $status;
+
+            $this->db->where('LOWER(td.ticket_status)', strtolower($status));
+        }
+
         $query = $this->db->get();
         return $query->result_array();
+    }
+
+    public function get_tickets_count() {
+        $query = $this->db->get('ticket_details');
+        return $query->result_array();
+
     }
 
     public function get_ticket_assigned() {

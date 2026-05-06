@@ -6,15 +6,15 @@ $count_pending = 0;
 $count_ongoing = 0;
 $count_testing = 0;
 $count_closed = 0;
-$current = uri_string();
+
 ?>
 <div class="dataTables_filter">
         <div class="row row-cols-7 mx-0 px-0 g-0 w-100 my-2">
                 <a href="<?= base_url("tickets/approval") ?>">
-                        <div class="col <?= ($current == "tickets/approval") ? "active" : "" ?>">
+                        <div class="col <?= ($status == "approval") ? "active" : "" ?>">
                                 <span class="text text-start">For Approval</span>
                                 <span class="count">
-                                        <?php foreach ($ticket_details as $ticket) {
+                                        <?php foreach ($tickets_count as $ticket) {
                                                 if (strtolower($ticket['ticket_status']) == strtolower("For Approval")) {
                                                         $count_approval++;
                                                 }
@@ -24,10 +24,10 @@ $current = uri_string();
                         </div>
                 </a>
                 <a href="<?= base_url("tickets/open") ?>">
-                        <div class="col <?= ($current == "tickets/open") ? "active" : "" ?>">
+                        <div class="col <?= ($status == "open") ? "active" : "" ?>">
                                 <span class="text text-start">To Assign</span>
                                 <span class="count">
-                                        <?php foreach ($ticket_details as $ticket) {
+                                        <?php foreach ($tickets_count as $ticket) {
                                                 if (strtolower($ticket['ticket_status']) == strtolower("open")) {
                                                         $count_open++;
                                                 }
@@ -37,10 +37,10 @@ $current = uri_string();
                         </div>
                 </a>
                 <a href="<?= base_url("tickets/pending") ?>">
-                        <div class="col <?= ($current == "tickets/pending") ? "active" : "" ?>">
+                        <div class="col <?= ($status == "pending") ? "active" : "" ?>">
                                 <span class="text text-start">Assigned</span>
                                 <span class="count">
-                                        <?php foreach ($ticket_details as $ticket) {
+                                        <?php foreach ($tickets_count as $ticket) {
                                                 if (strtolower($ticket['ticket_status']) == strtolower("pending")) {
                                                         $count_pending++;
                                                 }
@@ -50,10 +50,10 @@ $current = uri_string();
                         </div>
                 </a>
                 <a href="<?= base_url("tickets/ongoing") ?>">
-                        <div class="col <?= ($current == "tickets/ongoing") ? "active" : "" ?>">
+                        <div class="col <?= ($status == "ongoing") ? "active" : "" ?>">
                                 <span class="text text-start">On Going</span>
                                 <span class="count">
-                                        <?php foreach ($ticket_details as $ticket) {
+                                        <?php foreach ($tickets_count as $ticket) {
                                                 if (strtolower($ticket['ticket_status']) == strtolower("on going")) {
                                                         $count_ongoing++;
                                                 }
@@ -63,10 +63,10 @@ $current = uri_string();
                         </div>
                 </a>
                 <a href="<?= base_url("tickets/testing") ?>">
-                        <div class="col <?= ($current == "tickets/testing") ? "active" : "" ?>">
+                        <div class="col <?= ($status == "testing") ? "active" : "" ?>">
                                 <span class="text text-start">For Testing</span>
                                 <span class="count">
-                                        <?php foreach ($ticket_details as $ticket) {
+                                        <?php foreach ($tickets_count as $ticket) {
                                                 if (strtolower($ticket['ticket_status']) == strtolower("testing")) {
                                                         $count_testing++;
                                                 }
@@ -76,10 +76,10 @@ $current = uri_string();
                         </div>
                 </a>
                 <a href="<?= base_url("tickets/closed") ?>">
-                        <div class="col <?= ($current == "tickets/closed") ? "active" : "" ?>">
+                        <div class="col <?= ($status == "closed") ? "active" : "" ?>">
                                 <span class="text text-start">Closed</span>
                                 <span class="count">
-                                        <?php foreach ($ticket_details as $ticket) {
+                                        <?php foreach ($tickets_count as $ticket) {
                                                 if (strtolower($ticket['ticket_status']) == strtolower("closed")) {
                                                         $count_closed++;
                                                 }
@@ -93,7 +93,7 @@ $current = uri_string();
 
                                 <span class="text text-start">All</span>
                                 <span class="count">
-                                        <?php foreach ($ticket_details as $ticket) {
+                                        <?php foreach ($tickets_count as $ticket) {
                                                 $count_all++;
                                         }
                                         echo $count_all; ?>
@@ -126,7 +126,7 @@ Data</button> -->
         <form id="filterForm">
                 <h5 class="text-start">Filters</h5>
                 <div class="row">
-                        <?php if ($current == "tickets/all"): ?>
+                        <?php if ($status == "all"): ?>
                                 <div class="col-md-3">
                                         <div class="input-wrapper">
                                                 <select name="filterStatus" id="filterStatus" class="form-control">
@@ -142,7 +142,7 @@ Data</button> -->
                                         </div>
                                 </div>
                         <?php endif; ?>
-                        <?php if ($current !== "tickets/approval"): ?>
+                        <?php if ($status !== "approval"): ?>
                                 <div class="col-md-3">
                                         <div class="input-wrapper">
                                                 <select name="filterPriority" id="filterPriority" class="form-control">
@@ -172,8 +172,8 @@ Data</button> -->
 
                         </div>
                         <div class="col-md-3 text-start">
-                                <button type="reset" class="btn btn-danger has-tooltip" title="Reset"><i
-                                                class="fa-solid fa-arrow-rotate-right"></i></button>
+                                <button type="reset" class="btn btn-reset has-tooltip" title="Reset">
+                                        <i class="fa-solid fa-filter-circle-xmark"></i></button>
                         </div>
                 </div>
 

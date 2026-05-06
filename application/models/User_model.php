@@ -11,9 +11,14 @@ class User_model extends CI_Model {
         return $query->row_array();
     }
 
+    public function get_escalations() {
+        $query = $this->db->get('escalations');
+        return $query->result_array();
+    }
+
 
     public function get_users($id = FALSE) {
-        $this->db->select('CONCAT("UID-", LPAD(u.user_id, 5, "0")) as user_id, u.email, u.last_active, u.created_at, e.first_name, e.last_name, e.department_id, e.status,
+        $this->db->select('CONCAT("UID-", LPAD(u.user_id, 5, "0")) as user_id, u.employee_id, u.email, u.updated_at, u.created_at, e.first_name, e.last_name, e.department_id, e.status,
                     e.gender, a.access_name, d.department_name, p.position_name');
         $this->db->from('users u');
         $this->db->join('employees e', 'e.employee_id = u.employee_id', 'left');
@@ -53,11 +58,12 @@ class User_model extends CI_Model {
         $employeeData = [
             'first_name' => $this->input->post('firstName'),
             'last_name' => $this->input->post('lastName'),
+            'gender' => $this->input->post('gender'),
             'contact_number' => $this->input->post('contact'),
             'department_id' => $this->input->post('department'),
-            'position_id' => $this->input->post('role'),
+            'position_id' => $this->input->post('position'),
             'status' => 'Active',
-            'escalation_level' => $this->input->post('tier'),
+            'escalation_id' => $this->input->post('tier')
         ];
 
         $this->db->insert('employees', $employeeData);
@@ -66,7 +72,8 @@ class User_model extends CI_Model {
         $userData = [
             'employee_id' => $employeeID,
             'email' => $this->input->post('email'),
-            'password' => $hashed_password
+            'password' => $hashed_password,
+            'access_id' => $this->input->post('role')
         ];
 
         $this->db->insert('users', $userData);
@@ -94,5 +101,23 @@ class User_model extends CI_Model {
 
         $query = $this->db->get('access_types');
         return $query->result_array();
+    }
+
+    public function update_employee_status($employee_id, $status) {
+        $employeeStatus['status'] = ucfirst($status);
+        $this->db->where('employee_id', $employee_id);
+        $this->db->update('employees', $employeeStatus);
+        return true;
+    }
+
+    public function delete_pending_user($user_id, $employee_id) {
+        $this->db->trans_start();
+        $this->db->where('user_id', $user_id);
+        $this->db->delete('users');
+
+        $this->db->where('employee_id', $employee_id);
+        $this->db->delete('employees');
+        $this->db->trans_complete();
+        return true;
     }
 }

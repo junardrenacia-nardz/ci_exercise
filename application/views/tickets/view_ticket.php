@@ -19,8 +19,8 @@ foreach ($ticket_assigned as $assigned):
 endforeach; ?>
 <div class="w-100 rounded-3 mt-4 p-4 mx-auto mb-5"
     style="background-color: white; max-width: 1290px ; box-shadow: 0 6px 18px rgba(0, 0, 0, 0.25);">
-    <div class="ticket-details d-flex justify-content-between p-3">
-        <div class="information-tickets col-md-8 pe-3">
+    <div class="ticket-details information-tickets d-flex justify-content-between p-3">
+        <div class="d-flex flex-column">
             <div class="ticket-subject d-flex align-items-center mb-1">
                 <span class="subject me-2"><?= $ticket['ticket_name'] ?></span>
                 <span class="badge p-1 badge-ticket fw-bold">Main Ticket</span>
@@ -30,7 +30,42 @@ endforeach; ?>
                 <span class="badge p-1 badge-ticket fw-bold">
                     Ticket ID: <?= $ticket['ticket_id'] ?></span>
             </div>
-            <div class="detail-title mt-3">
+        </div>
+
+        <div class="ticket-button d-flex justify-content-end">
+            <div>
+                <button class="btn assign-reassign-btn timeline-btn me-2" data-bs-toggle="modal"
+                    data-bs-target="#modal_department">
+                    <i class="fa-solid fa-timeline me-1"></i> Timeline</button>
+            </div>
+            <div>
+                <?php if ($ticket['ticket_status'] !== "For Approval"): ?>
+                    <?php if ($count_assign == 0): ?>
+
+                        <a href="" class="btn assign-reassign-btn me-2" data-bs-toggle="modal"
+                            data-bs-target="#modal_assign_person">
+
+                            <i class="fa-solid fa-plus me-1"></i> Assign PIC</a>
+                    <?php else: ?>
+                        <a href="" class="btn assign-reassign-btn me-2" data-bs-toggle="modal"
+                            data-bs-target="#modal_assign_person">
+                            <i class="fa-solid fa-user-group me-1"></i> Re-assign PIC</a>
+                    <?php endif; ?>
+
+                <?php endif; ?>
+            </div>
+            <div>
+                <button class="btn assign-reassign-btn" data-bs-toggle="modal" data-bs-target="#modal_department">
+                    <i class="fa-solid fa-building-user me-1"></i> Re-assign Dept.</button>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="ticket-details d-flex justify-content-between pt-0 p-3">
+        <div class="information-tickets col-md-8 pe-3">
+
+            <div class="detail-title">
                 <span class="title fw-bold">Ticket Details:</span>
             </div>
             <div class="details mt-2">
@@ -105,26 +140,7 @@ endforeach; ?>
         </div>
 
         <div class="comments col-md-4">
-            <div class="ticket-button d-flex justify-content-end">
-                <?php if ($ticket['ticket_status'] !== "For Approval"): ?>
-                    <?php if ($count_assign == 0): ?>
-                        <a href="" class="btn assign-reassign-btn me-2" data-bs-toggle="modal"
-                            data-bs-target="#modal_assign_person">
-
-                            <i class="fa-solid fa-plus me-1"></i> Assign PIC</a>
-                    <?php else: ?>
-                        <a href="" class="btn assign-reassign-btn me-2" data-bs-toggle="modal"
-                            data-bs-target="#modal_assign_person">
-                            <i class="fa-solid fa-user-group me-1"></i> Re-assign PIC</a>
-                    <?php endif; ?>
-
-                <?php endif; ?>
-
-                <button class="btn assign-reassign-btn" data-bs-toggle="modal" data-bs-target="#modal_department">
-                    <i class="fa-solid fa-building-user me-1"></i> Re-assign Dept.</button>
-            </div>
-
-            <div class="comments-col w-100 mt-5">
+            <div class="comments-col w-100">
                 <div class="d-flex align-items-center justify-content-between comment-btn">
                     <div class="fs-6 fw-bold ">Comments <span>(<?= count($comments) ?>)</span></div>
                     <a href="" class="d-flex align-items-center" data-bs-toggle="modal" data-bs-target="#add_comment">
@@ -305,13 +321,13 @@ endforeach; ?>
                                                             <option value="">- Select person to be assigned -</option>
                                                             <?php foreach ($all_assigned as $choice): ?>
                                                                 <?php if ($choice['department_id'] == $ticket['department_id']): ?>
-                                                                    <option value="<?= $choice['user_id'] ?>"
+                                                                    <optionvalue="<?= $choice['user_id'] ?>"
                                                                         <?= ($selectedId == $choice['user_id']) ? "selected" : "" ?>>
                                                                         <?= $choice['first_name'] . " " . $choice['last_name'] ?>
                                                                         (#<?= $choice['user_id'] ?>)
-                                                                    </option>
-                                                                <?php endif; ?>
-                                                            <?php endforeach; ?>
+                                                                        </option>
+                                                                    <?php endif; ?>
+                                                                <?php endforeach; ?>
                                                         </select>
                                                         <i class="fa-solid fa-angle-down icon-dropdown"></i>
                                                     </div>
@@ -358,14 +374,14 @@ endforeach; ?>
                                                                 <option value="">- Select person to be assigned -</option>
                                                                 <?php foreach ($all_assigned as $choice): ?>
                                                                     <?php if ($choice['department_id'] == $ticket['department_id']): ?>
-                                                                        <option value="<?= $choice['user_id'] ?>"
+                                                                        <optionvalue="<?= $choice['user_id'] ?>"
                                                                             <?= ($choice['user_id'] == $person['id']) ? "selected" : "" ?>>
                                                                             <?= $choice['first_name'] . " " . $choice['last_name'] ?>
                                                                             (#<?= $choice['user_id'] ?>)
-                                                                        </option>
-                                                                    <?php endif; ?>
+                                                                            </option>
+                                                                        <?php endif; ?>
 
-                                                                <?php endforeach; ?>
+                                                                    <?php endforeach; ?>
                                                             </select>
                                                             <i class="fa-solid fa-angle-down icon-dropdown"></i>
                                                         </div>
@@ -449,8 +465,7 @@ endforeach; ?>
 </div>
 
 <!--CHANGE DEPARTMENT-->
-<div class="modal fade modalEdit" id="edit_department" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false"
-    aria-hidden="true">
+<div class="modal fade modalEdit" id="edit_department" tabindex="-1" data-bs-backdrop="static" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
@@ -465,11 +480,11 @@ endforeach; ?>
                             <select name="selectDepartment" id="selectDepartment" class="form-control">
                                 <option value="">- Select Department -</option>
                                 <?php foreach ($departments as $department): ?>
-                                    <option value="<?= $department['department_id'] ?>"
+                                    <optionvalue="<?= $department['department_id'] ?>"
                                         <?= ($ticket['department_id'] == $department['department_id']) ? "selected" : "" ?>>
                                         <?= $department['department_name'] ?>
-                                    </option>
-                                <?php endforeach; ?>
+                                        </option>
+                                    <?php endforeach; ?>
                             </select>
                             <i class="fa-solid fa-angle-down icon-dropdown"></i>
                         </div>
@@ -488,8 +503,7 @@ endforeach; ?>
 </div>
 
 <!--COMMENTS Modal-->
-<div class="modal fade" id="add_comment" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false"
-    aria-hidden="true">
+<div class="modal fade" id="add_comment" tabindex="-1" data-bs-backdrop="static" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
@@ -551,17 +565,72 @@ endforeach; ?>
         <div class="modal-content shadow-lg border-0 rounded-3 modal-attachment">
             <div class="modal-body px-3 py-3">
                 <div class="d-flex justify-content-between attachment-close w-100 ps-5">
-                    <h5 class="attachment-header-title"></h5>
+                    <h5 class="attachment-header-title">
+                        <?= $comment_attachments[0]['first_name'] . " " . $comment_attachments[0]['last_name'] ?>
+                    </h5>
                     <button type="button" class="btn-close btn-close-black" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="attachment-content d-flex flex-column my-4 mt-5 mx-3 overflow-y-auto overflow-x-hidden">
+                    <?php
+                    $commentImages = [];
+                    $commentFiles = [];
+
+                    foreach ($comment_attachments as $file) {
+                        $ext = strtolower(pathinfo($file['attachment'], PATHINFO_EXTENSION));
+
+                        if (in_array($ext, ['jpg', 'jpeg', 'png', 'gif'])) {
+                            $commentImages[] = $file;
+                        } else {
+                            $commentFiles[] = $file;
+                        }
+                    }
+                    ?>
+
+                    <!-- IMAGES -->
+                    <div class=" mb-3 mx-3">
+                        <h6 class="section-title">Images</h6>
+
+                        <?php if (!empty($commentImages)): ?>
+                            <div class="image-attachments">
+                                <?php foreach ($commentImages as $img): ?>
+                                    <a href="<?= base_url('assets/images/comment_attachments/' . $img['attachment']) ?>"
+                                        target="_blank" title="<?= $img['orig_name'] ?>" class="has-tooltip">
+                                        <img src="<?= base_url('assets/images/comment_attachments/' . $img['attachment']) ?>">
+                                    </a>
+                                <?php endforeach; ?>
+                            </div>
+                        <?php else: ?>
+                            <p class="text-muted">No Images Attached</p>
+                        <?php endif; ?>
+                    </div>
+
+                    <!-- FILES -->
+                    <div class="mx-3 mb-3">
+                        <h6 class="section-title">Files</h6>
+
+                        <?php if (!empty($commentFiles)): ?>
+                            <div class="file-attachments">
+                                <?php foreach ($commentFiles as $f): ?>
+                                    <div class="file-item">
+                                        <span class="file-name"><?= $f['orig_name'] ?></span>
+                                        <a href="<?= base_url('assets/images/comment_attachments/' . $f['attachment']) ?>"
+                                            target="_blank">
+                                            <i class="fa-solid fa-download" style='color: #666666;'></i>
+                                        </a>
+                                    </div>
+                                <?php endforeach; ?>
+                            </div>
+                        <?php else: ?>
+                            <p class="text-muted">No Files Attached</p>
+                        <?php endif; ?>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
 
-<div class="modal fade" id="ticket_attachments" tabindex="-1">
+<div class="modal fade" id="ticket_attachments" tabindex="-1" aria-hidden="true" data-bs-backdrop="static">
     <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content">
             <div class="modal-body attachment-content">
@@ -730,28 +799,6 @@ endforeach; ?>
     }
 </script>
 
-<?php if ($this->session->flashdata('showModal')): ?>
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            var modalId = "<?= $this->session->flashdata('showModal'); ?>";
-            var myModal = new bootstrap.Modal(document.getElementById(modalId));
-            myModal.show();
-        });
-    </script>
-<?php endif; ?>
-
-<?php
-function get_abbreviation($string) {
-    // Condition: Only proceed if there is more than 1 word
-    if (str_word_count($string) > 1) {
-        if (preg_match_all('/\b(\w)/', strtoupper($string), $matches)) {
-            return implode('', $matches[0]);
-        }
-    }
-    // Return original string if it's just one word or empty
-    return $string;
-}
-?>
 
 <script>
     document.addEventListener('click', function (e) {
@@ -802,7 +849,7 @@ function get_abbreviation($string) {
                                 <a href="${filePath}" target="_blank" title="${file.orig_name}" class="has-tooltip">
                                     <img src="${filePath}">
                                 </a>
-                            `;
+                                `;
                         }
 
                         // FILES
@@ -814,7 +861,7 @@ function get_abbreviation($string) {
                                      <i class="fa-solid fa-download" style = 'color: #666666;'></i>
                                     </a>
                                 </div>
-                            `;
+                                `;
                         }
                     });
 

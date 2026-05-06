@@ -54,7 +54,8 @@
                                                 <?php foreach ($departments as $department): ?>
                                                     <option value="<?= $department['department_id'] ?>"
                                                         <?= ($department['department_id'] == set_value('department')) ? 'selected' : "" ?>>
-                                                        <?= $department['department_name'] ?></option>
+                                                        <?= $department['department_name'] ?>
+                                                    </option>
                                                 <?php endforeach; ?>
                                             </select>
                                             <span id="" class="text-danger"><?= form_error('department') ?></span>
@@ -150,10 +151,10 @@
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
     integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous">
-</script>
+    </script>
 
 <script>
-    document.addEventListener("DOMContentLoaded", function() {
+    document.addEventListener("DOMContentLoaded", function () {
         const department = document.getElementById("department");
         const role = document.getElementById("role");
 
@@ -177,7 +178,7 @@
         }
 
         // 🔁 Run when user changes department
-        department.addEventListener("change", function() {
+        department.addEventListener("change", function () {
             filterRoles(this.value);
         });
 
