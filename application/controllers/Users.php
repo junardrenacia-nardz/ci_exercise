@@ -26,6 +26,15 @@ class Users extends CI_Controller {
             $email = $this->input->post('email');
 
             if ($user_id) {
+                if (strtolower($user_id['status']) === strtolower("pending")) {
+                    $this->session->set_flashdata('login_failed', 'The account is not approved yet. Contact the admin regarding the issue');
+                    $this->load->view('users/login', $data);
+                    return;
+                } else if (strtolower($user_id['status']) === strtolower("deactivated")) {
+                    $this->session->set_flashdata('login_failed', 'The account is deactivated. Contact the admin regarding the issue');
+                    $this->load->view('users/login', $data);
+                    return;
+                }
                 $user_data = [
                     'user_id' => $user_id['user_id'],
                     'employee_id' => $user_id['employee_id'],
@@ -40,13 +49,12 @@ class Users extends CI_Controller {
             } else {
                 $this->session->set_flashdata('login_failed', 'Password is incorrect. Login is invalid');
                 $this->load->view('users/login', $data);
+                return;
             }
         }
     }
 
     public function register() {
-        $data = $this->input->post();
-
         $this->form_validation->set_rules('firstName', 'First Name', 'required');
         $this->form_validation->set_rules('lastName', 'Last Name', 'required');
         $this->form_validation->set_rules('contact', 'Contact', 'required|callback_validate_contact');
@@ -85,6 +93,10 @@ class Users extends CI_Controller {
         }
     }
     public function logout() {
+        date_default_timezone_set('Asia/Manila');
+        $data['last_active'] = date("Y-m-d H:i:s", time());
+        $this->db->where('user_id', $this->session->userdata['user_id']);
+        $this->db->update('users', $data);
         $this->session->sess_destroy();
         redirect('users');
     }
@@ -108,9 +120,10 @@ class Users extends CI_Controller {
         $this->load->view('templates/footer');
     }
 
+
     public function update_employee_status($employee_id, $status, $user_id, $modal = FALSE) {
         if (strtolower($status) == strtolower("active") && $modal) {
-            $this->session->set_flashdata('showModal', 'approve_user');
+            $this->session->set_flashdata('showModal', $modal);
         }
 
         $this->session->set_flashdata('message', [
@@ -129,6 +142,49 @@ class Users extends CI_Controller {
         ]);
         $this->user_model->delete_pending_user($user_id, $employee_id);
         return redirect('users/user_index');
+    }
+
+    public function edit_user() {
+        $employee_id = $this->input->post('employee_id');
+        $user_id = explode('-', $this->input->post('user_id'))[1];
+
+        $this->form_validation->set_rules('firstName', 'First Name', 'required');
+        $this->form_validation->set_rules('lastName', 'Last Name', 'required');
+        $this->form_validation->set_rules('contact', 'Contact', 'required|callback_validate_contact');
+        $this->form_validation->set_rules('department', 'Department', 'required');
+        $this->form_validation->set_rules('role', "Role", 'required');
+        $this->form_validation->set_rules('gender', "Gender", 'required');
+        $this->form_validation->set_rules('position', "Position", 'required');
+        $this->form_validation->set_rules('tier', "Escalation", 'required');
+        $this->form_validation->set_rules('email', 'Email', 'required|valid_email');
+
+        if ($this->form_validation->run() == FALSE) {
+            $this->session->set_flashdata('showModal', 'edit_user');
+            $this->session->set_flashdata('message', [
+                'type' => 'danger', // or 'success'
+                'text' => 'The input(s) is/are invalid. Try Again'
+            ]);
+
+            $this->session->set_flashdata('old_input', $this->input->post());
+            $this->session->set_flashdata('errors', $this->form_validation->error_array());
+            return redirect('users/user_index'); // ✅ IMPORTANT
+        } else {
+            $this->session->set_flashdata('message', [
+                'type' => 'success', // or 'success'
+                'text' => "User $user_id is updated successfully"
+            ]);
+
+            $this->user_model->update_user($user_id, $employee_id);
+
+            return redirect('users/user_index');
+        }
+    }
+
+    public function change_password() {
+        $this->form_validation->set_rules('oldPassword', "Old Password", "required");
+        $this->form_validation->set_rules('newPassword', 'Password', 'required|callback_validate_password');
+        $this->form_validation->set_rules('confirmPassword', 'Confirm Password', 'matches[password]');
+
     }
 
 
@@ -177,5 +233,19 @@ class Users extends CI_Controller {
         }
     }
 
+    public function update_last_active() {
+        $user_id = $this->session->userdata('user_id');
+
+        if (!$user_id)
+            return;
+
+        $this->db->where('user_id', $user_id);
+        $this->db->update('users', [
+            'last_activity' => date('Y-m-d H:i:s'),
+            'is_online' => 1
+        ]);
+
+        echo json_encode(['status' => 'ok']);
+    }
 
 }

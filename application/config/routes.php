@@ -67,6 +67,7 @@ $route["dashboard"] = "tickets/dashboard";
 $route['users'] = 'users/login';
 $route['users/update_employee_status/(:any)/(:any)/(:any)/(:any)'] = 'users/update_employee_status/$1/$2/$3/$4';
 $route['delete_users/(:any)/(:any)'] = "users/delete_pending_user/$1/$2";
+$route['users/update_last_active'] = "users/update_last_active";
 
 $route['default_controller'] = 'tickets/index';
 $route['404_override'] = '';

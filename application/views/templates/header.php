@@ -1,11 +1,3 @@
-<?php
-
-/** @var array $ticket_details */
-/** @var array $ticket_assigned */
-/** @var array $logged_user */
-/** @var string $title */
-?>
-
 <?php $current = uri_string();
 $isViewTicket = strpos($current, 'tickets/view_ticket/') === 0; ?>
 
@@ -19,12 +11,6 @@ function name_abbr($first, $last) {
     return $initial;
 }
 ?>
-
-<script>
-    // BASE_URL JS
-    const BASE_URL = "<?= base_url() ?>";
-    const showModal = "<?= $this->session->flashdata('showModal'); ?>";
-</script>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -232,3 +218,32 @@ function name_abbr($first, $last) {
                         return $string;
                     }
                     ?>
+
+
+                    <script>
+                        // BASE_URL JS
+                        const BASE_URL = "<?= base_url() ?>";
+                        const showModal = "<?= $this->session->flashdata('showModal'); ?>";
+                    </script>
+
+
+                    <script>
+                        let isActive = true;
+
+                        function updateActivity() {
+                            fetch("<?= base_url('users/update_last_active') ?>", {
+                                method: "POST",
+                                credentials: "include",
+                                headers: {
+                                    "Content-Type": "application/x-www-form-urlencoded"
+                                },
+                                body: "<?= $this->security->get_csrf_token_name() ?>=<?= $this->security->get_csrf_hash() ?>"
+                            });
+                        }
+
+                        setInterval(updateActivity, 10000);
+                    </script>
+
+                    <script>
+                        const isUsersController = <?= ($this->router->fetch_class() === 'users') ? 'true' : 'false'; ?>;
+                    </script>

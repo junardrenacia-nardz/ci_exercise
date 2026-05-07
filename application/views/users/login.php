@@ -41,8 +41,7 @@
                     </div>
                     <div class="col d-flex flex-column">
                         <label for="password">Password</label>
-                        <input type="password" name="password" id="password" class="input form-control mb-1"
-                            value="<?= set_value('password'); ?>">
+                        <input type="password" name="password" id="password" class="input form-control mb-1" value="">
                         <span class="text-danger"><?= form_error('password'); ?></span>
                         <button class="btn btn-sm" id="toggle" type="button" onclick="togglePassword()">Show
                             Password</button>
@@ -65,7 +64,7 @@
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
     integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous">
-</script>
+    </script>
 <script src="<?= base_url('assets/js/') ?>alertMessage.js"></script>
 
 <script>
