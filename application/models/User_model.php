@@ -25,6 +25,13 @@ class User_model extends CI_Model {
         $this->db->join('access_types a', 'a.access_id = u.access_id', 'left');
         $this->db->join('departments d', 'd.department_id = e.department_id', 'left');
         $this->db->join('positions p', 'p.position_id = e.position_id');
+
+        if ($id) {
+            $this->db->where('u.user_id', $id);
+            $query = $this->db->get();
+            return $query->row_array();
+        }
+
         $query = $this->db->get();
         return $query->result_array();
     }
@@ -151,6 +158,7 @@ class User_model extends CI_Model {
         $this->db->trans_complete();
         return true;
     }
+
 
     // public function update_time() {
     //     date_default_timezone_set('Asia/Manila');

@@ -175,17 +175,12 @@ $old = $this->session->flashdata('old_input');
 
                         <div class="action-group user-action-btn">
                             <!-- Edit -->
-                            <a href="" title="Edit" data-id="<?= $user['user_id'] ?>" data-id="<?= $user['user_id'] ?>"
-                                data-firstname="<?= $user['first_name'] ?>" data-lastname="<?= $user['last_name'] ?>"
-                                data-gender="<?= $user['gender'] ?>" data-contact="<?= $user['contact_number'] ?>"
-                                data-email="<?= $user['email'] ?>" data-department="<?= $user['department_id'] ?>"
-                                data-position="<?= $user['position_id'] ?>" data-role="<?= $user['access_id'] ?>"
-                                data-tier="<?= $user['escalation_id'] ?>" data-employeeid="<?= $user['employee_id'] ?>"
-                                data-bs-toggle="modal" data-bs-target="#edit_user"
+                            <button title="Edit"
+                                onclick="openModal('<?= base_url('users/edit_user/' . idFormatRemove($user['user_id'])) ?>', 'edit_user', 'edit_user_modal')"
                                 class="action-item btn btn-sm d-flex align-items-center px-2 has-tooltip edit_user_btn">
                                 <i class="fa-solid fa-pen-to-square"></i>
 
-                            </a>
+                            </button>
 
                             <!-- Divider -->
                             <div style=" width: 1px; background: var(--border);">
@@ -227,6 +222,7 @@ $old = $this->session->flashdata('old_input');
             </tbody>
         </table>
     </div>
+
 
     <!--Add User-->
     <div class="modal fade" id="add_user" tabindex="-1" data-bs-backdrop="static" aria-hidden="true">
@@ -412,13 +408,12 @@ $old = $this->session->flashdata('old_input');
                                     <td class="text-center"><?= ucwords($user['access_name']) ?></td>
                                     <td class="text-center"><?= date('m-d-Y', strtotime($user['created_at'])) ?></td>
                                     <td class="text-center">
-                                        <?php $userIdNum = explode('-', $user['user_id'])[1]; ?>
                                         <div class="d-flex justify-content-evenly">
                                             <a href="<?= base_url('users/update_employee_status/' . $user['employee_id'] . "/active/" .$user['user_id']) . "/" . 'approve_user' ?>"
                                                 class="btn rounded-5 has-tooltip" title="Approve">
                                                 <i class="fa-solid fa-check"></i>
                                             </a>
-                                            <a href="<?= base_url('delete_users/' . intval($userIdNum) ."/" . $user['employee_id']) ?>"
+                                            <a href="<?= base_url('delete_users/' . intval(idFormatRemove($user['user_id'])) ."/" . $user['employee_id']) ?>"
                                                 class="btn rounded-5 has-tooltip" title="Reject">
                                                 <i class="fa-solid fa-xmark"></i>
                                             </a>
@@ -443,141 +438,13 @@ $old = $this->session->flashdata('old_input');
     <div class="modal fade" id="edit_user" tabindex="-1" data-bs-backdrop="static" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-lg">
             <div class="modal-content">
-                <div class="modal-body">
-                    <div class="d-flex justify-content-between w-100 ps-0">
-                        <div></div>
-                        <h5>Edit User Details</h5>
-                        <button type="button" class="btn-close btn-close-black btn-close-reload"
-                            data-bs-dismiss="modal"></button>
+                <div class="d-flex justify-content-between w-100 ps-0">
+                    <div class="modal-body" id="edit_user_modal">
+
+
                     </div>
-                    <form action="<?= base_url('users/edit_user') ?>" method="POST" id="step1Form" class=" px-3">
-                        <input type="hidden" name="user_id" id="user_id" value="<?= $old['user_id'] ?? '' ?>">
-                        <input type="hidden" name="employee_id" id="employee_id"
-                            value="<?= $old['employee_id'] ?? '' ?>">
-                        <div class="create-account mt-4 d-flex flex-column justify-content-between">
-                            <div class="fields">
-                                <div class="row">
-                                    <h6>Personal Info</h6>
-                                    <div class="col-sm-12 col-md-12 col-lg-4 col-xl-4 mt-1">
-                                        <label for="firstName" class="form-label">First Name</label>
-                                        <input type="text" name="firstName" id="editfirstName" class="form-control"
-                                            value="<?= $old['firstName'] ?? '' ?>">
-                                        <span id="" class="text-danger"><?= $errors['firstName'] ?? '' ?></span>
-                                    </div>
-                                    <div class="col-sm-12 col-md-12 col-lg-4 col-xl-4 mt-1">
-                                        <label for="lastName" class="form-label">Last Name</label>
-                                        <input type="text" name="lastName" id="editlastName" class="form-control"
-                                            value="<?= $old['lastName'] ?? '' ?>">
-                                        <span id="" class="text-danger"><?= $errors['lastName'] ?? '' ?></span>
-                                    </div>
-                                    <div class="col-sm-12 col-md-4 col-lg-4 col-xl-4 mt-1">
-                                        <label for="gender" class="form-label">Gender</label>
-                                        <select name="gender" id="editgender" class="form-control">
-                                            <option value="">- Gender -</option>
-                                            <option value="male"
-                                                <?= isset($old['gender']) && $old['gender'] == "male" ? 'selected' : '' ?>>
-                                                Male</option>
-                                            <option value="female"
-                                                <?= isset($old['gender']) && $old['gender'] == "female" ? 'selected' : '' ?>>
-                                                Female</option>
-                                        </select>
-                                        <span id="" class="text-danger"><?= $errors['gender'] ?? '' ?></span>
-                                    </div>
-                                    <div class="col-md-8 col-lg-6 col-xl-6 mt-1">
-                                        <label for="contact" class="form-label">Contact Number</label>
-                                        <input type="tel" name="contact" id="editcontact" class="form-control"
-                                            value="<?= $old['contact'] ?? '' ?>">
-                                        <span id="" class="text-danger"><?= $errors['contact'] ?? '' ?></span>
-                                    </div>
-                                    <div class="col-lg-6 col-xl-6 mt-1">
-                                        <label for="contact" class="form-label">Email</label>
-                                        <input type="text" name="email" id="editemail" class="form-control"
-                                            value="<?= $old['email'] ?? '' ?>">
-                                        <span class="text-danger"><?= $errors['email'] ?? '' ?></span>
-                                    </div>
-                                </div>
-                                <div class="row mt-4">
-                                    <h6>Employee Role and Department</h6>
-                                    <div class="col-sm-12 col-md-12 col-lg-6 col-xl-6 mt-1">
-                                        <label for="firstName" class="form-label">Department</label>
-                                        <select name="department" id="editdepartment" class="form-control">
-                                            <option value="">- Select a Department -</option>
-                                            <?php foreach ($departments as $department): ?>
-                                            <option value="<?= $department['department_id'] ?>"
-                                                <?= isset($old['department']) && $old['department'] == $department['department_id'] ? 'selected' : '' ?>>
-                                                <?= $department['department_name'] ?>
-                                            </option>
-                                            <?php endforeach; ?>
-                                        </select>
-                                        <span id="" class="text-danger"><?= $errors['department'] ?? '' ?></span>
-                                    </div>
-                                    <div class="col-sm-12 col-md-12 col-lg-6 col-xl-6 mt-1">
-                                        <label for="lastName" class="form-label">Position</label>
-                                        <select name="position" id="editposition" class="form-control">
-                                            <option value="">- Select a Position -</option>
-                                            <?php foreach ($positions as $position): ?>
-                                            <option value="<?= $position['position_id'] ?>"
-                                                data-department="<?= $position['department_id'] ?>"
-                                                <?= isset($old['position']) && $old['position'] == $position['position_id'] ? 'selected' : '' ?>>
-                                                <?= $position['position_name'] ?>
-                                            </option>
-                                            <?php endforeach; ?>
-
-                                        </select>
-                                        <span id="" class="text-danger"><?= $errors['position'] ?? '' ?></span>
-                                    </div>
-                                    <div class="col-sm-12 col-md-12 col-lg-6 col-xl-6 mt-1">
-                                        <label for="lastName" class="form-label">Escalation Level</label>
-                                        <select name="tier" id="edittier" class="form-control">
-                                            <option value="">- Select a Escalation -</option>
-                                            <?php foreach ($escalations as $e): ?>
-                                            <option value="<?= $e['escalation_id'] ?>"
-                                                <?= isset($old['tier']) && $old['tier'] == $e['escalation_id'] ? 'selected' : '' ?>>
-                                                <?php if ($e['escalation_level'] !== "10"): ?>
-                                                Level <?= $e['escalation_level'] ?>
-                                                <?php else: ?>
-                                                Super Admin Level
-                                                <?php endif; ?>
-                                            </option>
-                                            <?php endforeach; ?>
-                                        </select>
-                                        <span id="" class="text-danger"><?= $errors['tier'] ?? '' ?></span>
-                                    </div>
-                                    <div class="col-sm-12 col-md-12 col-lg-6 col-xl-6 mt-1">
-                                        <label for="lastName" class="form-label">Role</label>
-                                        <select name="role" id="editrole" class="form-control">
-                                            <option value="">- Select a Role -</option>
-                                            <?php foreach ($roles as $role): ?>
-                                            <option value="<?= $role['access_id'] ?>"
-                                                <?= isset($old['role']) && $old['role'] == $role['access_id'] ? 'selected' : '' ?>>
-                                                <?= ucwords($role['access_name']) ?>
-                                            </option>
-                                            <?php endforeach; ?>
-                                        </select>
-                                        <span id="" class="text-danger"><?= $errors['role'] ?? '' ?></span>
-                                    </div>
-                                </div>
-                                <div class="mt-4">
-                                    <a class="btn btn-outline-secondary" data-bs-target="#changePassword"
-                                        data-bs-toggle="modal">
-                                        <i class="fa-solid fa-unlock me-2"></i>Change Password</a>
-                                </div>
-                            </div>
-
-                            <div class="buttons d-flex justify-content-end mt-3">
-                                <a href="" type="submit" name="direction" value="go_to_login" data-bs-dismiss="modal"
-                                    class="btn btn-outline-dark btn-close-reload me-2">Cancel</a>
-                                <button class="btn btn-dark" type="submit" id="submit-1" name="direction"
-                                    value="submit">Update</button>
-                            </div>
-                        </div>
-
-
-                    </form>
-
 
                 </div>
-
             </div>
         </div>
     </div>
@@ -658,12 +525,7 @@ $old = $this->session->flashdata('old_input');
             setupDepartmentPosition(department, position);
         }
 
-        const editDepartment = document.getElementById("editdepartment");
-        const editPosition = document.getElementById("editposition");
 
-        if (editDepartment && editPosition) {
-            setupDepartmentPosition(editDepartment, editPosition);
-        }
 
     });
 

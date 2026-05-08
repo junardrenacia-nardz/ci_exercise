@@ -78,3 +78,12 @@ if (showModal) {
 		myModal.show();
 	});
 }
+
+function openModal(url, showModal, modalBodyName) {
+	fetch(url)
+		.then((res) => res.text())
+		.then((html) => {
+			document.getElementById(modalBodyName).innerHTML = html;
+			new bootstrap.Modal(document.getElementById(showModal)).show();
+		});
+}

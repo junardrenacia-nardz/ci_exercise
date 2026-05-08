@@ -68,7 +68,7 @@ class Ticket_model extends CI_Model {
 
     public function get_ticket_assigned() {
         $this->db->select('
-                ta.ticket_id, ta.user_id, u.employee_id, e.first_name, e.last_name,
+                ta.ticket_id, CONCAT("UID-", LPAD(ta.user_id, 5, "0")) as user_id, u.employee_id, e.first_name, e.last_name,
                 d.department_name
                 ');
         $this->db->from('ticket_assigned ta');

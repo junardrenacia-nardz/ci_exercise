@@ -161,7 +161,7 @@
                                             Assign</a>
                                     </div>
                                 <?php endif; ?>
-                            </td class="align-middle">
+                            </td>
                             <td class="align-middle">
                                 <?= $ticket['requester_first_name'] . " " . $ticket['requester_last_name'] ?>
                             </td>

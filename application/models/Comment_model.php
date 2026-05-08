@@ -2,7 +2,7 @@
 class Comment_model extends CI_Model {
     public function get_comments($ticket_id) {
         $this->db->order_by("c.comment_id", "ASC");
-        $this->db->select("c.user_id, c.comment_id, c.comment, e.first_name, e.last_name, e.gender, d.department_name, c.comment_created_at");
+        $this->db->select("CONCAT('UID-', LPAD(c.user_id, 5, '0')) as user_id, c.comment_id, c.comment, e.first_name, e.last_name, e.gender, d.department_name, c.comment_created_at");
         $this->db->from("comments c");
         $this->db->join("users u", "u.user_id = c.user_id", 'left');
         $this->db->join("employees e", "e.employee_id = u.employee_id", 'left');

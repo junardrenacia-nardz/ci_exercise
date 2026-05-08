@@ -51,6 +51,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 */
 // Tickets
 $route['tickets/(:any)'] = 'tickets/index/$1';
+$route['tickets'] = 'tickets/index/all';
 $route['tickets/view_ticket/(:any)'] = 'tickets/view_ticket/$1';
 $route['tickets/reassign_department/(:any)'] = 'tickets/reassign_department/$1';
 $route['tickets/assign_ticket/(:any)'] = 'tickets/assign_ticket/$1';
@@ -68,6 +69,7 @@ $route['users'] = 'users/login';
 $route['users/update_employee_status/(:any)/(:any)/(:any)/(:any)'] = 'users/update_employee_status/$1/$2/$3/$4';
 $route['delete_users/(:any)/(:any)'] = "users/delete_pending_user/$1/$2";
 $route['users/update_last_active'] = "users/update_last_active";
+$route['users/edit_user/(:any)/(:any)'] = "users/edit_user/$1/$2";
 
 $route['default_controller'] = 'tickets/index';
 $route['404_override'] = '';

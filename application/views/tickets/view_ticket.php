@@ -321,13 +321,13 @@ endforeach; ?>
                                                             <option value="">- Select person to be assigned -</option>
                                                             <?php foreach ($all_assigned as $choice): ?>
                                                                 <?php if ($choice['department_id'] == $ticket['department_id']): ?>
-                                                                    <optionvalue="<?= $choice['user_id'] ?>"
+                                                                    <option value="<?= $choice['user_id'] ?>"
                                                                         <?= ($selectedId == $choice['user_id']) ? "selected" : "" ?>>
                                                                         <?= $choice['first_name'] . " " . $choice['last_name'] ?>
                                                                         (#<?= $choice['user_id'] ?>)
-                                                                        </option>
-                                                                    <?php endif; ?>
-                                                                <?php endforeach; ?>
+                                                                    </option>
+                                                                <?php endif; ?>
+                                                            <?php endforeach; ?>
                                                         </select>
                                                         <i class="fa-solid fa-angle-down icon-dropdown"></i>
                                                     </div>
@@ -374,14 +374,14 @@ endforeach; ?>
                                                                 <option value="">- Select person to be assigned -</option>
                                                                 <?php foreach ($all_assigned as $choice): ?>
                                                                     <?php if ($choice['department_id'] == $ticket['department_id']): ?>
-                                                                        <optionvalue="<?= $choice['user_id'] ?>"
+                                                                        <option value="<?= $choice['user_id'] ?>"
                                                                             <?= ($choice['user_id'] == $person['id']) ? "selected" : "" ?>>
                                                                             <?= $choice['first_name'] . " " . $choice['last_name'] ?>
                                                                             (#<?= $choice['user_id'] ?>)
-                                                                            </option>
-                                                                        <?php endif; ?>
+                                                                        </option>
+                                                                    <?php endif; ?>
 
-                                                                    <?php endforeach; ?>
+                                                                <?php endforeach; ?>
                                                             </select>
                                                             <i class="fa-solid fa-angle-down icon-dropdown"></i>
                                                         </div>
@@ -480,11 +480,11 @@ endforeach; ?>
                             <select name="selectDepartment" id="selectDepartment" class="form-control">
                                 <option value="">- Select Department -</option>
                                 <?php foreach ($departments as $department): ?>
-                                    <optionvalue="<?= $department['department_id'] ?>"
+                                    <option value="<?= $department['department_id'] ?>"
                                         <?= ($ticket['department_id'] == $department['department_id']) ? "selected" : "" ?>>
                                         <?= $department['department_name'] ?>
-                                        </option>
-                                    <?php endforeach; ?>
+                                    </option>
+                                <?php endforeach; ?>
                             </select>
                             <i class="fa-solid fa-angle-down icon-dropdown"></i>
                         </div>

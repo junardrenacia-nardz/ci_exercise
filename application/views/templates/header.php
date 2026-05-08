@@ -10,6 +10,10 @@ function name_abbr($first, $last) {
 
     return $initial;
 }
+
+function idFormatRemove($id) {
+    return explode('-', $id)[1];
+}
 ?>
 
 <!DOCTYPE html>
@@ -226,22 +230,67 @@ function name_abbr($first, $last) {
                         const showModal = "<?= $this->session->flashdata('showModal'); ?>";
                     </script>
 
+                    <script>
+
+                    </script>
+
+
 
                     <script>
-                        let isActive = true;
+                        let inactiveTime = 0;
+                        let isOnline = true;
 
-                        function updateActivity() {
+                        const INACTIVE_LIMIT = 2 * 60 * 1000; // 2 minutes
+
+                        function updateActivity(status = 1) {
                             fetch("<?= base_url('users/update_last_active') ?>", {
                                 method: "POST",
                                 credentials: "include",
                                 headers: {
                                     "Content-Type": "application/x-www-form-urlencoded"
                                 },
-                                body: "<?= $this->security->get_csrf_token_name() ?>=<?= $this->security->get_csrf_hash() ?>"
+                                body: "status=" + status +
+                                    "&<?= $this->security->get_csrf_token_name() ?>=<?= $this->security->get_csrf_hash() ?>"
                             });
                         }
 
-                        setInterval(updateActivity, 10000);
+                        function resetTimer() {
+                            inactiveTime = Date.now();
+
+                            // User became active again
+                            if (!isOnline) {
+                                isOnline = true;
+                                updateActivity(1);
+                            }
+                        }
+
+                        // Detect activity
+                        ['mousemove', 'keydown', 'click', 'scroll'].forEach(event => {
+                            document.addEventListener(event, resetTimer);
+                        });
+
+                        // Start timer
+                        resetTimer();
+
+                        // Check every 10 seconds
+                        setInterval(() => {
+                            const now = Date.now();
+
+                            if (now - inactiveTime < INACTIVE_LIMIT) {
+
+                                // Still active
+                                updateActivity(1);
+
+                            } else {
+
+                                // Inactive
+                                if (isOnline) {
+                                    isOnline = false;
+                                    updateActivity(0);
+                                }
+                            }
+
+                        }, 10000);
                     </script>
 
                     <script>
