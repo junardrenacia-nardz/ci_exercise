@@ -181,7 +181,7 @@ class Users extends CI_Controller {
         $this->form_validation->set_rules('email', 'Email', 'required|valid_email');
 
         if ($this->form_validation->run() == FALSE) {
-            // $this->session->set_flashdata('showModal', "edit_user");
+            $this->session->set_flashdata('showModal', "edit_user");
             $this->session->set_flashdata('message', [
                 'type' => 'danger', // or 'success'
                 'text' => 'The input(s) is/are invalid. Try Again'
@@ -189,8 +189,10 @@ class Users extends CI_Controller {
             $data['inputs'] = $this->input->post();
             $data['errors'] = $this->form_validation->error_array();
             $data['status'] = 'error';
+            $this->session->set_flashdata('old_input', $this->input->post());
+            $this->session->set_flashdata('errors', $this->form_validation->error_array());
             echo json_encode($data);
-            return;
+            return redirect('users/user_index');
         }
 
 
@@ -205,11 +207,14 @@ class Users extends CI_Controller {
 
         $data['status'] = 'success';
         echo json_encode($data);
+        return redirect('users/user_index');
 
     }
 
 
-    public function update_employee_status($employee_id, $status, $user_id, $modal = FALSE) {
+    public function update_employee_status($status, $modal = FALSE) {
+        $employee_id = $this->input->post('employee_id');
+        $user_id = explode('-', $this->input->post('user_id'))[1];
         if (strtolower($status) == strtolower("active") && $modal) {
             $this->session->set_flashdata('showModal', $modal);
         }

@@ -14,7 +14,10 @@ $(document).on("click", ".edit_user_btn", function () {
 			$("body").append(response);
 
 			// NOW show it (because it exists in DOM)
-			let modal = new bootstrap.Modal(document.getElementById("editModal"));
+			let modal = new bootstrap.Modal(document.getElementById("editModal"), {
+				backdrop: "static",
+				keyboard: false,
+			});
 
 			modal.show();
 		},

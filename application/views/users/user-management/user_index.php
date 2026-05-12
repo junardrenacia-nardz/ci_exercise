@@ -188,21 +188,21 @@ $old = $this->session->flashdata('old_input');
 
                             <?php if(strtolower($user['status']) == strtolower("active")): ?>
                             <!-- Delete -->
-                            <a href="<?= base_url('users/update_employee_status/' . $user['employee_id'] . "/deactivated/" .$user['user_id']) ?>"
-                                title="Delete"
-                                class="action-item btn btn-sm d-flex align-items-center px-2 has-tooltip">
+                            <button href="" id="deactivate_btn" title="Deactivate"
+                                class="action-item btn btn-sm d-flex align-items-center px-2 has-tooltip"
+                                data-user_id="<?= $user['user_id'] ?>" data-employee_id="<?= $user['employee_id'] ?>">
                                 <i class="fa-solid fa-trash"></i>
-                            </a>
+                            </button>
 
                             <!-- Divider -->
                             <div style="width: 1px; background: var(--border);"></div>
                             <?php else: ?>
                             <!-- Reactivate -->
-                            <a href="<?= base_url('users/update_employee_status/' . $user['employee_id'] . "/active/" .$user['user_id']) ?>"
-                                title="Reactivate"
-                                class="action-item btn btn-sm d-flex align-items-center px-2 has-tooltip">
+                            <button id="activate_btn" title="Reactivate"
+                                class="action-item btn btn-sm d-flex align-items-center px-2 has-tooltip"
+                                data-user_id="<?= $user['user_id'] ?>" data-employee_id="<?= $user['employee_id'] ?>">
                                 <i class="fa-solid fa-arrow-rotate-left"></i>
-                            </a>
+                            </button>
 
                             <!-- Divider -->
                             <div style="width: 1px; background: var(--border);"></div>
@@ -446,7 +446,7 @@ $old = $this->session->flashdata('old_input');
                             <button type="button" class="btn-close btn-close-black btn-close-reload"
                                 data-bs-dismiss="modal"></button>
                         </div>
-                        <form action="" method="POST" id="editForm" class=" px-3">
+                        <form action="<?= base_url('users/update_user'); ?>" method="POST" id="editForm" class=" px-3">
                             <input type="hidden" name="user_id" id="user_id"
                                 value="<?= $old['user_id'] ?? $user['user_id'] ?? '' ?>">
                             <input type="hidden" name="employee_id" id="employee_id"
@@ -459,14 +459,13 @@ $old = $this->session->flashdata('old_input');
                                             <label for="firstName" class="form-label">First Name</label>
                                             <input type="text" name="firstName" id="editfirstName" class="form-control"
                                                 value="<?= $old['firstName'] ?? $user['first_name'] ?? '' ?>">
-                                            <span id="error_firstName"
-                                                class="text-danger"><?= $errors['firstName'] ?? '' ?></span>
+                                            <span id="" class="text-danger"><?= $errors['firstName'] ?? '' ?></span>
                                         </div>
                                         <div class="col-sm-12 col-md-12 col-lg-4 col-xl-4 mt-1">
                                             <label for="lastName" class="form-label">Last Name</label>
                                             <input type="text" name="lastName" id="editlastName" class="form-control"
                                                 value="<?= $old['lastName'] ?? $user['last_name'] ?? '' ?>">
-                                            <span id="error_lastName" class="text-danger"></span>
+                                            <span id="" class="text-danger"><?= $errors['lastName'] ?? '' ?></span>
                                         </div>
                                         <div class="col-sm-12 col-md-4 col-lg-4 col-xl-4 mt-1">
                                             <label for="gender" class="form-label">Gender</label>
@@ -479,20 +478,19 @@ $old = $this->session->flashdata('old_input');
                                                     <?= ($old['gender'] ?? $user['gender'] ?? '') == "female" ? 'selected' : '' ?>>
                                                     Female</option>
                                             </select>
-                                            <span id="error_gender" class="text-danger"></span>
+                                            <span id="" class="text-danger"><?= $errors['gender'] ?? '' ?></span>
                                         </div>
                                         <div class="col-md-8 col-lg-6 col-xl-6 mt-1">
                                             <label for="contact" class="form-label">Contact Number</label>
                                             <input type="tel" name="contact" id="editcontact" class="form-control"
                                                 value="<?= $old['contact'] ?? $user['contact_number'] ??  '' ?>">
-                                            <span id="error_contact"
-                                                class="text-danger"><?= $errors['contact'] ?? '' ?></span>
+                                            <span id="" class="text-danger"><?= $errors['contact'] ?? '' ?></span>
                                         </div>
                                         <div class="col-lg-6 col-xl-6 mt-1">
                                             <label for="contact" class="form-label">Email</label>
                                             <input type="text" name="email" id="editemail" class="form-control"
                                                 value="<?= $old['email'] ?? $user['email'] ?? '' ?>">
-                                            <span id="error_email" class="text-danger"></span>
+                                            <span class="text-danger"><?= $errors['email'] ?? '' ?></span>
                                         </div>
                                     </div>
                                     <div class="row mt-4">
@@ -508,8 +506,7 @@ $old = $this->session->flashdata('old_input');
                                                 </option>
                                                 <?php endforeach; ?>
                                             </select>
-                                            <span id="error_department"
-                                                class="text-danger"><?= $errors['department'] ?? '' ?></span>
+                                            <span id="" class="text-danger"><?= $errors['department'] ?? '' ?></span>
                                         </div>
                                         <div class="col-sm-12 col-md-12 col-lg-6 col-xl-6 mt-1">
                                             <label for="lastName" class="form-label">Position</label>
@@ -524,8 +521,7 @@ $old = $this->session->flashdata('old_input');
                                                 <?php endforeach; ?>
 
                                             </select>
-                                            <span id="error_position"
-                                                class="text-danger"><?= $errors['position'] ?? '' ?></span>
+                                            <span id="" class="text-danger"><?= $errors['position'] ?? '' ?></span>
                                         </div>
                                         <div class="col-sm-12 col-md-12 col-lg-6 col-xl-6 mt-1">
                                             <label for="lastName" class="form-label">Escalation Level</label>
@@ -542,8 +538,7 @@ $old = $this->session->flashdata('old_input');
                                                 </option>
                                                 <?php endforeach; ?>
                                             </select>
-                                            <span id="error_escalation"
-                                                class="text-danger"><?= $errors['tier'] ?? '' ?></span>
+                                            <span id="" class="text-danger"><?= $errors['tier'] ?? '' ?></span>
                                         </div>
                                         <div class="col-sm-12 col-md-12 col-lg-6 col-xl-6 mt-1">
                                             <label for="lastName" class="form-label">Role</label>
@@ -556,8 +551,7 @@ $old = $this->session->flashdata('old_input');
                                                 </option>
                                                 <?php endforeach; ?>
                                             </select>
-                                            <span id="error_role"
-                                                class="text-danger"><?= $errors['role'] ?? '' ?></span>
+                                            <span id="" class="text-danger"><?= $errors['role'] ?? '' ?></span>
                                         </div>
                                     </div>
                                     <div class="mt-4">
@@ -569,7 +563,8 @@ $old = $this->session->flashdata('old_input');
 
                                 <div class="buttons d-flex justify-content-end mt-3">
                                     <a href="" type="submit" name="direction" value="go_to_login"
-                                        data-bs-dismiss="modal" class="btn btn-outline-dark me-2">Cancel</a>
+                                        data-bs-dismiss="modal" class="btn btn-outline-dark me-2"
+                                        id='btn-close-modal'>Cancel</a>
                                     <button class="btn btn-dark" type="submit" id="submit-1" name="direction"
                                         value="submit">Update</button>
                                 </div>
@@ -578,15 +573,14 @@ $old = $this->session->flashdata('old_input');
 
                         </form>
 
+
+
                     </div>
 
                 </div>
             </div>
         </div>
     </div>
-
-
-
 
     <!--EDIT USER DETAILS-->
     <div class="modal fade" id="changePassword" tabindex="-1" data-bs-backdrop="static" aria-hidden="true">
@@ -627,7 +621,7 @@ $old = $this->session->flashdata('old_input');
 
                             <div class="buttons d-flex justify-content-end mt-3">
                                 <a href="" type="submit" name="direction" value="go_to_login" data-bs-toggle="modal"
-                                    data-bs-target="#edit_user" class="btn btn-outline-dark me-2">Cancel</a>
+                                    class="btn btn-outline-dark me-2">Cancel</a>
                                 <button class="btn btn-dark" type="submit" id="submit-1" name="direction"
                                     value="submit">Update</button>
                             </div>
@@ -642,6 +636,63 @@ $old = $this->session->flashdata('old_input');
             </div>
         </div>
     </div>
+
+
+    <!-- DEACTIVATE -->
+    <div class="modal fade modalEdit" id="deactivate_modal" tabindex="-1" data-bs-backdrop="static" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Deactivate User</h5>
+                    <button type="button" class="btn-close btn-close-white btn-close-reload"
+                        data-bs-dismiss="modal"></button>
+                </div>
+                <form method="POST" action=" <?=  base_url('users/update_employee_status/deactivated')?>">
+                    <input type="hidden" name="employee_id" id="deactivate_employee_id">
+                    <input type="hidden" name="user_id" id="deactivate_user_id">
+                    <div class="modal-body">
+                        <div class="col-12">
+                            <span>Are you sure you want to deactivate user <b id='user_id_text'></b>?</span>
+
+                        </div>
+                    </div>
+                    <div class="modal-footer border-0">
+                        <button type="submit" class="btn submit-btn">Deactivate</button>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- ACTIVATE -->
+    <div class="modal fade modalEdit" id="activate_modal" tabindex="-1" data-bs-backdrop="static" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Activate User</h5>
+                    <button type="button" class="btn-close btn-close-white btn-close-reload"
+                        data-bs-dismiss="modal"></button>
+                </div>
+                <form method="POST" action=" <?=  base_url('users/update_employee_status/active')?>">
+                    <input type="hidden" name="employee_id" id="activate_employee_id">
+                    <input type="hidden" name="user_id" id="activate_user_id">
+                    <div class="modal-body">
+                        <div class="col-12">
+                            <span>Are you sure you want to activate user <b id='user_id_activate'></b>?</span>
+
+                        </div>
+                    </div>
+                    <div class="modal-footer border-0">
+                        <button type="submit" class="btn submit-btn">Activate</button>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+
+
 
     <script>
     const filterToggle = document.querySelector(".btn-filter");
@@ -708,18 +759,8 @@ $old = $this->session->flashdata('old_input');
     </script>
 
     <script>
-    $(document).ready(function() {
-        $('.deleteUserBtn').on('click', function() {
-            $('#deleteUserId').val($(this).data('id'));
-            $('#deleteUserName').text($(this).data('name'));
-        });
-    });
-    </script>
-
-    <script>
     $(document).on("click", ".edit_user_btn", function() {
         let id = $(this).data("id");
-
 
         $.ajax({
             url: "<?= base_url('users/edit_user/')?>" + id,
@@ -729,13 +770,13 @@ $old = $this->session->flashdata('old_input');
                 id: id
             },
             success: function(response) {
-                user = response.user;
+                const user = response.user;
                 const department = user.department_id
                 const position = user.position_id;
 
                 // remove old modal (important)
-                $('#user_id').val(user.user_id);
-                $('#employee_id').val(user.employee_id);
+                $('#edit_user input[name="user_id"]').val(user.user_id);
+                $('#edit_user input[name="employee_id"]').val(user.employee_id);
 
                 // text inputs
                 $('#editfirstName').val(user.first_name);
@@ -757,7 +798,10 @@ $old = $this->session->flashdata('old_input');
                 // THEN set position
                 $('#editposition').val(position);
 
-                let modal = new bootstrap.Modal(document.getElementById("edit_user"));
+                let modal = new bootstrap.Modal(document.getElementById("edit_user"), {
+                    backdrop: 'static',
+                    keyboard: false
+                });
 
                 modal.show();
                 // // show modal
@@ -768,50 +812,35 @@ $old = $this->session->flashdata('old_input');
     </script>
 
     <script>
-    $(document).on("submit", "#editForm", function(e) {
-        e.preventDefault();
+    $(document).on("click", "#deactivate_btn", function() {
+        let user_id = $(this).data("user_id");
+        let employee_id = $(this).data("employee_id");
 
-        $.ajax({
-            url: "<?= base_url('users/update_user'); ?>",
-            type: "POST",
-            data: $(this).serialize(),
-            dataType: "json",
+        $('#deactivate_user_id').val(user_id);
+        $('#deactivate_employee_id').val(employee_id);
+        $('#user_id_text').html(user_id);
 
-            success: function(res) {
-                console.log(res.status)
-                const error = res.errors
-                // clear old errors
-                $("#editForm .text-danger").html("");
+        let modal = new bootstrap.Modal(document.getElementById("deactivate_modal"), {
+            backdrop: 'static',
+            keyboard: false
+        });
 
-                if (res.status === "error") {
+        modal.show();
+    })
 
-                    $('#error_firstName').html(error.firstName);
-                    $('#error_lastName').html(error.lastName);
-                    $('#error_contact').html(error.contact);
-                    $('#error_email').html(error.email);
-                    $('#error_gender').html(error.gender);
-                    $('#error_role').html(error.role);
-                    $('#error_escalation').html(error.tier);
-                    $('#error_department').html(error.department);
-                    $('#error_position').html(error.position);
+    $(document).on("click", "#activate_btn", function() {
+        let user_id = $(this).data("user_id");
+        let employee_id = $(this).data("employee_id");
 
-                    return;
+        $('#activate_user_id').val(user_id);
+        $('#activate_employee_id').val(employee_id);
+        $('#user_id_activate').html(user_id);
 
-                }
-                const modalEl = document.getElementById('edit_user');
-                const modal = bootstrap.Modal.getOrCreateInstance(modalEl);
-                modal.hide();
+        let modal = new bootstrap.Modal(document.getElementById("activate_modal"), {
+            backdrop: 'static',
+            keyboard: false
+        });
 
-                // reload table/page
-                setTimeout(() => {
-                    location.reload();
-                }, 300);
-
-
-                // hide modal
-
-            }
-        })
-
+        modal.show();
     })
     </script>

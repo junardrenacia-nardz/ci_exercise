@@ -74,7 +74,10 @@ document.querySelectorAll(".btn-close-reload").forEach((btn) => {
 if (showModal) {
 	document.addEventListener("DOMContentLoaded", function () {
 		var modalId = showModal;
-		var myModal = new bootstrap.Modal(document.getElementById(modalId));
+		var myModal = new bootstrap.Modal(document.getElementById(modalId), {
+			backdrop: "static",
+			keyboard: false,
+		});
 		myModal.show();
 	});
 }
@@ -84,34 +87,9 @@ function openModal(url, showModal, modalBodyName) {
 		.then((res) => res.text())
 		.then((html) => {
 			document.getElementById(modalBodyName).innerHTML = html;
-			new bootstrap.Modal(document.getElementById(showModal)).show();
+			new bootstrap.Modal(document.getElementById(showModal), {
+				backdrop: "static",
+				keyboard: false,
+			}).show();
 		});
-}
-
-function openModal(url, showModal, modalBodyName) {
-	$.ajax({
-		url: url,
-		type: "GET",
-		dataType: "json",
-
-		success: function (response) {
-			console.log(response);
-
-			$(showModal).show();
-		},
-	});
-}
-
-function userModal(url) {
-	console.log(url);
-	$.ajax({
-		url: url,
-		type: "GET",
-		dataType: "json",
-
-		success: function (res) {
-			let user = res.user;
-			console.log(user);
-		},
-	});
 }
