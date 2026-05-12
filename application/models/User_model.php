@@ -73,7 +73,7 @@ class User_model extends CI_Model {
             'contact_number' => $this->input->post('contact'),
             'department_id' => $this->input->post('department'),
             'position_id' => $this->input->post('position'),
-            'status' => 'Active',
+            'status' => 'Pending',
             'escalation_id' => $this->input->post('tier')
         ];
 

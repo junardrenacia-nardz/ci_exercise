@@ -63,7 +63,7 @@ class Users extends CI_Controller {
         $this->form_validation->set_rules('gender', "Gender", 'required');
         $this->form_validation->set_rules('position', "Position", 'required');
         $this->form_validation->set_rules('tier', "Escalation", 'required');
-        $this->form_validation->set_rules('email', 'Email', 'required|valid_email');
+        $this->form_validation->set_rules('email', 'Email', 'required|valid_email|callback_check_email_exists');
 
         if ($this->form_validation->run() == FALSE) {
 
@@ -120,7 +120,56 @@ class Users extends CI_Controller {
         $this->load->view('templates/footer');
     }
 
-    public function edit_user($user_id) {
+    // public function edit_user($user_id) {
+    //     $this->form_validation->set_rules('firstName', 'First Name', 'required');
+    //     $this->form_validation->set_rules('lastName', 'Last Name', 'required');
+    //     $this->form_validation->set_rules('contact', 'Contact', 'required|callback_validate_contact');
+    //     $this->form_validation->set_rules('department', 'Department', 'required');
+    //     $this->form_validation->set_rules('role', "Role", 'required');
+    //     $this->form_validation->set_rules('gender', "Gender", 'required');
+    //     $this->form_validation->set_rules('position', "Position", 'required');
+    //     $this->form_validation->set_rules('tier', "Escalation", 'required');
+    //     $this->form_validation->set_rules('email', 'Email', 'required|valid_email');
+    //     $data['user'] = $this->user_model->get_users($user_id);
+    //     $data['roles'] = $this->user_model->get_roles();
+    //     $data['departments'] = $this->department_model->get_departments();
+    //     $data['positions'] = $this->position_model->get_positions();
+    //     $data['escalations'] = $this->user_model->get_escalations();
+
+    //     if ($this->form_validation->run() == FALSE) {
+    //         $this->session->set_flashdata('message', [
+    //             'type' => 'danger', // or 'success'
+    //             'text' => 'The input(s) is/are invalid. Try Again'
+    //         ]);
+
+    //         $this->session->set_flashdata('old_input', $this->input->post());
+    //         $this->session->set_flashdata('errors', $this->form_validation->error_array());
+
+    //         return json_encode($data);
+    //     } else {
+    //         $this->session->set_flashdata('message', [
+    //             'type' => 'success', // or 'success'
+    //             'text' => "User $user_id is updated successfully"
+    //         ]);
+
+    //         $this->user_model->update_user($user_id, $data['user']['employee_id']);
+
+    //         return redirect('users/user_index');
+    //     }
+    // }
+
+    public function edit_user() {
+
+        $user_id = $this->input->post('id');
+
+        $data['user'] = $this->user_model->get_users($user_id);
+
+        echo json_encode($data);
+    }
+
+    public function update_user() {
+        $user_id = $this->input->post('user_id');
+
         $this->form_validation->set_rules('firstName', 'First Name', 'required');
         $this->form_validation->set_rules('lastName', 'Last Name', 'required');
         $this->form_validation->set_rules('contact', 'Contact', 'required|callback_validate_contact');
@@ -130,34 +179,33 @@ class Users extends CI_Controller {
         $this->form_validation->set_rules('position', "Position", 'required');
         $this->form_validation->set_rules('tier', "Escalation", 'required');
         $this->form_validation->set_rules('email', 'Email', 'required|valid_email');
-        $data['user'] = $this->user_model->get_users($user_id);
-        $data['roles'] = $this->user_model->get_roles();
-        $data['departments'] = $this->department_model->get_departments();
-        $data['positions'] = $this->position_model->get_positions();
-        $data['escalations'] = $this->user_model->get_escalations();
 
         if ($this->form_validation->run() == FALSE) {
+            // $this->session->set_flashdata('showModal', "edit_user");
             $this->session->set_flashdata('message', [
                 'type' => 'danger', // or 'success'
                 'text' => 'The input(s) is/are invalid. Try Again'
             ]);
-
-            $this->session->set_flashdata('old_input', $this->input->post());
-            $this->session->set_flashdata('errors', $this->form_validation->error_array());
-
-
-            $this->load->view('modals/edit_user_modal', $data);
-            // return redirect('users/user_index'); // ✅ IMPORTANT
-        } else {
-            $this->session->set_flashdata('message', [
-                'type' => 'success', // or 'success'
-                'text' => "User $user_id is updated successfully"
-            ]);
-
-            $this->user_model->update_user($user_id, $data['user']['employee_id']);
-
-            return redirect('users/user_index');
+            $data['inputs'] = $this->input->post();
+            $data['errors'] = $this->form_validation->error_array();
+            $data['status'] = 'error';
+            echo json_encode($data);
+            return;
         }
+
+
+        $this->session->set_flashdata('message', [
+            'type' => 'success', // or 'success'
+            'text' => "User $user_id is updated successfully"
+        ]);
+
+        $id = explode('-', $user_id)[1];
+
+        $this->user_model->update_user($id, $this->input->post('employee_id'));
+
+        $data['status'] = 'success';
+        echo json_encode($data);
+
     }
 
 
@@ -227,6 +275,15 @@ class Users extends CI_Controller {
             return false;
         }
         return true;
+    }
+
+    function check_email_exists($email) {
+        $this->form_validation->set_message(['check_email_exists' => 'That email is taken. Please choose a different one']);
+        if ($this->user_model->check_email_exists($email)) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
 

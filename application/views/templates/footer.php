@@ -11,6 +11,7 @@
 <script src="<?= base_url('assets/js/') ?>attachmentAdd.js"></script>
 <script src="<?= base_url('assets/js/') ?>alertMessage.js"></script>
 <script src="<?= base_url('assets/js/') ?>dataTable.js"></script>
+<script src="<?= base_url('assets/js/') ?>modals.js"></script>
 </body>
 
 </html>

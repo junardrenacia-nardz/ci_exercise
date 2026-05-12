@@ -109,7 +109,7 @@ $(document).ready(function () {
 		order: [[0, "asc"]],
 		// stateSave: true,
 		dom: 'f i rt<"bottom"l p >',
-		pageLength: 10,
+		pageLength: 5,
 		stateSave: true,
 		pagingType: "simple_numbers",
 		layout: {

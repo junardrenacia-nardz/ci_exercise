@@ -87,3 +87,31 @@ function openModal(url, showModal, modalBodyName) {
 			new bootstrap.Modal(document.getElementById(showModal)).show();
 		});
 }
+
+function openModal(url, showModal, modalBodyName) {
+	$.ajax({
+		url: url,
+		type: "GET",
+		dataType: "json",
+
+		success: function (response) {
+			console.log(response);
+
+			$(showModal).show();
+		},
+	});
+}
+
+function userModal(url) {
+	console.log(url);
+	$.ajax({
+		url: url,
+		type: "GET",
+		dataType: "json",
+
+		success: function (res) {
+			let user = res.user;
+			console.log(user);
+		},
+	});
+}
