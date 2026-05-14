@@ -84,11 +84,9 @@
 
 .create-account label,
 .create-account input,
-.create-account select {
-	font-size: 0.8rem;
-}
-
-.create-account span.text-danger {
+.create-account select,
+.create-account span.text-danger,
+.create-account span.password-valid {
 	font-size: 0.8rem;
 }
 

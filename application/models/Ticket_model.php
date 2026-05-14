@@ -28,7 +28,9 @@ class Ticket_model extends CI_Model {
 
             u.employee_id AS requester_employee_id,
             e.first_name  AS requester_first_name,
-            e.last_name AS requester_last_name
+            e.last_name AS requester_last_name,
+            ed.department_id AS requester_department_id,
+            ed.department_name AS requester_department_name
         ');
 
         $this->db->from('ticket_details td');
@@ -36,6 +38,7 @@ class Ticket_model extends CI_Model {
         $this->db->join('departments d', 'd.department_id = td.department_id');
         $this->db->join('users u', 'u.user_id = td.requester_id');
         $this->db->join('employees e', 'e.employee_id = u.employee_id', 'left');
+        $this->db->join('departments ed', 'ed.department_id = e.department_id', 'left');
 
         if ($id) {
             $this->db->where('td.ticket_id', $id);
@@ -146,10 +149,10 @@ class Ticket_model extends CI_Model {
         }
 
         foreach ($names as $name) {
-            if (!$this->check_assigned($name, $ticket_id)) {
+            if (!$this->check_assigned(explode('-', $name)[1], $ticket_id)) {
                 $assigndata = [
                     "ticket_id" => $ticket_id,
-                    "user_id" => $name,
+                    "user_id" => explode('-', $name)[1],
                     "person_status" => "Assigned",
                     "task_status" => "Pending"
                 ];
@@ -159,7 +162,7 @@ class Ticket_model extends CI_Model {
                     "person_status" => "Assigned",
                     "task_status" => "Pending"
                 ];
-                $this->db->where(['ticket_id' => $ticket_id, "user_id" => $name]);
+                $this->db->where(['ticket_id' => $ticket_id, "user_id" => explode('-', $name)[1]]);
                 $this->db->update('ticket_assigned', $assigndata);
             }
         }
@@ -206,5 +209,13 @@ class Ticket_model extends CI_Model {
         $this->db->where(["ticket_id" => $ticket_id]);
         $query = $this->db->get('ticket_attachments');
         return $query->result_array();
+    }
+
+    public function update_ticket_status($ticket_id, $status) {
+        $data['ticket_status'] = strtolower($status);
+        $data['priority'] = $this->input->post('priority');
+        $this->db->where('ticket_id', $ticket_id);
+        $this->db->update('ticket_details', $data);
+        return true;
     }
 }

@@ -18,7 +18,7 @@ class User_model extends CI_Model {
 
 
     public function get_users($id = FALSE) {
-        $this->db->select('CONCAT("UID-", LPAD(u.user_id, 5, "0")) as user_id, u.employee_id, u.email, u.updated_at,, u.last_active, u.created_at, e.first_name, e.last_name, e.department_id, e.status,
+        $this->db->select('CONCAT("UID-", LPAD(u.user_id, 5, "0")) as user_id ,u.employee_id, u.email, u.updated_at,, u.last_active, u.created_at, e.first_name, e.last_name, e.department_id, e.status,
                     e.gender, a.access_name, d.department_name, p.position_name, e.contact_number, e.department_id, e.position_id, e.escalation_id, u.access_id');
         $this->db->from('users u');
         $this->db->join('employees e', 'e.employee_id = u.employee_id', 'left');
@@ -39,7 +39,7 @@ class User_model extends CI_Model {
     public function login($password) {
         $email = $this->input->post('email');
 
-        $this->db->select('u.user_id, u.employee_id, u.password, e.status, e.gender');
+        $this->db->select('u.user_id, u.access_id, u.employee_id, u.password, e.status, e.gender, e.department_id');
         $this->db->from('users u');
         $this->db->join('employees e', 'e.employee_id = u.employee_id', 'left');
         $this->db->where('u.email', $email);
@@ -108,6 +108,7 @@ class User_model extends CI_Model {
         }
     }
 
+
     public function get_roles() {
 
         $query = $this->db->get('access_types');
@@ -159,6 +160,30 @@ class User_model extends CI_Model {
         return true;
     }
 
+    public function change_password($password) {
+        $user_id = $this->input->post('user_id');
+
+        $this->db->select('u.password, e.first_name, e.last_name, u.user_id');
+        $this->db->from('users u');
+        $this->db->join('employees e', 'e.employee_id = u.employee_id', 'left');
+        $this->db->where('user_id', $user_id);
+        $result = $this->db->get();
+        $row = $result->row();
+        $password_stored = $row->password;
+
+        if (password_verify($password, $password_stored)) {
+            if ($result->num_rows() == 1) {
+                $data['password'] = password_hash($this->input->post('newPassword'), PASSWORD_DEFAULT);
+                $this->db->where('user_id', $user_id);
+                $this->db->update('users', $data);
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            return $result->row_array();
+        }
+    }
 
     // public function update_time() {
     //     date_default_timezone_set('Asia/Manila');

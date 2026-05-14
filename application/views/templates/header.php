@@ -16,6 +16,7 @@ function idFormatRemove($id) {
 }
 ?>
 
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -175,14 +176,14 @@ function idFormatRemove($id) {
                         class="btn btn-create-ticket rounded-5 text-nowrap mx-1" type="button">
                         <i class="fa-solid fa-ticket me-2"></i>
                         <span>Create Ticket</span></a>
-                    <div class="input-group">
+                    <!-- <div class="input-group">
                         <input id="input-search-all" type="text" class="form-control rounded-5" placeholder="Search">
                         <button class="search-btn-all btn rounded-5 mx-1 p-2 px-3">
                             <i class="fa-solid fa-magnifying-glass"></i>
                         </button>
                     </div>
                     <a href="#" id="notifications" class="btn rounded-5 text-nowrap mx-1 p-2 px-3" type="button">
-                        <i class="fa-regular fa-bell" style="font-size: 18px;"></i></a>
+                        <i class="fa-regular fa-bell" style="font-size: 18px;"></i></a> -->
                     <h6 class="text-nowrap mx-1 me-2 px-1">
                         <?= $logged_user['first_name'] . ' ' . $logged_user['last_name'] ?>
                     </h6>

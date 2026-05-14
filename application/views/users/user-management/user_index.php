@@ -109,7 +109,7 @@ $old = $this->session->flashdata('old_input');
                                         $user['last_name']
                                     ); ?></b>
                             </div>
-                            <span class=""><?= $user['first_name'] . " " . $user['last_name'] ?></span>
+                            <span class=""><?= ucwords($user['first_name'] . " " . $user['last_name']) ?></span>
 
                         </div>
 
@@ -177,8 +177,23 @@ $old = $this->session->flashdata('old_input');
                             <!-- Edit -->
                             <button title="Edit" onclick=""
                                 class="action-item btn btn-sm d-flex align-items-center px-2 has-tooltip edit_user_btn"
+                                data-bs-toggle="modal" data-bs-target="#edit_user"
                                 data-id="<?= idFormatRemove($user['user_id']) ?>">
                                 <i class="fa-solid fa-pen-to-square"></i>
+
+                            </button>
+
+                            <!-- Divider -->
+                            <div style=" width: 1px; background: var(--border);">
+                            </div>
+
+                            <!--Edit Password-->
+                            <button title="Change Password" onclick="" id="changePassBtn"
+                                class="action-item btn btn-sm d-flex align-items-center px-2 has-tooltip change_password_btn"
+                                data-bs-toggle="modal" data-bs-target="#changePassword"
+                                data-pass_user_id="<?= idFormatRemove($user['user_id']) ?>"
+                                data-user_fullname="<?= $user['first_name'] . " " . $user['last_name']?>">
+                                <i class="fa-solid fa-key"></i>
 
                             </button>
 
@@ -190,6 +205,7 @@ $old = $this->session->flashdata('old_input');
                             <!-- Delete -->
                             <button href="" id="deactivate_btn" title="Deactivate"
                                 class="action-item btn btn-sm d-flex align-items-center px-2 has-tooltip"
+                                data-bs-toggle="modal" data-bs-target="#deactivate_modal"
                                 data-user_id="<?= $user['user_id'] ?>" data-employee_id="<?= $user['employee_id'] ?>">
                                 <i class="fa-solid fa-trash"></i>
                             </button>
@@ -200,6 +216,7 @@ $old = $this->session->flashdata('old_input');
                             <!-- Reactivate -->
                             <button id="activate_btn" title="Reactivate"
                                 class="action-item btn btn-sm d-flex align-items-center px-2 has-tooltip"
+                                data-bs-toggle="modal" data-bs-target="#activate_modal"
                                 data-user_id="<?= $user['user_id'] ?>" data-employee_id="<?= $user['employee_id'] ?>">
                                 <i class="fa-solid fa-arrow-rotate-left"></i>
                             </button>
@@ -207,6 +224,7 @@ $old = $this->session->flashdata('old_input');
                             <!-- Divider -->
                             <div style="width: 1px; background: var(--border);"></div>
                             <?php endif; ?>
+
 
 
                             <!-- Audit Trail -->
@@ -582,7 +600,7 @@ $old = $this->session->flashdata('old_input');
         </div>
     </div>
 
-    <!--EDIT USER DETAILS-->
+    <!--Change Password Modal-->
     <div class="modal fade" id="changePassword" tabindex="-1" data-bs-backdrop="static" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
@@ -590,30 +608,48 @@ $old = $this->session->flashdata('old_input');
                     <div class="d-flex justify-content-between w-100 ps-0">
                         <div></div>
                         <h5>Change Password</h5>
-                        <button type="button" class="btn-close btn-close-black " data-bs-dismiss="modal"></button>
+                        <button type="button" class="btn-close btn-close-black btn-close-reload"
+                            data-bs-dismiss="modal"></button>
                     </div>
-                    <form action="<?= base_url('users/change_password') ?>" method="POST" id="step1Form" class=" px-3">
-                        <input type="hidden" name="user_id" id="user_id" value="<?= $old['user_id'] ?? '' ?>">
+                    <form action="<?= base_url('users/change_password') ?>" method="POST" class=" px-3">
+                        <input type="hidden" name="user_id" id="pass_user_id" value="<?= $old['user_id'] ?? '' ?>">
+                        <input type="hidden" name="fullname_user" id="fullname_user"
+                            value="<?= $old['fullname_user'] ?? '' ?>">
                         <div class="create-account mt-4 d-flex flex-column justify-content-between">
+                            <span>User ID: <b
+                                    id="user_pass_id"><?= 'UID-' . str_pad($old['user_id'], 5, '0', STR_PAD_LEFT)  ?? '' ?></b></span>
+                            <span>Full Name: <b id="user_fullname"><?= $old['fullname_user'] ?? '' ?></b></span>
                             <div class="fields">
                                 <div class="row">
                                     <div class="col-xl-12 mt-1">
                                         <label for="firstName" class="form-label">Old Password</label>
-                                        <input type="text" name="firstName" id="editfirstName" class="form-control"
-                                            value="<?= $old['firstName'] ?? '' ?>">
-                                        <span id="" class="text-danger"><?= $errors['firstName'] ?? '' ?></span>
+                                        <input type="text" name="oldPassword" id="oldPassword" class="form-control"
+                                            value="<?= $old['oldPassword'] ?? '' ?>">
+                                        <span id="" class="text-danger"><?= $errors['oldPassword'] ?? '' ?></span>
                                     </div>
                                     <div class="col-xl-12 mt-1">
                                         <label for="firstName" class="form-label">New Password</label>
-                                        <input type="text" name="firstName" id="editfirstName" class="form-control"
-                                            value="<?= $old['firstName'] ?? '' ?>">
-                                        <span id="" class="text-danger"><?= $errors['firstName'] ?? '' ?></span>
+                                        <input type="text" name="newPassword" id="newPassword" class="form-control">
+                                        <div class="password-requirements mt-2 d-flex flex-column">
+                                            <span id="errorPassword" class="text-danger">
+                                                <?= $errors['newPassword'] ?? '' ?></span>
+                                            <span class="fw-bold" id="requirement"></span>
+                                            <ul>
+                                                <span class="password-valid" id="length"></span>
+                                                <span class="password-valid" id="lowCase"></span>
+                                                <span class="password-valid" id="upCase"></span>
+                                                <span class="password-valid" id="specialChars"></span>
+                                                <span class="password-valid" id="nums"></span>
+                                                <span class="password-valid" id="invalid"></span>
+                                            </ul>
+
+                                        </div>
                                     </div>
                                     <div class="col-xl-12 mt-1">
                                         <label for="firstName" class="form-label">Confirm Password</label>
-                                        <input type="text" name="firstName" id="editfirstName" class="form-control"
-                                            value="<?= $old['firstName'] ?? '' ?>">
-                                        <span id="" class="text-danger"><?= $errors['firstName'] ?? '' ?></span>
+                                        <input type="text" name="confirmPassword" id="confirmPassword"
+                                            class="form-control">
+                                        <span id="" class="text-danger"><?= $errors['confirmPassword'] ?? '' ?></span>
                                     </div>
                                 </div>
 
@@ -621,7 +657,7 @@ $old = $this->session->flashdata('old_input');
 
                             <div class="buttons d-flex justify-content-end mt-3">
                                 <a href="" type="submit" name="direction" value="go_to_login" data-bs-toggle="modal"
-                                    class="btn btn-outline-dark me-2">Cancel</a>
+                                    class="btn btn-outline-dark me-2 ">Cancel</a>
                                 <button class="btn btn-dark" type="submit" id="submit-1" name="direction"
                                     value="submit">Update</button>
                             </div>
@@ -644,8 +680,7 @@ $old = $this->session->flashdata('old_input');
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">Deactivate User</h5>
-                    <button type="button" class="btn-close btn-close-white btn-close-reload"
-                        data-bs-dismiss="modal"></button>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                 </div>
                 <form method="POST" action=" <?=  base_url('users/update_employee_status/deactivated')?>">
                     <input type="hidden" name="employee_id" id="deactivate_employee_id">
@@ -671,8 +706,7 @@ $old = $this->session->flashdata('old_input');
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">Activate User</h5>
-                    <button type="button" class="btn-close btn-close-white btn-close-reload"
-                        data-bs-dismiss="modal"></button>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                 </div>
                 <form method="POST" action=" <?=  base_url('users/update_employee_status/active')?>">
                     <input type="hidden" name="employee_id" id="activate_employee_id">
@@ -691,72 +725,6 @@ $old = $this->session->flashdata('old_input');
             </div>
         </div>
     </div>
-
-
-
-    <script>
-    const filterToggle = document.querySelector(".btn-filter");
-    const filterOptions = document.querySelector(".filter-option");
-
-    function toggleFilterOptions() {
-        filterOptions.classList.toggle("collapsed");
-
-    }
-    </script>
-
-
-    <script>
-    const editDepartment = document.getElementById("editdepartment");
-    const editPosition = document.getElementById("editposition");
-
-    if (editDepartment && editPosition) {
-        setupDepartmentPosition(editDepartment, editPosition);
-    }
-
-    function setupDepartmentPosition(deptSelect, posSelect) {
-
-        const allOptions = Array.from(posSelect.options);
-
-        function filterPositions(selectedDept, selectedPosition = null) {
-
-            posSelect.innerHTML = '<option value="">- Select a Position -</option>';
-
-            if (!selectedDept) {
-                posSelect.disabled = true;
-                return;
-            }
-
-            posSelect.disabled = false;
-
-            allOptions.forEach(option => {
-
-                // skip placeholder
-                if (option.value === "") return;
-
-                if (option.dataset.department == selectedDept) {
-
-                    const newOption = option.cloneNode(true);
-
-                    // restore selected position
-                    if (selectedPosition && newOption.value == selectedPosition) {
-                        newOption.selected = true;
-                    }
-
-                    posSelect.appendChild(newOption);
-                }
-            });
-        }
-
-        deptSelect.addEventListener("change", function() {
-            filterPositions(this.value);
-        });
-
-        // initial load
-        if (deptSelect.value) {
-            filterPositions(deptSelect.value, posSelect.value);
-        }
-    }
-    </script>
 
     <script>
     $(document).on("click", ".edit_user_btn", function() {
@@ -798,49 +766,10 @@ $old = $this->session->flashdata('old_input');
                 // THEN set position
                 $('#editposition').val(position);
 
-                let modal = new bootstrap.Modal(document.getElementById("edit_user"), {
-                    backdrop: 'static',
-                    keyboard: false
-                });
-
-                modal.show();
-                // // show modal
-                // $("#editModal").modal("show");
             },
         });
     });
     </script>
 
-    <script>
-    $(document).on("click", "#deactivate_btn", function() {
-        let user_id = $(this).data("user_id");
-        let employee_id = $(this).data("employee_id");
 
-        $('#deactivate_user_id').val(user_id);
-        $('#deactivate_employee_id').val(employee_id);
-        $('#user_id_text').html(user_id);
-
-        let modal = new bootstrap.Modal(document.getElementById("deactivate_modal"), {
-            backdrop: 'static',
-            keyboard: false
-        });
-
-        modal.show();
-    })
-
-    $(document).on("click", "#activate_btn", function() {
-        let user_id = $(this).data("user_id");
-        let employee_id = $(this).data("employee_id");
-
-        $('#activate_user_id').val(user_id);
-        $('#activate_employee_id').val(employee_id);
-        $('#user_id_activate').html(user_id);
-
-        let modal = new bootstrap.Modal(document.getElementById("activate_modal"), {
-            backdrop: 'static',
-            keyboard: false
-        });
-
-        modal.show();
-    })
-    </script>
+    <script src="<?= base_url('assets/js/') ?>users.js"></script>

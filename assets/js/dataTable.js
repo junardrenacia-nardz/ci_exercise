@@ -7,6 +7,7 @@ $(document).ready(function () {
 		// stateSave: true,
 		dom: 'f i rt<"bottom"l p>',
 		pageLength: 10,
+		stateSave: true,
 		pagingType: "simple_numbers",
 		layout: {
 			topStart: null,
@@ -109,7 +110,7 @@ $(document).ready(function () {
 		order: [[0, "asc"]],
 		// stateSave: true,
 		dom: 'f i rt<"bottom"l p >',
-		pageLength: 5,
+		pageLength: 10,
 		stateSave: true,
 		pagingType: "simple_numbers",
 		layout: {

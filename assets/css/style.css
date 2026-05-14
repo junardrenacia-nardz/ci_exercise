@@ -371,3 +371,7 @@ button.remove-attachment i {
 .btn {
 	transition: all 0.2s ease-in-out !important;
 }
+
+.dropdown-status .dropdown-item {
+	cursor: pointer;
+}

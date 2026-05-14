@@ -11,9 +11,10 @@
                     <?php if ($status === "all"): ?>
                         <th>Status</th>
                     <?php endif ?>
-                    <th class="text-center">Dept</th>
+                    <th class="text-center">Assigned Dept</th>
                     <th class="text-center">PIC</th>
                     <th>Created By</th>
+                    <th class="text-center">Requester Dept</th>
                     <th>Last Updated</th>
                     <th>Actions</th>
                 </tr>
@@ -130,7 +131,7 @@
                                     <?php endif; ?>
                                 </td>
                             <?php endif; ?>
-                            <td class="align-middle text-center"><?php echo $ticket['department_name'] ?></td>
+                            <td class="align-middle text-center"><?php echo get_abbreviation($ticket['department_name']) ?></td>
                             <td class="align-middle">
                                 <?php if ($count_assign != 0): ?>
                                     <?php if ($count_assign == 1): ?>
@@ -153,17 +154,26 @@
                                     <div class="text-center">
                                         <h5>-</h5>
                                     </div>
-                                    <?php
-                                elseif ($count_assign === 0): ?>
-                                    <div class="text-center">
-                                        <a href="" class="btn btn-assign fw-bold rounded-5 p-2 py-1"><i
+                                <?php elseif ($count_assign === 0): ?>
+                                    <?php if (strtolower($ticket['ticket_status']) == strtolower("Closed")): ?>
+                                        <div class="text-center">
+                                            <!-- <a href="" class="btn btn-assign fw-bold rounded-5 p-2 py-1"><i
                                                 class="fa-solid fa-plus"></i>
-                                            Assign</a>
-                                    </div>
+                                            Assign</a> -->
+                                            <h5>-</h5>
+                                        </div>
+                                    <?php else: ?>
+                                        <div class="text-center">
+                                            <span><i>To be assigned</i></span>
+                                        </div>
+
+                                    <?php endif; ?>
                                 <?php endif; ?>
                             </td>
                             <td class="align-middle">
                                 <?= $ticket['requester_first_name'] . " " . $ticket['requester_last_name'] ?>
+                            </td>
+                            <td class="align-middle text-center"><?= get_abbreviation($ticket['requester_department_name']) ?>
                             </td>
                             <td class="align-middle"><?= date('m-d-Y', strtotime($ticket['ticket_updated'])) ?></td>
                             <td class="align-middle">
@@ -184,9 +194,9 @@
                                     <div style="width: 1px; background: var(--border);"></div>
 
                                     <!-- Dropdown -->
-                                    <div class="dropdown d-flex">
+                                    <div class="dropdown dropdown-status d-flex">
                                         <button
-                                            class="action-item btn btn-sm d-flex align-items-center justify-content-center px-2"
+                                            class="action-item dropdown-item btn btn-sm d-flex align-items-center justify-content-center px-2"
                                             type="button" data-toggle="dropdown" style="
                                                 border: none;
                                                 color: var(--text-muted);
@@ -203,10 +213,21 @@
                                             ">
                                             <?php if (strtolower($ticket['ticket_status']) == strtolower('for approval')): ?>
 
-                                                <a class="dropdown-item" href="#"><i class="fa-solid fa-thumbs-up me-2"></i>
+                                                <a class="dropdown-item" id="approveBtn" data-bs-toggle="modal"
+                                                    data-bs-target="#approveTicket" data-ticket_id="<?= $ticket['ticket_id'] ?>"><i
+                                                        class="fa-solid fa-thumbs-up me-2"></i>
                                                     Approve</a>
-                                                <a class="dropdown-item" href="#"><i class="fa-solid fa-thumbs-down me-2"></i>
+                                                <a class="dropdown-item" id="rejectBtn" data-bs-toggle="modal"
+                                                    data-bs-target="#rejectTicket" data-ticket_id="<?= $ticket['ticket_id'] ?>"><i
+                                                        class="fa-solid fa-thumbs-down me-2"></i>
                                                     Reject</a>
+                                            <?php endif; ?>
+                                            <?php if ($this->session->userdata('role_id') == "3" && strtolower($ticket['ticket_status']) !== strtolower('for approval') && strtolower($ticket['ticket_status']) !== strtolower('open')): ?>
+                                                <a class="dropdown-item" id="ticketStatusBtn" data-bs-toggle="modal"
+                                                    data-bs-target="#ticketStatusModal"
+                                                    data-ticket_id="<?= $ticket['ticket_id'] ?>">
+                                                    <i class="fa-solid fa-spinner me-2"></i>
+                                                    Status</a>
                                             <?php endif; ?>
                                             <a class="dropdown-item" href="#"><i class="fa-solid fa-clipboard-list me-2"></i>
                                                 Audit
@@ -224,3 +245,190 @@
         </table>
     </div>
 </div>
+
+
+<!-- Approve -->
+<div class="modal fade modalEdit" id="approveTicket" tabindex="-1" data-bs-backdrop="static" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-sm">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title">Approve Ticket</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+
+            <form method="POST" action="<?= base_url('tickets/update_ticket_status/open') ?>">
+
+                <input type="hidden" name="ticket_id" id="approve_ticket_id">
+                <input type="hidden" name="current_uri" id="current_uri" value="<?= uri_string() ?>">
+
+                <div class="modal-body p-4">
+
+                    <!-- Ticket ID -->
+                    <div class="mb-3">
+                        <div class="text-muted small">Ticket ID</div>
+                        <div class="fw-semibold" id="ticket_id_approve"></div>
+                    </div>
+
+                    <!-- Priority Box -->
+                    <div class="border rounded-3 p-3">
+
+                        <label for="priority" class="form-label text-muted small mb-2">
+                            Set Priority
+                        </label>
+
+                        <select class="form-select form-select-sm shadow-none" name="priority" id="prioritySelect"
+                            required>
+                            <option value="" selected disabled>Select priority</option>
+                            <option value="low">Low</option>
+                            <option value="medium">Medium</option>
+                            <option value="high">High</option>
+                            <option value="critical">Critical</option>
+                        </select>
+
+                    </div>
+
+                </div>
+
+                <div class="modal-footer border-0 px-4 pb-4">
+                    <button type="submit" id="approveSubmitBtn" class="btn submit-btn w-100">
+                        Approve
+                    </button>
+                </div>
+
+            </form>
+
+        </div>
+    </div>
+</div>
+
+<!-- REJECT -->
+<div class="modal fade modalEdit" id="rejectTicket" tabindex="-1" data-bs-backdrop="static" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Reject Ticket</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <form method="POST" action=" <?= base_url('tickets/update_ticket_status/closed') ?>">
+                <input type="hidden" name="ticket_id" id="reject_ticket_id">
+                <input type="hidden" name="current_uri" id="current_uri" value="<?= uri_string() ?>">
+                <div class="modal-body">
+                    <div class="col-12">
+                        <span>Are you sure you want to reject ticket <b id='ticket_id_reject'></b>?</span>
+                    </div>
+                </div>
+                <div class="modal-footer border-0">
+                    <button type="submit" class="btn submit-btn">Reject</button>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>
+
+<!-- Ticket Status Update -->
+<div class="modal fade modalEdit" id="ticketStatusModal" tabindex="-1" data-bs-backdrop="static" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-sm">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title">Update Ticket Status</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+
+            <form method="POST" action="">
+
+                <input type="hidden" name="ticket_id" id="approve_ticket_id">
+                <input type="hidden" name="current_uri" id="current_uri" value="<?= uri_string() ?>">
+
+                <div class="modal-body p-4">
+
+                    <!-- Ticket ID -->
+                    <div class="mb-3">
+                        <div class="text-muted small">Ticket ID</div>
+                        <div class="fw-semibold" id="ticket_id_status"></div>
+                    </div>
+
+                    <!-- Priority Box -->
+                    <div class="border rounded-3 p-3">
+
+                        <label for="priority" class="form-label text-muted small mb-2">
+                            Select Ticket Status
+                        </label>
+
+                        <select class="form-select form-select-sm shadow-none" name="ticket_status" id="statusSelect"
+                            required>
+                            <option value="" selected disabled>Select ticket status</option>
+                            <option value="on going">On Going</option>
+                            <option value="testing">For Testing</option>
+                            <option value="closed">Close</option>
+                            <option value="for approval">Re-open</option>
+                        </select>
+
+                    </div>
+
+                </div>
+
+                <div class="modal-footer border-0 px-4 pb-4">
+                    <button type="submit" id="statusSubmitBtn" class="btn submit-btn w-100">
+                        Update Status
+                    </button>
+                </div>
+
+            </form>
+
+        </div>
+    </div>
+</div>
+<script>
+    $(document).on("click", "#approveBtn", function () {
+        let ticket_id = $(this).data("ticket_id");
+
+        $("#approve_ticket_id").val(ticket_id);
+        $('#ticket_id_approve').html(ticket_id);
+    });
+
+    $(document).on("click", "#rejectBtn", function () {
+        let ticket_id = $(this).data("ticket_id");
+
+        $("#reject_ticket_id").val(ticket_id);
+        $('#ticket_id_reject').html(ticket_id);
+    });
+</script>
+
+<script>
+    const approveBtn = document.getElementById('approveSubmitBtn');
+    const statusBtn = document.getElementById('statusSubmitBtn');
+    const selectPriority = document.getElementById('prioritySelect');
+    const selectStatus = document.getElementById('statusSelect');
+
+    const approveModal = document.getElementById('approveTicket');
+    const statusModal = document.getElementById('ticketStatusModal');
+
+
+    function toggleApproveButton(button, select) {
+        button.disabled = !select.value;
+    }
+
+    selectPriority.addEventListener('change', () => {
+        toggleApproveButton(approveBtn, selectPriority);
+    });
+
+    selectStatus.addEventListener('change', () => {
+        toggleApproveButton(statusBtn, selectStatus);
+    });
+
+    resetModal(approveModal, approveBtn, selectPriority);
+    resetModal(statusModal, statusBtn, selectStatus)
+
+
+    function resetModal(modal, button, select) {
+        modal.addEventListener('shown.bs.modal', function () {
+            this.querySelector('form').reset();
+
+            // run once on load or modal open
+            toggleApproveButton(button, select);
+        });
+    }
+</script>

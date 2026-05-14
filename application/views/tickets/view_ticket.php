@@ -21,9 +21,10 @@ endforeach; ?>
     style="background-color: white; max-width: 1290px ; box-shadow: 0 6px 18px rgba(0, 0, 0, 0.25);">
     <div class="ticket-details information-tickets d-flex justify-content-between p-3">
         <div class="d-flex flex-column">
-            <div class="ticket-subject d-flex align-items-center mb-1">
-                <span class="subject me-2"><?= $ticket['ticket_name'] ?></span>
-                <span class="badge p-1 badge-ticket fw-bold">Main Ticket</span>
+            <div class="ticket-subject mb-1">
+                <span class="subject me-2 align-middle"><?= $ticket['ticket_name'] ?> <span
+                        class="badge p-1 badge-ticket fw-bold ms-2">Main Ticket</span></span>
+
             </div>
 
             <div id="ticket_id">
@@ -39,7 +40,7 @@ endforeach; ?>
                     <i class="fa-solid fa-timeline me-1"></i> Timeline</button>
             </div>
             <div>
-                <?php if ($ticket['ticket_status'] !== "For Approval"): ?>
+                <?php if (strtolower($ticket['ticket_status']) !== strtolower("For Approval")): ?>
                     <?php if ($count_assign == 0): ?>
 
                         <a href="" class="btn assign-reassign-btn me-2" data-bs-toggle="modal"
@@ -136,6 +137,7 @@ endforeach; ?>
                         <span>Attachments</span>
                     </button>
                 </div>
+
             </div>
         </div>
 
@@ -203,6 +205,27 @@ endforeach; ?>
         </div>
 
     </div>
+    <?php if (strtolower($ticket['ticket_status']) == strtolower('for approval')): ?>
+
+        <div class="mt-1 p-3 border rounded-3 d-flex justify-content-between align-items-center bg-light">
+            <div>
+                <b class="d-block">Pending Approval</b>
+                <small class="text-muted">Choose an action for this ticket</small>
+            </div>
+            <div class="d-flex gap-2">
+                <button class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#rejectTicket">
+                    Reject
+                </button>
+                <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#approveTicket">
+                    Approve
+                </button>
+
+            </div>
+
+        </div>
+
+    <?php endif; ?>
+
 </div>
 
 <!--ASSIGN Person to the Ticket-->
@@ -320,7 +343,7 @@ endforeach; ?>
                                                         <select name="employeeName[]" class="form-control">
                                                             <option value="">- Select person to be assigned -</option>
                                                             <?php foreach ($all_assigned as $choice): ?>
-                                                                <?php if ($choice['department_id'] == $ticket['department_id']): ?>
+                                                                <?php if ($choice['department_id'] == $ticket['department_id'] && $choice['access_id'] !== 1): ?>
                                                                     <option value="<?= $choice['user_id'] ?>"
                                                                         <?= ($selectedId == $choice['user_id']) ? "selected" : "" ?>>
                                                                         <?= $choice['first_name'] . " " . $choice['last_name'] ?>
@@ -347,7 +370,7 @@ endforeach; ?>
                                                         <select name="employeeName[]" id="employeeName" class="form-control">
                                                             <option value="">- Select person to be assigned -</option>
                                                             <?php foreach ($all_assigned as $choice): ?>
-                                                                <?php if ($choice['department_id'] == $ticket['department_id']): ?>
+                                                                <?php if ($choice['department_id'] == $ticket['department_id'] && $choice['access_id'] !== '1'): ?>
                                                                     <option value="<?= $choice['user_id'] ?>">
                                                                         <?= $choice['first_name'] . " " . $choice['last_name'] ?>
                                                                         (#<?= $choice['user_id'] ?>)
@@ -373,7 +396,7 @@ endforeach; ?>
                                                             <select name="employeeName[]" id="employeeName" class="form-control">
                                                                 <option value="">- Select person to be assigned -</option>
                                                                 <?php foreach ($all_assigned as $choice): ?>
-                                                                    <?php if ($choice['department_id'] == $ticket['department_id']): ?>
+                                                                    <?php if ($choice['department_id'] == $ticket['department_id'] && $choice['access_id'] !== 1): ?>
                                                                         <option value="<?= $choice['user_id'] ?>"
                                                                             <?= ($choice['user_id'] == $person['id']) ? "selected" : "" ?>>
                                                                             <?= $choice['first_name'] . " " . $choice['last_name'] ?>
@@ -700,6 +723,86 @@ endforeach; ?>
     </div>
 </div>
 
+<!-- Approve -->
+<div class="modal fade modalEdit" id="approveTicket" tabindex="-1" data-bs-backdrop="static" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-sm">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title">Approve Ticket</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+
+            <form method="POST" action="<?= base_url('tickets/update_ticket_status/open') ?>">
+
+                <input type="hidden" name="ticket_id" id="approve_ticket_id" value="<?= $ticket['ticket_id'] ?>">
+                <input type="hidden" name="current_uri" id="current_uri" value="<?= uri_string() ?>">
+
+                <div class="modal-body p-4">
+
+                    <!-- Ticket ID -->
+                    <div class="mb-3">
+                        <div class="text-muted small">Ticket ID</div>
+                        <div class="fw-semibold" id="ticket_id_approve"><?= $ticket['ticket_id'] ?></div>
+                    </div>
+
+                    <!-- Priority Box -->
+                    <div class="border rounded-3 p-3">
+
+                        <label for="priority" class="form-label text-muted small mb-2">
+                            Set Priority
+                        </label>
+
+                        <select class="form-select form-select-sm shadow-none" name="priority" id="prioritySelect"
+                            required>
+                            <option value="" selected disabled>Select priority</option>
+                            <option value="low">Low</option>
+                            <option value="medium">Medium</option>
+                            <option value="high">High</option>
+                            <option value="critical">Critical</option>
+                        </select>
+
+                    </div>
+
+                </div>
+
+                <div class="modal-footer border-0 px-4 pb-4">
+                    <button type="submit" id="approveSubmitBtn" class="btn submit-btn w-100">
+                        Approve
+                    </button>
+                </div>
+
+            </form>
+
+        </div>
+    </div>
+</div>
+
+<!-- REJECT -->
+<div class="modal fade modalEdit" id="rejectTicket" tabindex="-1" data-bs-backdrop="static" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Reject Ticket</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <form method="POST" action=" <?= base_url('tickets/update_ticket_status/closed') ?>">
+                <input type="hidden" name="ticket_id" id="reject_ticket_id" value="<?= $ticket['ticket_id'] ?>">
+                <input type="hidden" name="current_uri" id="current_uri" value="<?= uri_string() ?>">
+                <div class="modal-body">
+                    <div class="col-12">
+                        <span>Are you sure you want to reject ticket <b
+                                id='ticket_id_reject'><?= $ticket['ticket_id'] ?></b>?</span>
+                    </div>
+                </div>
+                <div class="modal-footer border-0">
+                    <button type="submit" class="btn submit-btn">Reject</button>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>
 
 <script>
     $(function () {
@@ -742,7 +845,7 @@ endforeach; ?>
                             <select name="employeeName[]" id="employeeName" class="form-control">
                                 <option value="">- Select person to be assigned -</option>
                                 <?php foreach ($all_assigned as $choice): ?>
-                                    <?php if ($choice['department_id'] == $ticket['department_id']): ?>
+                                    <?php if ($choice['department_id'] == $ticket['department_id'] && $choice['access_id'] !== 1): ?>
                                         <option value="<?= $choice['user_id'] ?>"
                                             <?= (set_value('employeeName')) ? "selected" : "" ?>>
                                             <?= $choice['first_name'] . " " . $choice['last_name'] ?>
@@ -875,5 +978,26 @@ endforeach; ?>
 
                 });
         }
+    });
+</script>
+
+<script>
+    approveBtn = document.getElementById('approveSubmitBtn');
+    selectPriority = document.getElementById('prioritySelect');
+
+    function toggleApproveButton() {
+        approveBtn.disabled = !selectPriority.value;
+    }
+
+    selectPriority.addEventListener('change', toggleApproveButton);
+
+
+    const approveModal = document.getElementById('approveTicket');
+
+    approveModal.addEventListener('shown.bs.modal', function () {
+        this.querySelector('form').reset();
+
+        // run once on load or modal open
+        toggleApproveButton();
     });
 </script>

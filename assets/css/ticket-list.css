@@ -139,6 +139,11 @@
 	font-size: 0.8rem;
 }
 
+.information-tickets .ticket_description .description-body {
+	overflow-y: auto;
+	max-height: 30vh;
+}
+
 #modal_assign_person,
 #edit_assign_person table select,
 #edit_assign_person table .removeRow,
@@ -155,7 +160,7 @@
 
 .comment-contents {
 	border: 2px solid var(--gray-300);
-	max-height: 60vh;
+	max-height: 55vh;
 	overflow-y: auto;
 	border-radius: 5px;
 }

@@ -114,6 +114,11 @@ class Tickets extends CI_Controller {
                 }
             }
 
+            $this->session->set_flashdata('message', [
+                'type' => 'success', // or 'success'
+                'text' => 'New ticket is created successfully'
+            ]);
+
             $this->ticket_model->create_ticket($fileNames);
             $this->session->unset_userdata('temp_files');
             redirect('tickets/all');
@@ -195,7 +200,7 @@ class Tickets extends CI_Controller {
             ]);
 
             if ($this->input->post('prev_id')) {
-                $prevId = $this->input->post('prev_id');
+                $prevId = explode("-", $this->input->post('prev_id'))[1];
                 $this->ticket_model->assign_person($names, $ticket_id, $prevId);
                 return redirect('tickets/view_ticket/' . $ticket_id);
             }
@@ -243,6 +248,19 @@ class Tickets extends CI_Controller {
         $this->session->set_userdata('temp_files', $uploaded);
 
         echo json_encode(['files' => $uploaded]);
+    }
+
+    public function update_ticket_status($status) {
+        $current_page = $this->input->post('current_uri');
+        $ticket_id = $this->input->post('ticket_id');
+        $this->ticket_model->update_ticket_status($ticket_id, $status);
+
+        $this->session->set_flashdata('message', [
+            'type' => 'success', // or 'success'
+            'text' => "Ticket $ticket_id updated its status successfully"
+        ]);
+
+        return redirect($current_page);
     }
 
     public function dashboard() {
