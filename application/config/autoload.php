@@ -139,5 +139,6 @@ $autoload['model'] = array(
     'position_model',
     'ticket_type_model',
     'priority_model',
-    'comment_model'
+    'comment_model',
+    'audit_model'
 );

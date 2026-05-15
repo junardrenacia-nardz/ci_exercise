@@ -51,6 +51,11 @@ class Comment_model extends CI_Model {
             $this->db->insert("comment_attachments", $attachmentData);
         }
 
+        $current_user = $this->session->userdata('user_id');
+        $id = 'UID-' . str_pad($current_user, 5, '0', STR_PAD_LEFT);
+        $description = "User <b>$id</b> added a comment to Ticket <b>$ticket_id</b>";
+        $this->audit_model->ticket_audit($ticket_id, $current_user, $description, "insert");
+
         $this->db->trans_complete();
 
         // CHECK IF SUCCESS

@@ -62,34 +62,3 @@ searchBtnToggler.addEventListener("click", function () {
 $(function () {
 	$(".has-tooltip").tooltip();
 });
-
-document.querySelectorAll(".btn-close-reload").forEach((btn) => {
-	btn.addEventListener("click", function () {
-		setTimeout(() => {
-			location.reload();
-		}, 250); // 1000ms = 1 second
-	});
-});
-
-if (showModal) {
-	document.addEventListener("DOMContentLoaded", function () {
-		var modalId = showModal;
-		var myModal = new bootstrap.Modal(document.getElementById(modalId), {
-			backdrop: "static",
-			keyboard: false,
-		});
-		myModal.show();
-	});
-}
-
-function openModal(url, showModal, modalBodyName) {
-	fetch(url)
-		.then((res) => res.text())
-		.then((html) => {
-			document.getElementById(modalBodyName).innerHTML = html;
-			new bootstrap.Modal(document.getElementById(showModal), {
-				backdrop: "static",
-				keyboard: false,
-			}).show();
-		});
-}

@@ -1,3 +1,78 @@
+<style>
+    .status-approval,
+    .status-open,
+    .status-pending,
+    .status-ongoing,
+    .status-testing,
+    .status-closed {
+        border-radius: 6px !important;
+        margin-right: 6px !important;
+        font-size: 0.6rem !important;
+        height: auto !important;
+        width: auto !important;
+    }
+
+    .status-approval {
+        background-color: #f8fafc !important;
+        border: 1px solid var(--gray-300) !important;
+        color: var(--gray-700) !important;
+    }
+
+    .status-open {
+        background-color: #f3f4f6 !important;
+        border: 1px solid var(--gray-500) !important;
+        color: var(--gray-700) !important;
+    }
+
+    .status-pending {
+        background-color: #fffbeb !important;
+        border: 1px solid var(--warning) !important;
+        color: var(--warning-dark) !important;
+    }
+
+    .status-ongoing {
+        background-color: #fff7ed !important;
+        border: 1px solid var(--warning) !important;
+        color: var(--warning-dark) !important;
+    }
+
+    .status-testing {
+        background-color: #eff6ff !important;
+        border: 1px solid var(--blue) !important;
+        color: var(--blue-hover) !important;
+    }
+
+    .status-closed {
+        background-color: #f0fdf4 !important;
+        border: 1px solid var(--success) !important;
+        color: var(--success-dark) !important;
+    }
+
+    .priority-critical {
+        background-color: #fef2f2 !important;
+        border: 1px solid #ef4444 !important;
+        color: #b91c1c !important;
+    }
+
+    .priority-high {
+        background-color: #fff1f2 !important;
+        border: 1px solid #f87171 !important;
+        color: #be123c !important;
+    }
+
+    .priority-medium {
+        background-color: #fffbeb !important;
+        border: 1px solid #f59e0b !important;
+        color: #92400e !important;
+    }
+
+    .priority-low {
+        background-color: #f0fdf4 !important;
+        border: 1px solid #22c55e !important;
+        color: #166534 !important;
+    }
+</style>
+
 <?php
 $showModal = $this->session->flashdata('showModal');
 $old = null;
@@ -24,12 +99,55 @@ endforeach; ?>
             <div class="ticket-subject mb-1">
                 <span class="subject me-2 align-middle"><?= $ticket['ticket_name'] ?> <span
                         class="badge p-1 badge-ticket fw-bold ms-2">Main Ticket</span></span>
-
             </div>
 
-            <div id="ticket_id">
-                <span class="badge p-1 badge-ticket fw-bold">
+            <div id="ticket_id" class="d-flex mt-2">
+                <span class="badge p-1 badge-ticket fw-bold me-2 d-flex align-items-center">
                     Ticket ID: <?= $ticket['ticket_id'] ?></span>
+                <div class="d-flex align-items-center me-2">
+                    <?php if (
+                        strtolower($ticket['ticket_status']) == strtolower("for approval")
+                    ): ?>
+                        <span class="text-start badge status-approval"><?= ucwords($ticket['ticket_status']) ?>
+                        </span>
+                    <?php elseif (
+                        strtolower($ticket['ticket_status']) == strtolower("open")
+                    ): ?>
+                        <span class="text-start badge status-open"><?= ucwords($ticket['ticket_status']) ?>
+                        </span>
+                    <?php elseif (
+                        strtolower($ticket['ticket_status']) == strtolower("pending")
+                    ): ?>
+                        <span class="text-start badge status-pending"><?= ucwords($ticket['ticket_status']) ?>
+                        </span>
+                    <?php elseif (
+                        strtolower($ticket['ticket_status']) == strtolower("on going")
+                    ): ?>
+                        <span class="text-start badge status-ongoing"><?= ucwords($ticket['ticket_status']) ?>
+                        </span>
+                    <?php elseif (
+                        strtolower($ticket['ticket_status']) == strtolower("testing")
+                    ): ?>
+                        <span class="text-start badge status-testing">For <?= ucwords($ticket['ticket_status']) ?>
+                        </span>
+                    <?php elseif (
+                        strtolower($ticket['ticket_status']) == strtolower("closed")
+                    ): ?>
+                        <span class="text-start badge status-closed"><?= ucwords($ticket['ticket_status']) ?>
+                        </span>
+                    <?php endif; ?>
+                </div>
+                <div class="d-flex align-items-center justify-content-center">
+                    <?php if (strtolower($ticket['priority']) == strtolower("critical")): ?>
+                        <span class="priority-critical badge text-center"><?= ucwords($ticket['priority']) ?></span>
+                    <?php elseif (strtolower($ticket['priority']) == strtolower("high")): ?>
+                        <span class="priority-high badge"><?= ucwords($ticket['priority']) ?></span>
+                    <?php elseif (strtolower($ticket['priority']) == strtolower("medium")): ?>
+                        <span class="priority-medium badge"><?= ucwords($ticket['priority']) ?></span>
+                    <?php elseif (strtolower($ticket['priority']) == strtolower("low")): ?>
+                        <span class="priority-low badge class"><?= ucwords($ticket['priority']) ?></span>
+                    <?php endif; ?>
+                </div>
             </div>
         </div>
 
@@ -74,9 +192,16 @@ endforeach; ?>
                     <span class="text-nowrap me-2"><i><b>Person/s In-Charge: </b></i> </span>
                     <span>
                         <?php if ($count_assign !== 0): ?>
-                            <?php foreach ($inCharge as $person): ?>
-                                <?php echo $person['name'] ?>,
-                            <?php endforeach; ?>
+                            <?php
+                            $names = array_column($inCharge, 'name');
+
+                            if (count($names) > 1) {
+                                $last = array_pop($names);
+                                echo implode(', ', $names) . ' and ' . $last;
+                            } else {
+                                echo $names[0] ?? '';
+                            }
+                            ?>
                         <?php else: ?>
                             <i>Not assigned to anyone yet</i>
                         <?php endif; ?>
@@ -226,6 +351,36 @@ endforeach; ?>
 
     <?php endif; ?>
 
+    <?php
+    $isPending = strtolower($ticket['ticket_status']) == 'pending';
+    $currentUser = $this->session->userdata('user_id');
+    $showBlock = false;
+
+    foreach ($inCharge as $assign) {
+        if ((int) idFormatRemove($assign['id']) === (int) $currentUser) {
+            $showBlock = true;
+            break;
+        }
+    }
+    ?>
+
+    <?php if ($isPending && $showBlock): ?>
+
+        <div class="mt-1 p-3 border rounded-3 d-flex justify-content-between align-items-center bg-light">
+            <div>
+                <b class="d-block">Start Ticket Progress</b>
+                <small class="text-muted">
+                    Click the button once you begin working on this ticket.
+                </small>
+            </div>
+            <div class="d-flex gap-2">
+                <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#startConfirmation">
+                    Start Working
+                </button>
+            </div>
+        </div>
+
+    <?php endif; ?>
 </div>
 
 <!--ASSIGN Person to the Ticket-->
@@ -343,7 +498,7 @@ endforeach; ?>
                                                         <select name="employeeName[]" class="form-control">
                                                             <option value="">- Select person to be assigned -</option>
                                                             <?php foreach ($all_assigned as $choice): ?>
-                                                                <?php if ($choice['department_id'] == $ticket['department_id'] && $choice['access_id'] !== 1): ?>
+                                                                <?php if ($choice['department_id'] == $ticket['department_id'] && $choice['access_id'] !== '1' && strtolower($choice['status']) == strtolower('active')): ?>
                                                                     <option value="<?= $choice['user_id'] ?>"
                                                                         <?= ($selectedId == $choice['user_id']) ? "selected" : "" ?>>
                                                                         <?= $choice['first_name'] . " " . $choice['last_name'] ?>
@@ -370,7 +525,7 @@ endforeach; ?>
                                                         <select name="employeeName[]" id="employeeName" class="form-control">
                                                             <option value="">- Select person to be assigned -</option>
                                                             <?php foreach ($all_assigned as $choice): ?>
-                                                                <?php if ($choice['department_id'] == $ticket['department_id'] && $choice['access_id'] !== '1'): ?>
+                                                                <?php if ($choice['department_id'] == $ticket['department_id'] && $choice['access_id'] !== '1' && strtolower($choice['status']) == strtolower('active')): ?>
                                                                     <option value="<?= $choice['user_id'] ?>">
                                                                         <?= $choice['first_name'] . " " . $choice['last_name'] ?>
                                                                         (#<?= $choice['user_id'] ?>)
@@ -396,7 +551,7 @@ endforeach; ?>
                                                             <select name="employeeName[]" id="employeeName" class="form-control">
                                                                 <option value="">- Select person to be assigned -</option>
                                                                 <?php foreach ($all_assigned as $choice): ?>
-                                                                    <?php if ($choice['department_id'] == $ticket['department_id'] && $choice['access_id'] !== 1): ?>
+                                                                    <?php if ($choice['department_id'] == $ticket['department_id'] && $choice['access_id'] !== '1' && strtolower($choice['status']) == strtolower('active')): ?>
                                                                         <option value="<?= $choice['user_id'] ?>"
                                                                             <?= ($choice['user_id'] == $person['id']) ? "selected" : "" ?>>
                                                                             <?= $choice['first_name'] . " " . $choice['last_name'] ?>
@@ -501,7 +656,6 @@ endforeach; ?>
                     <div class="col-12">
                         <div class="input-wrapper">
                             <select name="selectDepartment" id="selectDepartment" class="form-control">
-                                <option value="">- Select Department -</option>
                                 <?php foreach ($departments as $department): ?>
                                     <option value="<?= $department['department_id'] ?>"
                                         <?= ($ticket['department_id'] == $department['department_id']) ? "selected" : "" ?>>
@@ -845,7 +999,7 @@ endforeach; ?>
                             <select name="employeeName[]" id="employeeName" class="form-control">
                                 <option value="">- Select person to be assigned -</option>
                                 <?php foreach ($all_assigned as $choice): ?>
-                                    <?php if ($choice['department_id'] == $ticket['department_id'] && $choice['access_id'] !== 1): ?>
+                                    <?php if ($choice['department_id'] == $ticket['department_id'] && $choice['access_id'] !== '1' && strtolower($choice['status']) == strtolower('active')): ?>
                                         <option value="<?= $choice['user_id'] ?>"
                                             <?= (set_value('employeeName')) ? "selected" : "" ?>>
                                             <?= $choice['first_name'] . " " . $choice['last_name'] ?>

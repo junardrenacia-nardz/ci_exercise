@@ -1,25 +1,18 @@
-$(document).on("click", ".edit_user_btn", function () {
-	let id = $(this).data("id");
-
-	$.ajax({
-		url: editUserUrl,
-		type: "POST",
-		data: { id: id },
-
-		success: function (response) {
-			// remove old modal (important)
-			$("#editModal").remove();
-
-			// insert modal from other PHP file
-			$("body").append(response);
-
-			// NOW show it (because it exists in DOM)
-			let modal = new bootstrap.Modal(document.getElementById("editModal"), {
-				backdrop: "static",
-				keyboard: false,
-			});
-
-			modal.show();
-		},
+document.querySelectorAll(".btn-close-reload").forEach((btn) => {
+	btn.addEventListener("click", function () {
+		setTimeout(() => {
+			location.reload();
+		}, 250); // 1000ms = 1 second
 	});
 });
+
+if (showModal) {
+	document.addEventListener("DOMContentLoaded", function () {
+		var modalId = showModal;
+		var myModal = new bootstrap.Modal(document.getElementById(modalId), {
+			backdrop: "static",
+			keyboard: false,
+		});
+		myModal.show();
+	});
+}

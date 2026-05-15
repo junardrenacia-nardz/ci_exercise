@@ -80,55 +80,45 @@
                             <td class="align-middle"><?= $ticket['ticket_name'] ?></td>
                             <?php if ($status === "all"): ?>
                                 <td class="align-middle">
-                                    <?php if (
-                                        strtolower($ticket['ticket_status']) == strtolower("for approval")
-                                    ): ?>
-                                        <div class="d-flex align-items-center">
+                                    <div class="d-flex align-items-center">
+                                        <?php if (
+                                            strtolower($ticket['ticket_status']) == strtolower("for approval")
+                                        ): ?>
                                             <div class="status-approval"></div>
                                             <span class="text-start"><?= ucwords($ticket['ticket_status']) ?>
                                             </span>
-                                        </div>
-                                    <?php elseif (
-                                        strtolower($ticket['ticket_status']) == strtolower("open")
-                                    ): ?>
-                                        <div class="d-flex align-items-center">
+                                        <?php elseif (
+                                            strtolower($ticket['ticket_status']) == strtolower("open")
+                                        ): ?>
                                             <div class="status-open"></div>
                                             <span class="text-start"><?= ucwords($ticket['ticket_status']) ?>
                                             </span>
-                                        </div>
-                                    <?php elseif (
-                                        strtolower($ticket['ticket_status']) == strtolower("pending")
-                                    ): ?>
-                                        <div class="d-flex align-items-center">
+                                        <?php elseif (
+                                            strtolower($ticket['ticket_status']) == strtolower("pending")
+                                        ): ?>
                                             <div class="status-pending"></div>
                                             <span class="text-start"><?= ucwords($ticket['ticket_status']) ?>
                                             </span>
-                                        </div>
-                                    <?php elseif (
-                                        strtolower($ticket['ticket_status']) == strtolower("on going")
-                                    ): ?>
-                                        <div class="d-flex align-items-center">
+                                        <?php elseif (
+                                            strtolower($ticket['ticket_status']) == strtolower("on going")
+                                        ): ?>
                                             <div class="status-ongoing"></div>
                                             <span class="text-start"><?= ucwords($ticket['ticket_status']) ?>
                                             </span>
-                                        </div>
-                                    <?php elseif (
-                                        strtolower($ticket['ticket_status']) == strtolower("testing")
-                                    ): ?>
-                                        <div class="d-flex align-items-center">
+                                        <?php elseif (
+                                            strtolower($ticket['ticket_status']) == strtolower("testing")
+                                        ): ?>
                                             <div class="status-testing"></div>
                                             <span class="text-start">For <?= ucwords($ticket['ticket_status']) ?>
                                             </span>
-                                        </div>
-                                    <?php elseif (
-                                        strtolower($ticket['ticket_status']) == strtolower("closed")
-                                    ): ?>
-                                        <div class="d-flex align-items-center">
+                                        <?php elseif (
+                                            strtolower($ticket['ticket_status']) == strtolower("closed")
+                                        ): ?>
                                             <div class="status-closed"></div>
                                             <span class="text-start"><?= ucwords($ticket['ticket_status']) ?>
                                             </span>
-                                        </div>
-                                    <?php endif; ?>
+                                        <?php endif; ?>
+                                    </div>
                                 </td>
                             <?php endif; ?>
                             <td class="align-middle text-center"><?php echo get_abbreviation($ticket['department_name']) ?></td>
@@ -171,7 +161,7 @@
                                 <?php endif; ?>
                             </td>
                             <td class="align-middle">
-                                <?= $ticket['requester_first_name'] . " " . $ticket['requester_last_name'] ?>
+                                <?= ucwords($ticket['requester_first_name'] . " " . $ticket['requester_last_name']) ?>
                             </td>
                             <td class="align-middle text-center"><?= get_abbreviation($ticket['requester_department_name']) ?>
                             </td>
@@ -222,14 +212,16 @@
                                                         class="fa-solid fa-thumbs-down me-2"></i>
                                                     Reject</a>
                                             <?php endif; ?>
-                                            <?php if ($this->session->userdata('role_id') == "3" && strtolower($ticket['ticket_status']) !== strtolower('for approval') && strtolower($ticket['ticket_status']) !== strtolower('open')): ?>
+                                            <?php if ($this->session->userdata('role_id') == "3" && strtolower($ticket['ticket_status']) !== strtolower('for approval')): ?>
                                                 <a class="dropdown-item" id="ticketStatusBtn" data-bs-toggle="modal"
                                                     data-bs-target="#ticketStatusModal"
                                                     data-ticket_id="<?= $ticket['ticket_id'] ?>">
                                                     <i class="fa-solid fa-spinner me-2"></i>
                                                     Status</a>
                                             <?php endif; ?>
-                                            <a class="dropdown-item" href="#"><i class="fa-solid fa-clipboard-list me-2"></i>
+                                            <a class="dropdown-item btn-audit-trail" data-bs-toggle="modal"
+                                                data-bs-target="#audit_trail" data-ticket_id="<?= $ticket['ticket_id'] ?>"><i
+                                                    class="fa-solid fa-clipboard-list me-2"></i>
                                                 Audit
                                                 Trail</a>
                                         </div>
@@ -360,6 +352,7 @@
                         <select class="form-select form-select-sm shadow-none" name="ticket_status" id="statusSelect"
                             required>
                             <option value="" selected disabled>Select ticket status</option>
+                            <option value="open">Open</option>
                             <option value="on going">On Going</option>
                             <option value="testing">For Testing</option>
                             <option value="closed">Close</option>
@@ -381,6 +374,39 @@
         </div>
     </div>
 </div>
+
+<!--Audit Trail-->
+<div class="modal fade" id="audit_trail" tabindex="-1" data-bs-backdrop="static" aria-hidden="true">
+    <div class="modal-dialog  modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5>Tickets Audit Trail</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="table-wrapper">
+
+                    <table class="table tbl-custom" id="auditTable">
+                        <thead>
+                            <tr>
+                                <th class="text-center">ID</th>
+                                <th class="text-center">Action</th>
+                                <th class="text-center">Date</th>
+                                <th class="text-start">Description</th>
+                            </tr>
+                        </thead>
+                        <tbody id="auditTableBody">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-dark" data-bs-dismiss="modal">Done</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script>
     $(document).on("click", "#approveBtn", function () {
         let ticket_id = $(this).data("ticket_id");
@@ -431,4 +457,52 @@
             toggleApproveButton(button, select);
         });
     }
+</script>
+
+<script>
+    let auditTable;
+
+    $(document).on("click", ".btn-audit-trail", function () {
+
+        id = $(this).data("ticket_id");
+
+        $.ajax({
+            url: "<?= base_url('get_ticket_audits') ?>",
+            type: "POST",
+            dataType: "json",
+            data: {
+                id: id
+            },
+            success: function (data) {
+
+                let rows = '';
+
+                if (data.length > 0) {
+                    $.each(data, function (i, item) {
+                        rows += `
+                        <tr>
+                            <td class="text-center">${item.audit_ticket_id}</td>
+                            <td class="text-center">${item.action.toUpperCase()}</td>
+                            <td class="text-center">${item.audit_date}</td>
+                            <td class="text-start">${item.description}</td>
+                        </tr>
+                    `;
+                    });
+                }
+
+                $("#auditTableBody").html(rows);
+
+            },
+            error: function () {
+                $("#auditTableBody").html(`
+                <tr>
+                    <td colspan="4" class="text-danger text-center">
+                        Failed to load data
+                    </td>
+                </tr>
+            `);
+            }
+        });
+
+    });
 </script>

@@ -1,6 +1,8 @@
 var ticketTable;
 var userTable;
+var pendingUserTable;
 
+// Ticket Table
 $(document).ready(function () {
 	ticketTable = $("#ticketTable").DataTable({
 		order: [[0, "asc"]],
@@ -105,6 +107,7 @@ $(document).ready(function () {
 	});
 });
 
+// User Table
 $(document).ready(function () {
 	userTable = $("#userTable").DataTable({
 		order: [[0, "asc"]],
@@ -205,6 +208,55 @@ $(document).ready(function () {
 			});
 		},
 	});
+});
+
+// // Pending User Table
+// $(document).ready(function () {
+// 	pendingUserTable = $("#pendingUserTable").DataTable({
+// 		order: [[0, "asc"]],
+// 		// stateSave: true,
+// 		dom: 'f i rt<"bottom"l p >',
+// 		pageLength: 10,
+// 		pagingType: "simple_numbers",
+// 		layout: {
+// 			topStart: null,
+// 			topEnd: "search",
+// 			top: {
+// 				start: null,
+// 				end: null,
+// 			},
+// 		},
+
+// 	});
+// });
+
+$("#approve_user").on("shown.bs.modal", function () {
+	if (!$.fn.DataTable.isDataTable("#pendingUserTable")) {
+		pendingUserTable = $("#pendingUserTable").DataTable({
+			order: [[0, "asc"]],
+			dom: 'f i rt<"bottom"l p>',
+			pageLength: 10,
+
+			initComplete: function () {
+				$(".dt-search input").attr("placeholder", "Search...");
+			},
+		});
+	}
+});
+
+$("#audit_trail").on("shown.bs.modal", function () {
+	if (!$.fn.DataTable.isDataTable("#auditTable")) {
+		auditTable = $("#auditTable").DataTable({
+			order: [[0, "asc"]],
+			dom: 'f i rt<"bottom"l p>',
+			pageLength: 10,
+			autoWidth: true,
+
+			initComplete: function () {
+				$(".dt-search input").attr("placeholder", "Search...");
+			},
+		});
+	}
 });
 
 $.fn.dataTable.version;

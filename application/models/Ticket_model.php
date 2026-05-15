@@ -126,6 +126,11 @@ class Ticket_model extends CI_Model {
             $this->db->insert('ticket_attachments', $attachmentData);
         }
 
+        $current_user = $this->session->userdata('user_id');
+        $id = 'UID-' . str_pad($current_user, 5, '0', STR_PAD_LEFT);
+        $description = "<b>$id</b> created ticket <b>$ticketID</b>";
+        $this->audit_model->ticket_audit($ticketID, $current_user, $description, "create");
+
         $this->db->trans_complete();
 
         // CHECK IF SUCCESS
@@ -139,28 +144,30 @@ class Ticket_model extends CI_Model {
         if (!empty($users)) {
             foreach ($users as $user) {
                 $editAssigned = [
-                    "person_status" => "Reassigned",
-                    "task_status" => "Removed"
+                    "person_status" => "Reassigned"
                 ];
+
+                $user = explode("-", $user)[1];
 
                 $this->db->where(['user_id' => $user, "ticket_id" => $ticket_id]);
                 $this->db->update('ticket_assigned', $editAssigned);
             }
         }
 
+        $count_existing = 0;
+
         foreach ($names as $name) {
             if (!$this->check_assigned(explode('-', $name)[1], $ticket_id)) {
                 $assigndata = [
                     "ticket_id" => $ticket_id,
                     "user_id" => explode('-', $name)[1],
-                    "person_status" => "Assigned",
-                    "task_status" => "Pending"
+                    "person_status" => "Assigned"
                 ];
                 $this->db->insert('ticket_assigned', $assigndata);
             } else {
+                $count_existing++;
                 $assigndata = [
-                    "person_status" => "Assigned",
-                    "task_status" => "Pending"
+                    "person_status" => "Assigned"
                 ];
                 $this->db->where(['ticket_id' => $ticket_id, "user_id" => explode('-', $name)[1]]);
                 $this->db->update('ticket_assigned', $assigndata);
@@ -175,6 +182,22 @@ class Ticket_model extends CI_Model {
 
         $this->db->where("ticket_id", $ticket_id);
         $this->db->update("ticket_details", $ticketUpdate);
+
+        $oldUsers = $this->formatNames($users);
+        $newUsers = $this->formatNames($names);
+
+        $current_user = $this->session->userdata('user_id');
+        $id = 'UID-' . str_pad($current_user, 5, '0', STR_PAD_LEFT);
+
+        if ($count_existing >= 1) {
+            $description = "<b>$id</b> reassigned ticket <b>$ticket_id</b> from $oldUsers to $newUsers";
+            $action = "update";
+        } else {
+            $description = "Ticket <b>$ticket_id</b> assigned to $newUsers by user <b>$id</b>";
+            $action = "insert";
+        }
+
+        $this->audit_model->ticket_audit($ticket_id, $current_user, $description, $action);
 
         $this->db->trans_complete();
 
@@ -198,6 +221,19 @@ class Ticket_model extends CI_Model {
         $this->db->where('ticket_id', $ticket_id);
         $this->db->update('ticket_assigned', $assignedData);
 
+        $oldDepartment = $this->input->post('oldDepartment');
+        $newDepartment = $this->input->post('selectDepartment');
+
+        $old = $this->department_model->get_departments($oldDepartment);
+        $new = $this->department_model->get_departments($newDepartment);
+
+        $current_user = $this->session->userdata('user_id');
+        $id = 'UID-' . str_pad($current_user, 5, '0', STR_PAD_LEFT);
+        $description = "User <b>$id</b> changed the department from <b>{$old['department_name']}</b> to <b>{$new['department_name']}</b> for Ticket <b>$ticket_id</b>";
+        $this->audit_model->ticket_audit($ticket_id, $current_user, $description, "update");
+
+        $this->db->trans_complete();
+
         return true;
     }
     public function check_assigned($user, $ticket_id) {
@@ -217,5 +253,21 @@ class Ticket_model extends CI_Model {
         $this->db->where('ticket_id', $ticket_id);
         $this->db->update('ticket_details', $data);
         return true;
+    }
+
+    protected function formatNames(array $users) {
+        $names = $users;
+
+        if (count($names) > 1) {
+            $last = array_pop($names);
+
+            $boldNames = array_map(function ($name) {
+                return "<b>{$name}</b>";
+            }, $names);
+
+            return implode(', ', $boldNames) . ' and <b>' . $last . '</b>';
+        }
+
+        return isset($names[0]) ? "<b>{$names[0]}</b>" : '';
     }
 }

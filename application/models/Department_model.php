@@ -9,5 +9,8 @@ class Department_model extends CI_Model {
             $query = $this->db->get('departments');
             return $query->result_array();
         }
+
+        $query = $this->db->get_where('departments', array('department_id' => $id));
+        return $query->row_array();
     }
 }

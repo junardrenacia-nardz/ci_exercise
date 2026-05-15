@@ -388,7 +388,7 @@ $old = $this->session->flashdata('old_input');
                 <div class="modal-body">
                     <div class="table-wrapper">
 
-                        <table class="table tbl-custom" id="userTable">
+                        <table class="table tbl-custom" id="pendingUserTable">
                             <thead>
                                 <tr>
                                     <th class="text-start">User ID</th>

@@ -200,7 +200,7 @@ class Tickets extends CI_Controller {
             ]);
 
             if ($this->input->post('prev_id')) {
-                $prevId = explode("-", $this->input->post('prev_id'))[1];
+                $prevId = $this->input->post('prev_id');
                 $this->ticket_model->assign_person($names, $ticket_id, $prevId);
                 return redirect('tickets/view_ticket/' . $ticket_id);
             }
@@ -208,11 +208,6 @@ class Tickets extends CI_Controller {
             $this->ticket_model->assign_person($names, $ticket_id);
             return redirect('tickets/view_ticket/' . $ticket_id);
         }
-    }
-
-    public function clear_assign_modal_state() {
-        $this->session->unset_userdata('old_input');
-        $this->session->unset_userdata('showModal');
     }
 
     public function uploadTemp() {
@@ -261,6 +256,16 @@ class Tickets extends CI_Controller {
         ]);
 
         return redirect($current_page);
+    }
+
+    public function get_ticket_audits() {
+        $id = $this->input->post('id');
+
+        $query = $this->db->get_where('audit_tickets', [
+            'ticket_id' => $id
+        ]);
+
+        echo json_encode($query->result_array());
     }
 
     public function dashboard() {
