@@ -162,7 +162,7 @@ Data</button> -->
                                         <select name="filterDepartment" id="filterDepartment" class="form-control">
                                                 <option value="">- Select Department -</option>
                                                 <?php foreach ($departments as $department): ?>
-                                                        <option value="<?= $department['department_name'] ?>">
+                                                        <option value="<?= get_abbreviation($department['department_name']) ?>">
                                                                 <?= $department['department_name'] ?>
                                                         </option>
                                                 <?php endforeach; ?>

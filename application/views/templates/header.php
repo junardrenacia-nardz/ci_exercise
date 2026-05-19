@@ -98,7 +98,8 @@ function idFormatRemove($id) {
                 <li class="sidebar-item">
                     <a href="#" class="sidebar-link has-dropdown <?= ($current == "tickets/all" || $current == "tickets/approval" || $current == "tickets/open"
                         || $current == "tickets/pending" || $current == "tickets/ongoing"
-                        || $current == "tickets/testing" || $current == "tickets/closed"
+                        || $current == "tickets/testing" || $current == "tickets/closed" || $current == "my_tickets/all"
+                        || $current == "my_tickets/assigned" || $current == "my_tickets/requested" || $current == "my_tickets/completed"
                         || $isViewTicket) ? "active" : "" ?>" data-bs-toggle="collapse" data-bs-target="#ticket-items"
                         aria-expanded="true" aria-controls="ticket-items">
                         <i class="fa-solid fa-ticket"></i>
@@ -106,10 +107,14 @@ function idFormatRemove($id) {
                     </a>
                     <ul class="sidebar-dropdown list-unstyled collapse <?= ($current == "tickets/all" || $current == "tickets/approval" || $current == "tickets/open"
                         || $current == "tickets/pending" || $current == "tickets/ongoing"
-                        || $current == "tickets/testing" || $current == "tickets/closed"
+                        || $current == "tickets/testing" || $current == "tickets/closed" || $current == "my_tickets/all"
+                        || $current == "my_tickets/assigned" || $current == "my_tickets/requested" || $current == "my_tickets/completed"
                         || $isViewTicket) ? "show" : "" ?>" id="ticket-items">
                         <li class="sidebar-item">
-                            <a href="" class="sidebar-link"><i class="fa-regular fa-user"></i>
+                            <a href="<?= base_url('my_tickets/all') ?>" class="sidebar-link <?= $current == "my_tickets/all"
+                                  || $current == "my_tickets/assigned" || $current == "my_tickets/requested"
+                                  || $current == "my_tickets/completed" ? "active" : "" ?>"><i
+                                    class="fa-regular fa-user"></i>
                                 <span>My Tickets</span></a>
                             <a href="<?= base_url("tickets/all") ?>"
                                 class="sidebar-link <?= ($current == "tickets/all" || $current == "tickets/approval" || $current == "tickets/open"
@@ -129,7 +134,7 @@ function idFormatRemove($id) {
                     </a>
                 </li> -->
 
-                <li class="sidebar-item">
+                <!-- <li class="sidebar-item">
                     <a href="#" class="sidebar-link has-dropdown" data-bs-toggle="collapse"
                         data-bs-target="#history-item" aria-expanded="true" aria-controls="history-item">
                         <i class="fa-solid fa-hourglass"></i>
@@ -141,7 +146,7 @@ function idFormatRemove($id) {
                             <a href="#" class="sidebar-link"><i class="fa-solid fa-xmark"></i><span>On Going</span></a>
                         </li>
                     </ul>
-                </li>
+                </li> -->
 
                 <li class="sidebar-header">Management</li>
                 <li class="sidebar-item">

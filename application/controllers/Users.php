@@ -42,7 +42,8 @@ class Users extends CI_Controller {
                     'logged_in' => true,
                     'gender' => $user_id['gender'],
                     'department_id' => $user_id['department_id'],
-                    'role_id' => $user_id['access_id']
+                    'role_id' => $user_id['access_id'],
+
                 ];
 
                 $this->session->set_userdata($user_data);
@@ -176,9 +177,9 @@ class Users extends CI_Controller {
     }
 
 
-    public function update_employee_status($status, $modal = FALSE) {
-        $employee_id = $this->input->post('employee_id');
-        $user_id = explode('-', $this->input->post('user_id'))[1];
+    public function update_employee_status($status, $modal = FALSE, $employee_id = FALSE, $user_id = FALSE) {
+        $employee_id = $employee_id !== FALSE ? $employee_id : $this->input->post('employee_id');
+        $user_id = $user_id !== FALSE ? $user_id : explode('-', $this->input->post('user_id'))[1];
         if (strtolower($status) == strtolower("active") && $modal) {
             $this->session->set_flashdata('showModal', $modal);
         }

@@ -9,7 +9,6 @@ $(document).ready(function () {
 		// stateSave: true,
 		dom: 'f i rt<"bottom"l p>',
 		pageLength: 10,
-		stateSave: true,
 		pagingType: "simple_numbers",
 		layout: {
 			topStart: null,
@@ -40,7 +39,7 @@ $(document).ready(function () {
 					modifier: {
 						search: "applied",
 					},
-					columns: [0, 1, 2, 3, 4, 5, 6, 7, 8],
+					columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
 				},
 			},
 			{
@@ -52,7 +51,7 @@ $(document).ready(function () {
 					modifier: {
 						search: "applied",
 					},
-					columns: [0, 1, 2, 3, 4, 5, 6, 7, 8],
+					columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
 				},
 			},
 			{
@@ -62,7 +61,7 @@ $(document).ready(function () {
 					modifier: {
 						search: "applied",
 					},
-					columns: [0, 1, 2, 3, 4, 5, 6, 7, 8],
+					columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
 				},
 			},
 		],

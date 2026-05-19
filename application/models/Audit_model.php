@@ -11,6 +11,4 @@ class Audit_model extends CI_Model {
 
         return $this->db->insert('audit_tickets', $data);
     }
-
-
 }

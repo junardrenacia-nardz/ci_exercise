@@ -19,7 +19,7 @@
             </thead>
             <tbody>
                 <?php foreach ($ticket_details as $ticket): ?>
-                    <?php if (strtolower($ticket['ticket_status']) !== strtolower("Not Approved")): ?>
+                    <?php if ($ticket['requester_id'] == $_SESSION['user_id']): ?>
                         <?php $count_assign = 0;
                         $peopleInCharge = [];
                         $inCharge = ""; ?>

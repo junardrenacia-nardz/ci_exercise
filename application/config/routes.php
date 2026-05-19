@@ -58,6 +58,8 @@ $route['tickets/assign_ticket/(:any)'] = 'tickets/assign_ticket/$1';
 $route["create_ticket"] = "tickets/createTicket";
 $route['tickets/update_ticket_status/(:any)/(:any)'] = "tickets/update_ticket_status/$1/$2";
 $route["get_ticket_audits"] = "tickets/get_ticket_audits";
+$route["update_ticket_progress"] = "tickets/update_ticket_progress";
+$route["my_tickets/(:any)"] = "tickets/my_tickets/$1";
 
 // Comments
 $route['comments/(:any)'] = "comments/addComments/$1";
@@ -67,7 +69,7 @@ $route['comments/get_attachments/(:any)/(:any)'] = 'comments/get_attachments/$1/
 $route["dashboard"] = "tickets/dashboard";
 
 $route['users'] = 'users/login';
-$route['users/update_employee_status/(:any)/(:any)'] = 'users/update_employee_status/$1/$2/';
+$route['users/update_employee_status/(:any)/(:any)/(:any)/(:any)'] = 'users/update_employee_status/$1/$2/$3/$4';
 $route['delete_users/(:any)/(:any)'] = "users/delete_pending_user/$1/$2";
 $route['users/update_last_active'] = "users/update_last_active";
 $route['users/edit_user/(:any)/(:any)'] = "users/edit_user/$1/$2";

@@ -383,7 +383,9 @@ $old = $this->session->flashdata('old_input');
             <div class="modal-content">
                 <div class="modal-header">
                     <h5>Roles and Permission</h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                    <button type="button"
+                        class="btn-close btn-close-white <?= $this->session->flashdata('showModal') ? "btn-close-reload" : ""  ?>"
+                        data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
                     <div class="table-wrapper">
@@ -427,7 +429,7 @@ $old = $this->session->flashdata('old_input');
                                     <td class="text-center"><?= date('m-d-Y', strtotime($user['created_at'])) ?></td>
                                     <td class="text-center">
                                         <div class="d-flex justify-content-evenly">
-                                            <a href="<?= base_url('users/update_employee_status/' . $user['employee_id'] . "/active/" .$user['user_id']) . "/" . 'approve_user' ?>"
+                                            <a href="<?= base_url('users/update_employee_status/active/approve_user/' . $user['employee_id'] . "/" . $user['user_id'])?>"
                                                 class="btn rounded-5 has-tooltip" title="Approve">
                                                 <i class="fa-solid fa-check"></i>
                                             </a>
@@ -446,7 +448,9 @@ $old = $this->session->flashdata('old_input');
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button class="btn btn-dark" data-bs-dismiss="modal">Done</button>
+                    <button
+                        class="btn btn-dark <?= $this->session->flashdata('showModal') ? "btn-close-reload" : ""  ?>"
+                        data-bs-dismiss="modal">Done</button>
                 </div>
             </div>
         </div>
@@ -461,7 +465,8 @@ $old = $this->session->flashdata('old_input');
                         <div class="d-flex justify-content-between w-100 ps-0">
                             <div></div>
                             <h5>Edit User Details</h5>
-                            <button type="button" class="btn-close btn-close-black btn-close-reload"
+                            <button type="button"
+                                class="btn-close btn-close-black <?php echo !empty($old)? "btn-close-reload" : "" ?>"
                                 data-bs-dismiss="modal"></button>
                         </div>
                         <form action="<?= base_url('users/update_user'); ?>" method="POST" id="editForm" class=" px-3">
@@ -572,16 +577,12 @@ $old = $this->session->flashdata('old_input');
                                             <span id="" class="text-danger"><?= $errors['role'] ?? '' ?></span>
                                         </div>
                                     </div>
-                                    <div class="mt-4">
-                                        <a class="btn btn-outline-secondary" data-bs-target="#changePassword"
-                                            data-bs-toggle="modal">
-                                            <i class="fa-solid fa-unlock me-2"></i>Change Password</a>
-                                    </div>
                                 </div>
 
                                 <div class="buttons d-flex justify-content-end mt-3">
                                     <a href="" type="submit" name="direction" value="go_to_login"
-                                        data-bs-dismiss="modal" class="btn btn-outline-dark me-2"
+                                        data-bs-dismiss="modal"
+                                        class="btn btn-outline-dark me-2 <?php echo !empty($old)? "btn-close-reload" : "" ?>"
                                         id='btn-close-modal'>Cancel</a>
                                     <button class="btn btn-dark" type="submit" id="submit-1" name="direction"
                                         value="submit">Update</button>
@@ -608,7 +609,8 @@ $old = $this->session->flashdata('old_input');
                     <div class="d-flex justify-content-between w-100 ps-0">
                         <div></div>
                         <h5>Change Password</h5>
-                        <button type="button" class="btn-close btn-close-black btn-close-reload"
+                        <button type="button"
+                            class="btn-close btn-close-black <?php echo !empty($old)? "btn-close-reload" : "" ?>"
                             data-bs-dismiss="modal"></button>
                     </div>
                     <form action="<?= base_url('users/change_password') ?>" method="POST" class=" px-3">
@@ -623,13 +625,13 @@ $old = $this->session->flashdata('old_input');
                                 <div class="row">
                                     <div class="col-xl-12 mt-1">
                                         <label for="firstName" class="form-label">Old Password</label>
-                                        <input type="text" name="oldPassword" id="oldPassword" class="form-control"
+                                        <input type="password" name="oldPassword" id="oldPassword" class="form-control"
                                             value="<?= $old['oldPassword'] ?? '' ?>">
                                         <span id="" class="text-danger"><?= $errors['oldPassword'] ?? '' ?></span>
                                     </div>
                                     <div class="col-xl-12 mt-1">
                                         <label for="firstName" class="form-label">New Password</label>
-                                        <input type="text" name="newPassword" id="newPassword" class="form-control">
+                                        <input type="password" name="newPassword" id="newPassword" class="form-control">
                                         <div class="password-requirements mt-2 d-flex flex-column">
                                             <span id="errorPassword" class="text-danger">
                                                 <?= $errors['newPassword'] ?? '' ?></span>
@@ -647,7 +649,7 @@ $old = $this->session->flashdata('old_input');
                                     </div>
                                     <div class="col-xl-12 mt-1">
                                         <label for="firstName" class="form-label">Confirm Password</label>
-                                        <input type="text" name="confirmPassword" id="confirmPassword"
+                                        <input type="password" name="confirmPassword" id="confirmPassword"
                                             class="form-control">
                                         <span id="" class="text-danger"><?= $errors['confirmPassword'] ?? '' ?></span>
                                     </div>
@@ -657,7 +659,7 @@ $old = $this->session->flashdata('old_input');
 
                             <div class="buttons d-flex justify-content-end mt-3">
                                 <a href="" type="submit" name="direction" value="go_to_login" data-bs-toggle="modal"
-                                    class="btn btn-outline-dark me-2 ">Cancel</a>
+                                    class="btn btn-outline-dark me-2 <?php echo !empty($old)? "btn-close-reload" : "" ?>">Cancel</a>
                                 <button class="btn btn-dark" type="submit" id="submit-1" name="direction"
                                     value="submit">Update</button>
                             </div>
@@ -773,3 +775,17 @@ $old = $this->session->flashdata('old_input');
 
 
     <script src="<?= base_url('assets/js/') ?>users.js"></script>
+
+
+    <script>
+    const changePassword = document.getElementById('changePassword');
+    changePassword.addEventListener('hidden.bs.modal', function() {
+        this.querySelectorAll('.form-control').forEach(el => {
+            el.value = '';
+        });
+
+        this.querySelectorAll('.password-valid').forEach(el => {
+            el.textContent = '';
+        });
+    });
+    </script>

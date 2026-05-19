@@ -16,6 +16,14 @@ class User_model extends CI_Model {
         return $query->result_array();
     }
 
+    public function get_employee_name($user_id) {
+        $this->db->select('users.user_id, users.employee_id, employees.first_name, employees.last_name');
+        $this->db->from('users');
+        $this->db->join('employees', 'employees.employee_id = users.employee_id');
+        $this->db->where('users.user_id', $user_id);
+        $query = $this->db->get();
+        return $query->row_array();
+    }
 
     public function get_users($id = FALSE) {
         $this->db->select('CONCAT("UID-", LPAD(u.user_id, 5, "0")) as user_id ,u.employee_id, u.email, u.updated_at,, u.last_active, u.created_at, e.first_name, e.last_name, e.department_id, e.status,

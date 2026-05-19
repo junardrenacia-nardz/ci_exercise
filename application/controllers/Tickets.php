@@ -21,11 +21,11 @@ class Tickets extends CI_Controller {
             redirect('users');
         }
         $employee_id = $this->session->userdata('employee_id');
+        $user_details = $this->session->userdata();
         $data['logged_user'] = $this->user_model->get_employee_details($employee_id);
         $data['title'] = 'Tickets';
-
-        $data['ticket_details'] = $this->ticket_model->get_tickets(FALSE, $status) ?? [];
-        $data['tickets_count'] = $this->ticket_model->get_tickets_count();
+        $data['ticket_details'] = $this->ticket_model->get_tickets(FALSE, $status, $user_details) ?? [];
+        $data['tickets_count'] = $this->ticket_model->get_tickets_count($user_details);
         $data['ticket_assigned'] = $this->ticket_model->get_ticket_assigned();
         $data['departments'] = $this->department_model->get_departments();
 
@@ -51,10 +51,51 @@ class Tickets extends CI_Controller {
         $data['all_assigned'] = $this->user_model->get_users();
         $data['comments'] = $this->comment_model->get_comments($ticket_id);
         $data['comment_attachments'] = $this->comment_model->get_comment_attachments($ticket_id);
+        $data['histories'] = $this->history_model->get_history_tickets($ticket_id);
 
         $this->load->view('templates/header', $data);
         $this->load->view('tickets/view_ticket', $data);
         $this->load->view('templates/footer');
+    }
+
+    public function my_tickets($status = '') {
+        if (!$this->session->userdata('logged_in')) {
+            redirect('users');
+        }
+        $employee_id = $this->session->userdata('employee_id');
+        $user_details = $this->session->userdata();
+        $data['logged_user'] = $this->user_model->get_employee_details($employee_id);
+        $data['title'] = 'My Tickets';
+        $data['ticket_details'] = $this->ticket_model->get_tickets(FALSE, 'all', $user_details) ?? [];
+        $data['tickets_count'] = $this->ticket_model->get_tickets_count($user_details);
+        $data['ticket_assigned'] = $this->ticket_model->get_ticket_assigned();
+        $data['departments'] = $this->department_model->get_departments();
+        $data['tickets_count'] = $this->ticket_model->get_tickets_count($user_details);
+
+        $data['status'] = strtolower($status);
+
+        if ($status == "assigned") {
+            $this->load->view('templates/header', $data);
+            $this->load->view('templates/my_tickets_header', $data);
+            $this->load->view('tickets/my_tickets_assigned', $data);
+            $this->load->view('templates/footer');
+        } else if ($status == "requested") {
+            $this->load->view('templates/header', $data);
+            $this->load->view('templates/my_tickets_header', $data);
+            $this->load->view('tickets/my_tickets_requested', $data);
+            $this->load->view('templates/footer');
+        } else if ($status == "completed") {
+            $this->load->view('templates/header', $data);
+            $this->load->view('templates/my_tickets_header', $data);
+            $this->load->view('tickets/my_tickets_completed', $data);
+            $this->load->view('templates/footer');
+        } else {
+            $this->load->view('templates/header', $data);
+            $this->load->view('templates/my_tickets_header', $data);
+            $this->load->view('tickets/my_tickets', $data);
+            $this->load->view('templates/footer');
+        }
+
     }
 
     public function createTicket() {
@@ -193,7 +234,6 @@ class Tickets extends CI_Controller {
             $this->session->set_flashdata('old_input', $this->input->post());
             return redirect('tickets/view_ticket/' . $ticket_id);
         } else {
-            $this->session->set_flashdata('showModal', 'modal_assign_person');
             $this->session->set_flashdata('message', [
                 'type' => 'success', // or 'success'
                 'text' => "New individual(s) assigned to $ticket_id"
@@ -258,12 +298,90 @@ class Tickets extends CI_Controller {
         return redirect($current_page);
     }
 
+    public function update_ticket_progress() {
+        $current_page = $this->input->post('current_uri');
+        $ticket_id = $this->input->post('ticket_id');
+        $status = strtolower(trim($this->input->post('ticket_status')));
+        $oldStatus = strtolower(trim($this->input->post('old_status')));
+
+        // Cannot move directly from Pending or On Going to For Approval
+        if (
+            in_array($oldStatus, ['pending', 'on going'], true)
+            && $status === 'for approval'
+        ) {
+            $this->session->set_flashdata('message', [
+                'type' => 'danger',
+                'text' => "The selected status is invalid. The update on ticket $ticket_id is unsuccessful."
+            ]);
+            return redirect($current_page);
+        }
+
+        // From Testing, cannot go back to On Going or move to For Approval
+        if (
+            $oldStatus === strtolower('testing')
+            && $status == strtolower("for approval")
+        ) {
+            $this->session->set_flashdata('message', [
+                'type' => 'danger',
+                'text' => "The selected status is invalid. The update on ticket $ticket_id is unsuccessful."
+            ]);
+            return redirect($current_page);
+        }
+
+        // From Closed, only allowed status is For Approval
+        if (
+            $oldStatus === 'closed'
+            && $status !== 'for approval'
+        ) {
+            $this->session->set_flashdata('message', [
+                'type' => 'danger',
+                'text' => "The selected status is invalid. The update on ticket $ticket_id is unsuccessful."
+            ]);
+            return redirect($current_page);
+        }
+
+        if ($oldStatus == $status) {
+            $this->session->set_flashdata('message', [
+                'type' => 'info',
+                'text' => "The same status is selected. Please choose another"
+            ]);
+            return redirect($current_page);
+        }
+
+        // Update ticket status
+        $this->ticket_model->update_ticket_progress($ticket_id, $status, $oldStatus);
+
+        $this->session->set_flashdata('message', [
+            'type' => 'success',
+            'text' => "Ticket $ticket_id updated its status successfully."
+        ]);
+
+        return redirect($current_page);
+    }
+
     public function get_ticket_audits() {
         $id = $this->input->post('id');
 
-        $query = $this->db->get_where('audit_tickets', [
-            'ticket_id' => $id
-        ]);
+        $this->db->select('
+        a.action,
+        a.audit_ticket_id,
+        a.ticket_id,
+        a.user_id,
+        a.description,
+        a.audit_date,
+        e.first_name,
+        e.last_name
+    ');
+
+        $this->db->from('audit_tickets a');
+
+        $this->db->join('users u', 'u.user_id = a.user_id');
+
+        $this->db->join('employees e', 'e.employee_id = u.employee_id');
+
+        $this->db->where('a.ticket_id', $id);
+
+        $query = $this->db->get();
 
         echo json_encode($query->result_array());
     }

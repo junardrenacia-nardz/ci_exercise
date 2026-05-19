@@ -152,13 +152,73 @@ endforeach; ?>
         </div>
 
         <div class="ticket-button d-flex justify-content-end">
-            <div>
-                <button class="btn assign-reassign-btn timeline-btn me-2" data-bs-toggle="modal"
-                    data-bs-target="#modal_department">
+            <div class="position-relative d-inline-block">
+                <button id="timelineBtn" class="btn assign-reassign-btn timeline-btn me-2">
                     <i class="fa-solid fa-timeline me-1"></i> Timeline</button>
+
+                <!-- Timeline Popup -->
+                <div id="timelinePopup" class="card shadow-lg position-absolute d-none mt-2 border-0" style="
+                        width: 380px;
+                        max-width: 90vw;
+                        max-height: 400px;
+                        overflow-y: auto;
+                        z-index: 1055;
+                        right: 0;
+                        scrollbar-width: none;
+                    ">
+
+                    <!-- Header -->
+                    <div class="card-header text-white fw-semibold" style="background: var(--accent-clay);">
+                        Ticket History
+                    </div>
+
+                    <!-- Body -->
+                    <div class="card-body">
+                        <?php foreach ($histories as $history): ?>
+                            <!-- Timeline Item -->
+                            <div class="d-flex mb-4">
+
+                                <!-- Dot + Line -->
+                                <div class="d-flex flex-column align-items-center me-3">
+                                    <div class=" rounded-circle"
+                                        style="background: var(--accent-clay-light);width:12px; height:12px;"> </div>
+
+                                    <div class=""
+                                        style="background: var(--accent-clay-light); width:2px; flex:1; min-height:40px; opacity:.3;">
+                                    </div>
+                                </div>
+
+                                <!-- Content -->
+                                <div>
+                                    <div class="fw-semibold text-dark" style="font-size: 0.9rem;">
+                                        <?= ucwords($history['action']) ?>
+                                    </div>
+
+                                    <div class="small text-secondary fw-semibold mt-1" style="font-size: 0.85rem;">
+
+                                        <i class="fa-solid fa-user me-1"></i>
+
+                                        <?= $history['first_name'] . " " . $history['last_name'] ?>
+
+                                    </div>
+
+
+                                    <small class="text-muted" style="font-size: 0.9rem;">
+                                        <?php echo date('F d, Y'); ?> • <?php echo date('h:i A'); ?>
+                                    </small>
+
+                                    <div class="small text-muted mt-1" style="font-size: 0.8rem;">
+                                        <?= $history['description'] ?>
+                                    </div>
+                                </div>
+                            </div>
+                        <?php endforeach; ?>
+
+                    </div>
+                </div>
             </div>
-            <div>
-                <?php if (strtolower($ticket['ticket_status']) !== strtolower("For Approval")): ?>
+            <?php if (strtolower($ticket['ticket_status']) !== strtolower("For Approval") && $ticket['department_id'] == $_SESSION['department_id'] && $_SESSION['role_id'] == "3"): ?>
+                <div>
                     <?php if ($count_assign == 0): ?>
 
                         <a href="" class="btn assign-reassign-btn me-2" data-bs-toggle="modal"
@@ -170,13 +230,15 @@ endforeach; ?>
                             data-bs-target="#modal_assign_person">
                             <i class="fa-solid fa-user-group me-1"></i> Re-assign PIC</a>
                     <?php endif; ?>
+                </div>
+            <?php endif; ?>
+            <?php if (strtolower($ticket['ticket_status']) !== "closed"): ?>
+                <div>
+                    <button class="btn assign-reassign-btn" data-bs-toggle="modal" data-bs-target="#modal_department">
+                        <i class="fa-solid fa-building-user me-1"></i> Re-assign Dept.</button>
+                </div>
+            <?php endif; ?>
 
-                <?php endif; ?>
-            </div>
-            <div>
-                <button class="btn assign-reassign-btn" data-bs-toggle="modal" data-bs-target="#modal_department">
-                    <i class="fa-solid fa-building-user me-1"></i> Re-assign Dept.</button>
-            </div>
         </div>
 
     </div>
@@ -243,7 +305,44 @@ endforeach; ?>
                     </div>
                     <div class="col-md-3 col-sm-6 d-flex flex-column">
                         <b>Resolution Aging:</b>
-                        <span><?= $ticket['actual_start_date'] ?? "N/A" ?></span>
+                        <?php if ($ticket['resolved_date'] !== null && $ticket['actual_start_date'] !== null): ?>
+
+                            <?php
+                            date_default_timezone_set('Asia/Manila');
+
+                            $created = new DateTime($ticket['resolved_date']);
+
+                            $today = new DateTime();
+                            $today->setTimezone(new DateTimeZone('Asia/Manila'));
+
+                            $diffSeconds = $today->getTimestamp() - $created->getTimestamp();
+
+                            $minutes = floor($diffSeconds / 60);
+                            $hours = floor($diffSeconds / 3600);
+                            $days = floor($diffSeconds / 86400);
+                            $months = floor($diffSeconds / (30 * 86400));
+                            $years = floor($diffSeconds / (365 * 86400));
+                            ?>
+                            <?php if ($minutes < 60): ?>
+                                <span><?= $minutes ?> minute(s) ago</span>
+
+
+                            <?php elseif ($hours < 24): ?>
+                                <span><?= $hours ?> hour(s) ago</span>
+
+                            <?php elseif ($days < 30): ?>
+                                <span><?= $days ?> day(s) ago</span>
+
+                            <?php elseif ($months < 12): ?>
+                                <span><?= $months ?> month(s) ago</span>
+
+                            <?php else: ?>
+                                <span><?= $years ?> year(s) ago</span>
+
+                            <?php endif; ?>
+                        <?php else: ?>
+                            <span>N/A</span>
+                        <?php endif; ?>
                     </div>
                 </div>
 
@@ -330,7 +429,7 @@ endforeach; ?>
         </div>
 
     </div>
-    <?php if (strtolower($ticket['ticket_status']) == strtolower('for approval')): ?>
+    <?php if (strtolower($ticket['ticket_status']) == strtolower('for approval') && $ticket['department_id'] == $_SESSION['department_id'] && $_SESSION['role_id'] == "3"): ?>
 
         <div class="mt-1 p-3 border rounded-3 d-flex justify-content-between align-items-center bg-light">
             <div>
@@ -338,10 +437,12 @@ endforeach; ?>
                 <small class="text-muted">Choose an action for this ticket</small>
             </div>
             <div class="d-flex gap-2">
-                <button class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#rejectTicket">
+                <button class="btn btn-outline-danger" data-bs-toggle="modal"
+                    data-bs-target="<?= $ticket['priority'] !== null ? "#rejectReopen" : "#rejectTicket" ?>">
                     Reject
                 </button>
-                <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#approveTicket">
+                <button class="btn btn-success" data-bs-toggle="modal"
+                    data-bs-target="<?= $ticket['priority'] !== null ? "#approveReopen" : "#approveTicket" ?>">
                     Approve
                 </button>
 
@@ -381,7 +482,40 @@ endforeach; ?>
         </div>
 
     <?php endif; ?>
+
+    <?php
+    $isOngoing = strtolower($ticket['ticket_status']) == 'on going';
+    $currentUser = $this->session->userdata('user_id');
+    $showBlock = false;
+
+    foreach ($inCharge as $assign) {
+        if ((int) idFormatRemove($assign['id']) === (int) $currentUser) {
+            $showBlock = true;
+            break;
+        }
+    }
+    ?>
+
+    <?php if ($isOngoing && $showBlock): ?>
+
+        <div class="mt-1 p-3 border rounded-3 d-flex justify-content-between align-items-center bg-light">
+            <div>
+                <b class="d-block">Ready for Testing?</b>
+                <small class="text-muted">
+                    Mark this ticket as completed and send it for testing.
+                </small>
+            </div>
+            <div class="d-flex gap-2">
+                <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#startTesting">
+                    Send for Testing
+                </button>
+            </div>
+        </div>
+
+    <?php endif; ?>
 </div>
+
+
 
 <!--ASSIGN Person to the Ticket-->
 <div class="modal fade" id="modal_assign_person" tabindex="-1" aria-hidden="true" data-bs-backdrop="static">
@@ -394,7 +528,8 @@ endforeach; ?>
                     <?= ($count_assign === 0) ? "Assign Ticket" : "Re-assign Ticket" ?>
                 </h5>
 
-                <button type="button" class="btn-close btn-close-white btn-close-reload"
+                <button type="button"
+                    class="btn-close btn-close-white <?php echo !empty($old) ? "btn-close-reload" : "" ?>"
                     data-bs-dismiss="modal"></button>
             </div>
 
@@ -439,7 +574,8 @@ endforeach; ?>
 
             <!-- FOOTER -->
             <div class="modal-footer border-0 px-4 pb-4 d-flex justify-content-between">
-                <button type="button" class="btn btn-secondary btn-close-reload" data-bs-dismiss="modal">
+                <button type="button" class="btn btn-secondary <?php echo !empty($old) ? "btn-close-reload" : "" ?>"
+                    data-bs-dismiss="modal">
                     Close
                 </button>
 
@@ -466,7 +602,8 @@ endforeach; ?>
                     <?= ($count_assign === 0) ? "Assign Ticket" : "Edit Assigned Ticket" ?>
                 </h5>
 
-                <button type="button" class="btn-close btn-close-white btn-close-reload"
+                <button type="button"
+                    class="btn-close btn-close-white <?php echo !empty($old) ? "btn-close-reload" : "" ?>"
                     data-bs-dismiss="modal"></button>
             </div>
             <form action="<?= base_url('tickets/assign_ticket/' . $ticket['ticket_id']) ?>" method="post">
@@ -596,8 +733,9 @@ endforeach; ?>
 
                 <!-- FOOTER -->
                 <div class="modal-footer border-0 px-4 pb-4 d-flex justify-content-between">
-                    <button type="button" class="btn btn-secondary" data-bs-toggle="modal"
-                        data-bs-target="#modal_assign_person">
+                    <button type="button"
+                        class="btn btn-secondary <?php echo !empty($old) ? "btn-close-reload" : "" ?> "
+                        data-bs-toggle="modal" data-bs-target="#modal_assign_person">
                         Close
                     </button>
                     <button type="submit" class="btn submit-btn">
@@ -685,7 +823,8 @@ endforeach; ?>
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title">Add New Comment</h5>
-                <button type="button" class="btn-close btn-close-white btn-close-reload"
+                <button type="button"
+                    class="btn-close btn-close-white <?php echo !empty($old) ? "btn-close-reload" : "" ?>"
                     data-bs-dismiss="modal"></button>
             </div>
             <form action="<?php echo base_url("comments/") . $ticket['ticket_id'] ?>" method="post"
@@ -727,7 +866,8 @@ endforeach; ?>
                 </div>
 
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-close-reload" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn <?php echo !empty($old) ? "btn-close-reload" : "" ?>"
+                        data-bs-dismiss="modal">Cancel</button>
                     <button type="submit" class="btn">Add Comment</button>
                 </div>
             </form>
@@ -894,35 +1034,53 @@ endforeach; ?>
 
                 <div class="modal-body p-4">
 
-                    <!-- Ticket ID -->
-                    <div class="mb-3">
-                        <div class="text-muted small">Ticket ID</div>
-                        <div class="fw-semibold" id="ticket_id_approve"><?= $ticket['ticket_id'] ?></div>
+                    <!-- Ticket Info Card -->
+                    <div class="card border-0 shadow-sm mb-3">
+                        <div class="card-body py-3">
+
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span class="text-muted small">Ticket ID</span>
+                                <span class="badge bg-light text-dark">For Approval</span>
+                            </div>
+
+                            <div class="fw-semibold fs-6" id="ticket_id_approve"><?= $ticket['ticket_id'] ?></div>
+
+                        </div>
                     </div>
 
-                    <!-- Priority Box -->
-                    <div class="border rounded-3 p-3">
+                    <!-- Priority Selection Card -->
+                    <div class="card border-0 shadow-sm">
+                        <div class="card-body">
 
-                        <label for="priority" class="form-label text-muted small mb-2">
-                            Set Priority
-                        </label>
+                            <label for="prioritySelect" class="form-label small text-muted mb-2">
+                                Set Priority
+                            </label>
 
-                        <select class="form-select form-select-sm shadow-none" name="priority" id="prioritySelect"
-                            required>
-                            <option value="" selected disabled>Select priority</option>
-                            <option value="low">Low</option>
-                            <option value="medium">Medium</option>
-                            <option value="high">High</option>
-                            <option value="critical">Critical</option>
-                        </select>
+                            <div class="input-group input-group-sm">
+                                <span class="input-group-text bg-light">Priority</span>
 
+                                <select class="form-select" name="priority" id="prioritySelect" required>
+                                    <option value="" selected disabled>Select priority</option>
+                                    <option value="low">Low</option>
+                                    <option value="medium">Medium</option>
+                                    <option value="high">High</option>
+                                    <option value="critical">Critical</option>
+                                </select>
+                            </div>
+
+                            <div class="form-text mt-2">
+                                Choose the urgency level for this ticket.
+                            </div>
+
+                        </div>
                     </div>
 
                 </div>
 
+                <!-- Footer -->
                 <div class="modal-footer border-0 px-4 pb-4">
-                    <button type="submit" id="approveSubmitBtn" class="btn submit-btn w-100">
-                        Approve
+                    <button type="submit" id="approveSubmitBtn" class="btn submit-btn w-100 fw-semibold">
+                        Approve Ticket
                     </button>
                 </div>
 
@@ -947,6 +1105,121 @@ endforeach; ?>
                     <div class="col-12">
                         <span>Are you sure you want to reject ticket <b
                                 id='ticket_id_reject'><?= $ticket['ticket_id'] ?></b>?</span>
+                    </div>
+                </div>
+                <div class="modal-footer border-0">
+                    <button type="submit" class="btn submit-btn">Reject</button>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>
+
+
+<!-- Start Ticket -->
+<div class="modal fade modalEdit" id="startConfirmation" tabindex="-1" data-bs-backdrop="static" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Start Ticket Confirmation</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <form method="POST" action="<?= base_url('update_ticket_progress') ?>">
+                <input type="hidden" name="ticket_id" id="status_ticket_id" value="<?= $ticket['ticket_id'] ?>">
+                <input type="hidden" name="old_status" id="old_ticket_status" value="<?= $ticket['ticket_status'] ?>">
+                <input type="hidden" name="current_uri" id="current_uri" value="<?= uri_string() ?>">
+                <input type="hidden" name="ticket_status" value="on going">
+                <div class="modal-body">
+                    <div class="col-12">
+                        <span>Are you sure you want to start Ticket <b id='ticket_id_reject'>
+                                <?= $ticket['ticket_id'] ?>
+                            </b>?</span>
+                    </div>
+                </div>
+                <div class="modal-footer border-0">
+                    <button type="submit" class="btn submit-btn">Confirm</button>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>
+
+<!--START TESTING-->
+<div class="modal fade modalEdit" id="startTesting" tabindex="-1" data-bs-backdrop="static" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Send for Testing Confirmation</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <form method="POST" action="<?= base_url('update_ticket_progress') ?>">
+                <input type="hidden" name="ticket_id" id="status_ticket_id" value="<?= $ticket['ticket_id'] ?>">
+                <input type="hidden" name="old_status" id="old_ticket_status" value="<?= $ticket['ticket_status'] ?>">
+                <input type="hidden" name="current_uri" id="current_uri" value="<?= uri_string() ?>">
+                <input type="hidden" name="ticket_status" value="testing">
+                <div class="modal-body">
+                    <div class="col-12">
+                        <span>Are you sure you want to send <b id='ticket_id_reject'>
+                                <?= $ticket['ticket_id'] ?></b> for Testing?
+                        </span>
+                    </div>
+                </div>
+                <div class="modal-footer border-0">
+                    <button type="submit" class="btn submit-btn">Confirm</button>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>
+
+<!-- Approve Re-open -->
+<div class="modal fade modalEdit" id="approveReopen" tabindex="-1" data-bs-backdrop="static" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Approve Re-open Ticket</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <form method="POST" action="<?= base_url('tickets/update_ticket_status/open') ?>">
+                <input type="hidden" name="ticket_status" id="reopen_approve_status"
+                    value="<?= $ticket['ticket_status'] ?>">
+                <input type="hidden" name="ticket_id" id="reopen_ticket_id" value="<?= $ticket['ticket_id'] ?>">
+                <input type="hidden" name="current_uri" id="current_uri" value="<?= uri_string() ?>">
+                <div class="modal-body">
+                    <div class="col-12">
+                        <span>Are you sure you want to re-open ticket <b
+                                id='ticket_id_reopen_approve'><?= $ticket['ticket_id'] ?></b>?</span>
+                    </div>
+                </div>
+                <div class="modal-footer border-0">
+                    <button type="submit" class="btn submit-btn">Approve</button>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>
+
+<!-- REJECT Re-Open -->
+<div class="modal fade modalEdit" id="rejectReopen" tabindex="-1" data-bs-backdrop="static" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Reject Re-open Ticket</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <form method="POST" action="<?= base_url('tickets/update_ticket_status/closed') ?>">
+                <input type="hidden" name="ticket_status" id="reopen_reject_status"
+                    value="<?= $ticket['ticket_status'] ?>">
+                <input type="hidden" name="ticket_id" id="reject_reopen_ticket_id" value="<?= $ticket['ticket_id'] ?>">
+                <input type="hidden" name="current_uri" id="current_uri" value="<?= uri_string() ?>">
+                <div class="modal-body">
+                    <div class="col-12">
+                        <span>Are you sure you want to reject re-opening the ticket <b
+                                id='ticket_id_reopen_reject'><?= $ticket['ticket_id'] ?></b>?</span>
                     </div>
                 </div>
                 <div class="modal-footer border-0">
@@ -1153,5 +1426,27 @@ endforeach; ?>
 
         // run once on load or modal open
         toggleApproveButton();
+    });
+</script>
+
+<script>
+    const timelineBtn = document.getElementById('timelineBtn');
+    const timelinePopup = document.getElementById('timelinePopup');
+
+    timelineBtn.addEventListener('click', function (e) {
+        e.stopPropagation();
+        timelinePopup.classList.toggle('d-none');
+    });
+
+    // Close when clicking outside
+    document.addEventListener('click', function (e) {
+
+        if (
+            !timelinePopup.contains(e.target) &&
+            !timelineBtn.contains(e.target)
+        ) {
+            timelinePopup.classList.add('d-none');
+        }
+
     });
 </script>

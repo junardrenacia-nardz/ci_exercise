@@ -5,11 +5,18 @@ function toggleFilterOptions() {
 	filterOptions.classList.toggle("collapsed");
 }
 
+const department = document.getElementById("department");
+const position = document.getElementById("position");
+
 const editDepartment = document.getElementById("editdepartment");
 const editPosition = document.getElementById("editposition");
 
 if (editDepartment && editPosition) {
 	setupDepartmentPosition(editDepartment, editPosition);
+}
+
+if (department && position) {
+	setupDepartmentPosition(department, position);
 }
 
 function setupDepartmentPosition(deptSelect, posSelect) {
