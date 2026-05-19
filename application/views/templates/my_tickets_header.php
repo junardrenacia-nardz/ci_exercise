@@ -1,10 +1,10 @@
 <style>
     .row-cols-7 {
-        width: 40% !important;
+        width: 30% !important;
     }
 
     .row-cols-7>* {
-        width: calc(100% / 4.2);
+        width: calc(100% / 3.1);
     }
 
     .filter_specific {
@@ -61,31 +61,6 @@ $count_completed = 0;
                         }
                     }
                     echo $count_completed; ?>
-                </span>
-            </div>
-        </a>
-        <a href="<?= base_url('my_tickets/all') ?>">
-            <div class="col ticket-all">
-                <span class="text text-start">All</span>
-                <span class="count">
-                    <?php foreach ($tickets_count as $count) {
-
-                        // requester matches current user
-                        if ($count['requester_id'] == $_SESSION['user_id']) {
-                            $count_all++;
-                            continue;
-                        }
-
-                        // assigned user matches current user
-                        foreach ($ticket_assigned as $assign) {
-                            if ((int) idFormatRemove($assign['user_id']) == (int) $_SESSION['user_id']) {
-                                $count_all++;
-                                break;
-                            }
-                        }
-                    }
-
-                    echo $count_all; ?>
                 </span>
             </div>
         </a>

@@ -89,11 +89,6 @@ class Tickets extends CI_Controller {
             $this->load->view('templates/my_tickets_header', $data);
             $this->load->view('tickets/my_tickets_completed', $data);
             $this->load->view('templates/footer');
-        } else {
-            $this->load->view('templates/header', $data);
-            $this->load->view('templates/my_tickets_header', $data);
-            $this->load->view('tickets/my_tickets', $data);
-            $this->load->view('templates/footer');
         }
 
     }
