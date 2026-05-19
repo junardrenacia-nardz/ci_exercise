@@ -122,12 +122,12 @@ Data</button> -->
                 Filter</button>
 </div>
 
-<div class="filter_options mb-3">
+<div class="filter_options mb-3 ">
         <form id="filterForm">
                 <h5 class="text-start">Filters</h5>
                 <div class="row">
                         <?php if ($status == "all"): ?>
-                                <div class="col-md-3">
+                                <div class="col-md-3 mt-2">
                                         <div class="input-wrapper">
                                                 <select name="filterStatus" id="filterStatus" class="form-control">
                                                         <option value="">- Select Status -</option>
@@ -143,7 +143,7 @@ Data</button> -->
                                 </div>
                         <?php endif; ?>
                         <?php if ($status !== "approval"): ?>
-                                <div class="col-md-3">
+                                <div class="col-md-3 mt-2">
                                         <div class="input-wrapper">
                                                 <select name="filterPriority" id="filterPriority" class="form-control">
                                                         <option value="">- Select Priority -</option>
@@ -157,10 +157,10 @@ Data</button> -->
 
                                 </div>
                         <?php endif; ?>
-                        <div class="col-md-3">
+                        <div class="col-md-3 mt-2">
                                 <div class="input-wrapper">
                                         <select name="filterDepartment" id="filterDepartment" class="form-control">
-                                                <option value="">- Select Department -</option>
+                                                <option value="">- Select Assigned Department Department -</option>
                                                 <?php foreach ($departments as $department): ?>
                                                         <option value="<?= get_abbreviation($department['department_name']) ?>">
                                                                 <?= $department['department_name'] ?>
@@ -169,11 +169,29 @@ Data</button> -->
                                         </select>
                                         <i class="fa-solid fa-angle-down icon-dropdown"></i>
                                 </div>
-
                         </div>
-                        <div class="col-md-3 text-start">
-                                <button type="reset" class="btn btn-reset has-tooltip" title="Reset">
-                                        <i class="fa-solid fa-filter-circle-xmark"></i></button>
+                        <?php if ($_SESSION['role_id'] == "4"): ?>
+                                <div class="col-md-3 mt-2">
+                                        <div class="input-wrapper">
+                                                <select name="filterRequesterDepartment" id="filterRequesterDepartment"
+                                                        class="form-control">
+                                                        <option value="">- Select Requester Department -</option>
+                                                        <?php foreach ($departments as $department): ?>
+                                                                <option value="<?= get_abbreviation($department['department_name']) ?>">
+                                                                        <?= $department['department_name'] ?>
+                                                                </option>
+                                                        <?php endforeach; ?>
+                                                </select>
+                                                <i class="fa-solid fa-angle-down icon-dropdown"></i>
+                                        </div>
+                                </div>
+                        <?php endif; ?>
+                        <div class="col-md-3 mt-2 d-flex align-items-end">
+                                <button type="reset" class="btn btn-md btn-outline-dark px-4 has-tooltip"
+                                        title="Reset Filters">
+                                        <i class="fa-solid fa-filter-circle-xmark me-2"></i>
+                                        Reset
+                                </button>
                         </div>
                 </div>
 

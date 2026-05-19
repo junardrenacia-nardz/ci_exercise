@@ -92,6 +92,10 @@ $(document).ready(function () {
 				ticketTable.column(5).search(this.value).draw();
 			});
 
+			$("#filterRequesterDepartment").on("change", function () {
+				ticketTable.column(8).search(this.value).draw();
+			});
+
 			// Reset Button
 			$("#filterForm").on("reset", function () {
 				// wait for form to actually reset values
@@ -109,7 +113,7 @@ $(document).ready(function () {
 // User Table
 $(document).ready(function () {
 	userTable = $("#userTable").DataTable({
-		order: [[0, "asc"]],
+		order: [[9, "desc"]],
 		// stateSave: true,
 		dom: 'f i rt<"bottom"l p >',
 		pageLength: 10,

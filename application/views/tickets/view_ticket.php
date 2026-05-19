@@ -232,7 +232,8 @@ endforeach; ?>
                     <?php endif; ?>
                 </div>
             <?php endif; ?>
-            <?php if (strtolower($ticket['ticket_status']) !== "closed"): ?>
+            <?php if (strtolower($ticket['ticket_status']) !== "closed"
+                && $ticket['requester_id'] == $_SESSION['user_id']): ?>
                 <div>
                     <button class="btn assign-reassign-btn" data-bs-toggle="modal" data-bs-target="#modal_department">
                         <i class="fa-solid fa-building-user me-1"></i> Re-assign Dept.</button>

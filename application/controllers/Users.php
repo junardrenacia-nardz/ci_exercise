@@ -80,10 +80,18 @@ class Users extends CI_Controller {
             $this->session->set_flashdata('errors', $this->form_validation->error_array());
             return redirect('users/user_index'); // ✅ IMPORTANT
         } else {
-            $this->session->set_flashdata('message', [
-                'type' => 'success', // or 'success'
-                'text' => 'New user is added successfully'
-            ]);
+            if ($this->session->userdata('role_id') == "4") {
+                $this->session->set_flashdata('message', [
+                    'type' => 'success', // or 'success'
+                    'text' => 'New user is added successfully'
+                ]);
+            } else {
+                $this->session->set_flashdata('message', [
+                    'type' => 'warning', // or 'success'
+                    'text' => "The account is pending. Please wait for admin's approval."
+                ]);
+            }
+
 
             $first_name = ucfirst(explode(' ', trim($this->input->post('firstName')))[0]);
             $last_name = ucfirst(str_replace(' ', '', $this->input->post('lastName')));

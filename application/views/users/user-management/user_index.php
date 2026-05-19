@@ -59,7 +59,7 @@ $old = $this->session->flashdata('old_input');
 
     <div class="dropdown me-2 ">
         <button class="btn dropdown-toggle btn-filter-export btn-export px-3" type="button" data-bs-toggle="dropdown"
-            aria-expanded="false">
+            aria-expanded="false" <?= (in_array($_SESSION['role_id'], ['1', '2'], true))? "disabled" : "" ?>>
             <i class="fa-solid fa-download me-2"></i> Export
         </button>
 
@@ -68,10 +68,12 @@ $old = $this->session->flashdata('old_input');
             <li><a class="dropdown-item btn-export-pdf" href="#">Export as PDF</a></li>
         </ul>
     </div>
-    <button class="btn btn-filter-export btn-add-user me-2 px-3" data-bs-toggle="modal" data-bs-target="#add_user">
+    <button <?= (in_array($_SESSION['role_id'], ['1', '2'], true))? "disabled" : "" ?>
+        class="btn btn-filter-export btn-add-user me-2 px-3" data-bs-toggle="modal" data-bs-target="#add_user">
         <i class="fa-solid fa-user-plus me-2"></i>
         Add User</button>
-    <button class="btn btn-filter-export btn-add-user px-3" data-bs-toggle="modal" data-bs-target="#approve_user">
+    <button class="btn btn-filter-export btn-add-user px-3" data-bs-toggle="modal" data-bs-target="#approve_user"
+        <?= (in_array($_SESSION['role_id'], ['1', '2'], true))? "disabled" : "" ?>>
         <i class="fa-solid fa-key me-2"></i>
         Roles and Permissions</button>
 </div>
@@ -90,7 +92,9 @@ $old = $this->session->flashdata('old_input');
                     <th class="text-center">Role</th>
                     <th class="text-center">Joined Date</th>
                     <th class="text-center">Last Active</th>
+                    <?php if(in_array($_SESSION['role_id'], ['3', '4'], true)): ?>
                     <th class="text-center">Actions</th>
+                    <?php endif; ?>
                 </tr>
             </thead>
             <tbody>
@@ -149,7 +153,7 @@ $old = $this->session->flashdata('old_input');
 
 
                         <?php if($diffSeconds < 75): ?>
-                        <span>Active Now</span>
+                        <span>Active Now <div class="status-closed ms-2"></div></span>
 
                         <?php elseif ($minutes < 60): ?>
                         <span><?= $minutes ?> minute(s) ago</span>
@@ -171,6 +175,7 @@ $old = $this->session->flashdata('old_input');
 
 
                     </td>
+                    <?php if(in_array($_SESSION['role_id'], ['3', '4'], true)): ?>
                     <td class="text-center">
 
                         <div class="action-group user-action-btn">
@@ -234,6 +239,7 @@ $old = $this->session->flashdata('old_input');
                             </a>
                         </div>
                     </td>
+                    <?php endif; ?>
                 </tr>
                 <?php endif; ?>
                 <?php endforeach; ?>
@@ -400,7 +406,9 @@ $old = $this->session->flashdata('old_input');
                                     <th class="text-center">Dept</th>
                                     <th class="text-center">Role</th>
                                     <th class="text-center">Joined Date</th>
+                                    <?php if($_SESSION['role_id'] == "4"): ?>
                                     <th class="text-center">Actions</th>
+                                    <?php endif; ?>
                                 </tr>
                             </thead>
                             <tbody>
@@ -427,6 +435,7 @@ $old = $this->session->flashdata('old_input');
                                     </td>
                                     <td class="text-center"><?= ucwords($user['access_name']) ?></td>
                                     <td class="text-center"><?= date('m-d-Y', strtotime($user['created_at'])) ?></td>
+                                    <?php if($_SESSION['role_id'] == "4"): ?>
                                     <td class="text-center">
                                         <div class="d-flex justify-content-evenly">
                                             <a href="<?= base_url('users/update_employee_status/active/approve_user/' . $user['employee_id'] . "/" . $user['user_id'])?>"
@@ -440,6 +449,7 @@ $old = $this->session->flashdata('old_input');
                                         </div>
 
                                     </td>
+                                    <?php endif ?>
                                 </tr>
                                 <?php endif; ?>
                                 <?php endforeach; ?>

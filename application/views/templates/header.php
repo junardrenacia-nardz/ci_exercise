@@ -111,7 +111,7 @@ function idFormatRemove($id) {
                         || $current == "my_tickets/assigned" || $current == "my_tickets/requested" || $current == "my_tickets/completed"
                         || $isViewTicket) ? "show" : "" ?>" id="ticket-items">
                         <li class="sidebar-item">
-                            <a href="<?= base_url('my_tickets/all') ?>" class="sidebar-link <?= $current == "my_tickets/all"
+                            <a href="<?= base_url('my_tickets/requested') ?>" class="sidebar-link <?= $current == "my_tickets/all"
                                   || $current == "my_tickets/assigned" || $current == "my_tickets/requested"
                                   || $current == "my_tickets/completed" ? "active" : "" ?>"><i
                                     class="fa-regular fa-user"></i>
@@ -124,8 +124,9 @@ function idFormatRemove($id) {
                     </ul>
                 </li>
                 <li class="sidebar-item">
-                    <a href="#" class="sidebar-link">
-                        <i class="fa-solid fa-building"></i><span>Department</span>
+                    <a href="<?= base_url('departments/get_departments') ?>"
+                        class="sidebar-link <?= $current == "departments/get_departments" ? "active" : '' ?>">
+                        <i class="fa-solid fa-building"></i><span>Departments</span>
                     </a>
                 </li>
                 <!-- <li class="sidebar-item">
@@ -149,11 +150,11 @@ function idFormatRemove($id) {
                 </li> -->
 
                 <li class="sidebar-header">Management</li>
-                <li class="sidebar-item">
+                <!-- <li class="sidebar-item">
                     <a href="#" class="sidebar-link">
                         <i class="fa-solid fa-address-card"></i><span>My Profile</span>
                     </a>
-                </li>
+                </li> -->
                 <li class="sidebar-item">
                     <a href="<?= base_url("users/user_index") ?>"
                         class="sidebar-link <?= ($current == "users/user_index") ? "active" : "" ?>"">
